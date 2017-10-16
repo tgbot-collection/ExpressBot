@@ -47,7 +47,7 @@ def bot_list(message):
 def bot_delete(message):
     if message.text == '/delete':
         bot.send_chat_action(message.chat.id, 'typing')
-        bot.send_message(message.chat.id, 'Please add your ExpressID to delete command, i.e. \n/delete 123456789')
+        bot.send_message(message.chat.id, 'Please append your ExpressID to delete command, i.e. \n/delete 123456789')
     else:
         msg = kuaidi100.delete(message.text[8:])
         bot.send_chat_action(message.chat.id, 'typing')
@@ -69,4 +69,14 @@ def track_express(message):
     bot.send_message(message.chat.id, r)
 
 
-bot.polling()
+@bot.message_handler()
+def t(a, b, c):
+    # bot.send_chat_action(message.chat.id, 'typing')
+    r = kuaidi100.recv(a, b, c)
+    # There is not messageid, so not this line.
+    # bot.reply_to(c, r)
+    bot.send_message(c, r)
+
+
+if __name__ == '__main__':
+    bot.polling()

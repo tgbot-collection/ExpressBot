@@ -16,7 +16,7 @@ cmd = '''CREATE TABLE IF NOT EXISTS job
     content TEXT,
     status VARCHAR(10),
     date DATETIME,
-    done BOOLEAN
+    done TINYINT
 )'''
 cur.execute(cmd)
 con.commit()
