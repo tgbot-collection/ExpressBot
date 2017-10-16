@@ -5,6 +5,7 @@
 import telebot
 import logging
 import kuaidi100
+import json
 from config import TOKEN
 
 bot = telebot.TeleBot(TOKEN)
@@ -51,6 +52,14 @@ def bot_delete(message):
         msg = kuaidi100.delete(message.text[8:])
         bot.send_chat_action(message.chat.id, 'typing')
         bot.send_message(message.chat.id, msg)
+
+
+@bot.message_handler(commands=['quickdel'])
+def bot_quick_delete(message):
+    s = message.reply_to_message.text
+    msg = kuaidi100.delete(s.split()[0])
+    bot.send_chat_action(message.chat.id, 'typing')
+    bot.send_message(message.chat.id, msg)
 
 
 @bot.message_handler()
