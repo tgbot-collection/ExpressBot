@@ -3,19 +3,32 @@
 
 
 import telebot
+import logging
+import kuaidi100
 from config import TOKEN
 
 bot = telebot.TeleBot(TOKEN)
 
+logger = telebot.logger
+telebot.logger.setLevel(logging.DEBUG)  # Outputs debug messages to console.
 
-@bot.message_handler(commands=['start', 'help'])
-def send_welcome(message):
-    bot.reply_to(message, "Howdy, how are you doing?")
+
+# start - 输入快递单号来查询
+# help - 帮助
+# list - 查看我的查询历史
+# delete - 删除某个单号
+
+@bot.message_handler(commands=['help'])
+def bot_help(message):
+    bot.send_message(message.chat.id, '直接给我发送单号就可以啦~')
 
 
 @bot.message_handler(func=lambda message: True)
-def echo_all(message):
-    bot.reply_to(message, message.text)
+def track_express(message):
+    # bot.send_message(message.chat.id, 'come again?')
+
+    r = kuaidi100.recv(message.text, message.chat.username, message.chat.id)
+    bot.send_message(message.chat.id, r)
 
 
 bot.polling()
