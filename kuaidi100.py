@@ -28,8 +28,11 @@ c.setopt(pycurl.WRITEFUNCTION, result.write)
 def auto_detect(track_id):
     url = 'http://www.kuaidi100.com/autonumber/autoComNum'
     c.setopt(pycurl.CUSTOMREQUEST, 'POST')
-    c.setopt(pycurl.URL, url + '?text=' + track_id)
-    c.perform()
+    try:
+        c.setopt(pycurl.URL, url + '?text=' + track_id)
+        c.perform()
+    except UnicodeEncodeError:
+        pass
 
     try:
         return json.loads(result.getvalue()).get('auto')[0].get('comCode')
@@ -51,8 +54,12 @@ def recv(code, *args):
     # No result in database would return none, so do a query and insert
 
     # TODO: SQL Injection
-    db_res = db.select('SELECT * FROM job WHERE track_id=' + code)
-    if db_res is None:
+    try:
+        db_res = db.select("SELECT * FROM job WHERE track_id='%s'" % code)[0]
+    except IndexError:
+        db_res = db.select("SELECT * FROM job WHERE track_id='%s'" % code)
+
+    if len(db_res) == 0:
         com_code = auto_detect(code)
         if not com_code:
             return 'My dear, I think you have entered a wrong number.'
@@ -92,9 +99,24 @@ def recv(code, *args):
         except IndexError:
             return res.get('message')
     else:
-        return db_res[4]+'\n'+db_res[7] +  ' ' + db_res[5]
+        return db_res[4] + '\n' + db_res[7] + ' ' + db_res[5]
+
+
+def list_query(un):
+    cmd = "SELECT track_id,date,content FROM job WHERE username='%s'" % un
+    return db.select(cmd)
+
+
+def delete(tid):
+    cmd = "DELETE FROM job WHERE track_id='%s'" % tid
+    if db.upsert(cmd) == 1:
+        return 'Delete succeed'
+    else:
+        return 'The ID you entered is not available.'
 
 
 if __name__ == '__main__':
     print recv('***REMOVED***', 'BennyThink', 260260121)
     # print recv('***REMOVED***', 'BennyThink', 260260121)
+    # list_query('BennyThink')
+    # delete('***REMOVED***')
