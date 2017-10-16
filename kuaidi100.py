@@ -30,7 +30,11 @@ def auto_detect(track_id):
     c.setopt(pycurl.CUSTOMREQUEST, 'POST')
     c.setopt(pycurl.URL, url + '?text=' + track_id)
     c.perform()
-    return json.loads(result.getvalue()).get('auto')[0].get('comCode')
+
+    try:
+        return json.loads(result.getvalue()).get('auto')[0].get('comCode')
+    except (IndexError, ValueError):
+        return False
 
 
 def query_express_status(com, track_id):
@@ -50,37 +54,47 @@ def recv(code, *args):
     db_res = db.select('SELECT * FROM job WHERE track_id=' + code)
     if db_res is None:
         com_code = auto_detect(code)
+        if not com_code:
+            return 'My dear, I think you have entered a wrong number.'
         res = query_express_status(com_code, code)
+
         if res.get('state') == '3' or res.get('state') == '4':
             done = True
         else:
             done = False
+        try:
+            sql_cmd = "INSERT INTO job VALUES (%s,'%s','%s','%s','%s','%s','%s','%s','%s')" % \
+                      ('null', args[0], args[1], com_code, code, res.get('data')[0].get('context'),
+                       state.get(res.get('state')), res.get('data')[0].get('time'), done)
 
-        sql_cmd = "INSERT INTO job VALUES (%s,'%s','%s','%s','%s','%s','%s','%s','%s')" % \
-                  ('null', args[0], args[1], com_code, code, res.get('data')[0].get('context'),
-                   state.get(res.get('state')), res.get('data')[0].get('time'), done)
-
-        db.upsert(sql_cmd)
-        return res.get('data')[0].get('time') + ' ' + code + ' ' + res.get('data')[0].get('context')
+            db.upsert(sql_cmd)
+            return code + '\n' + res.get('data')[0].get('time') + ' ' + res.get('data')[0].get('context')
+        except IndexError:
+            return res.get('message')
     elif db_res[8] == 'False':
         com_code = auto_detect(code)
+        if not com_code:
+            return 'My dear, I think you have entered a wrong number.'
         res = query_express_status(com_code, code)
         if res.get('state') == '3' or res.get('state') == '4':
             done = True
         else:
             done = False
-        sql_cmd = "UPDATE job set content='%s',status='%s',date='%s',done='%s' WHERE track_id='%s'" % \
-                  (res.get('data')[0].get('context'),
-                   state.get(res.get('state')),
-                   res.get('data')[0].get('time'),
-                   done,
-                   code)
-        db.upsert(sql_cmd)
-        return res.get('data')[0].get('time') + ' ' + code + ' ' + res.get('data')[0].get('context')
-
+        try:
+            sql_cmd = "UPDATE job set content='%s',status='%s',date='%s',done='%s' WHERE track_id='%s'" % \
+                      (res.get('data')[0].get('context'),
+                       state.get(res.get('state')),
+                       res.get('data')[0].get('time'),
+                       done,
+                       code)
+            db.upsert(sql_cmd)
+            return code + '\n' + res.get('data')[0].get('time') + ' ' + res.get('data')[0].get('context')
+        except IndexError:
+            return res.get('message')
     else:
-        return db_res[7] + ' ' + db_res[4] + ' ' + db_res[5]
+        return db_res[4]+'\n'+db_res[7] +  ' ' + db_res[5]
 
 
 if __name__ == '__main__':
     print recv('***REMOVED***', 'BennyThink', 260260121)
+    # print recv('***REMOVED***', 'BennyThink', 260260121)
