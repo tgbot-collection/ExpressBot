@@ -19,6 +19,7 @@ bot = telebot.TeleBot(TOKEN)
 # help - 帮助
 # list - 查看我的查询历史
 # delete - 删除某个单号
+# quickdel - 回复某条查询消息来快速删除
 
 
 @bot.message_handler(commands=['start'])
@@ -70,12 +71,12 @@ def track_express(message):
 
 
 @bot.message_handler()
-def t(a, b, c):
+def cron(code, un, chat_id):
     # bot.send_chat_action(message.chat.id, 'typing')
-    r = kuaidi100.recv(a, b, c)
+    r = kuaidi100.recv(code, un, chat_id)
     # There is not messageid, so not this line.
     # bot.reply_to(c, r)
-    bot.send_message(c, r)
+    bot.send_message(chat_id, r)
 
 
 if __name__ == '__main__':

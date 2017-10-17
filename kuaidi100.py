@@ -65,10 +65,7 @@ def recv(code, *args):
             return 'My dear, I think you have entered a wrong number.'
         res = query_express_status(com_code, code)
 
-        if res.get('state') == '3' or res.get('state') == '4':
-            done = 1
-        else:
-            done = 0
+        done = 1 if (res.get('state') == '3' or res.get('state') == '4') else 0
         try:
             sql_cmd = "INSERT INTO job VALUES (%s,'%s','%s','%s','%s','%s','%s','%s','%s')" % \
                       ('null', args[0], args[1], com_code, code, res.get('data')[0].get('context'),
@@ -83,10 +80,7 @@ def recv(code, *args):
         if not com_code:
             return 'My dear, I think you have entered a wrong number.'
         res = query_express_status(com_code, code)
-        if res.get('state') == '3' or res.get('state') == '4':
-            done = 1
-        else:
-            done = 0
+        done = 1 if (res.get('state') == '3' or res.get('state') == '4') else 0
         try:
             sql_cmd = "UPDATE job set content='%s',status='%s',date='%s',done='%s' WHERE track_id='%s'" % \
                       (res.get('data')[0].get('context'),

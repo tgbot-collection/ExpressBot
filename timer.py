@@ -10,4 +10,4 @@ if __name__ == '__main__':
     s = db.select(sql_cmd)
 
     for i in s:
-        main.t(i[0], i[1], i[2])
+        main.cron(i[0], i[1], i[2])
