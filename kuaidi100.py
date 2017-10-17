@@ -18,19 +18,21 @@ import db
 state = {'0': 'Transporting', '1': 'Accepted', '2': 'Trouble', '3': 'Delivered', '4': 'Rejected', '5': 'Delivering',
          '6': 'Rejecting'}
 
-result = StringIO.StringIO()
-
 c = pycurl.Curl()
 c.setopt(pycurl.CAINFO, certifi.where())
-c.setopt(pycurl.WRITEFUNCTION, result.write)
 
 
-def auto_detect(track_id):
-    url = 'http://www.kuaidi100.com/autonumber/autoComNum'
-    c.setopt(pycurl.CUSTOMREQUEST, 'POST')
+def auto_detect(tracker):
+    url = 'http://www.kuaidi100.com/autonumber/autoComNum?text=' + tracker
+    com_result = StringIO.StringIO()
+
     try:
-        c.setopt(pycurl.URL, url + '?text=' + track_id)
+        c.setopt(pycurl.CUSTOMREQUEST, 'POST')
+        c.setopt(pycurl.URL, url)
+        c.setopt(pycurl.WRITEFUNCTION, com_result.write)
+
         c.perform()
+
     except UnicodeEncodeError:
         pass
 
@@ -42,11 +44,15 @@ def auto_detect(track_id):
 
 def query_express_status(com, track_id):
     url = 'http://www.kuaidi100.com/query'
+    exp_result = StringIO.StringIO()
+
     c.setopt(pycurl.CUSTOMREQUEST, 'GET')
+    c.setopt(pycurl.WRITEFUNCTION, exp_result.write)
+
     c.setopt(pycurl.URL, url + '?type=' + com + '&postid=' + track_id)
     c.perform()
-    s = result.getvalue()
-    return json.loads(s[s.index('}]}') + 3:])
+    # return json.loads(s[s.index('}]}') + 3:])
+    return json.loads(exp_result.getvalue())
 
 
 def recv(code, *args):
@@ -61,11 +67,12 @@ def recv(code, *args):
 
     if len(db_res) == 0:
         com_code = auto_detect(code)
+
         if not com_code:
             return 'My dear, I think you have entered a wrong number.'
         res = query_express_status(com_code, code)
-
         done = 1 if (res.get('state') == '3' or res.get('state') == '4') else 0
+
         try:
             sql_cmd = "INSERT INTO job VALUES (%s,'%s','%s','%s','%s','%s','%s','%s','%s')" % \
                       ('null', args[0], args[1], com_code, code, res.get('data')[0].get('context'),
@@ -81,6 +88,7 @@ def recv(code, *args):
             return 'My dear, I think you have entered a wrong number.'
         res = query_express_status(com_code, code)
         done = 1 if (res.get('state') == '3' or res.get('state') == '4') else 0
+
         try:
             sql_cmd = "UPDATE job set content='%s',status='%s',date='%s',done='%s' WHERE track_id='%s'" % \
                       (res.get('data')[0].get('context'),
@@ -96,6 +104,7 @@ def recv(code, *args):
         return db_res[4] + '\n' + db_res[7] + ' ' + db_res[5]
 
 
+# TODO: what if the user has no history, it must say something.
 def list_query(un):
     cmd = "SELECT track_id,date,content FROM job WHERE username='%s'" % un
     return db.select(cmd)
@@ -111,6 +120,7 @@ def delete(tid):
 
 if __name__ == '__main__':
     print recv('***REMOVED***', 'BennyThink', 260260121)
-    # print recv('***REMOVED***', 'BennyThink', 260260121)
-    # list_query('BennyThink')
+    print recv('***REMOVED***', 'BennyThink', 260260121)
+    print recv('***REMOVED***', 'BennyThink', 260260121)
+
     # delete('***REMOVED***')
