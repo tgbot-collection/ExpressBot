@@ -37,7 +37,7 @@ def auto_detect(tracker):
         pass
 
     try:
-        return json.loads(result.getvalue()).get('auto')[0].get('comCode')
+        return json.loads(com_result.getvalue()).get('auto')[0].get('comCode')
     except (IndexError, ValueError):
         return False
 
@@ -61,9 +61,9 @@ def recv(code, *args):
 
     # TODO: SQL Injection
     try:
-        db_res = db.select("SELECT * FROM job WHERE track_id='%s'" % code)[0]
+        db_res = db.select("SELECT * FROM job WHERE track_id=?", (code,))[0]
     except IndexError:
-        db_res = db.select("SELECT * FROM job WHERE track_id='%s'" % code)
+        db_res = db.select("SELECT * FROM job WHERE track_id=?", (code,))
 
     if len(db_res) == 0:
         com_code = auto_detect(code)
@@ -74,11 +74,10 @@ def recv(code, *args):
         done = 1 if (res.get('state') == '3' or res.get('state') == '4') else 0
 
         try:
-            sql_cmd = "INSERT INTO job VALUES (%s,'%s','%s','%s','%s','%s','%s','%s','%s')" % \
-                      ('null', args[0], args[1], com_code, code, res.get('data')[0].get('context'),
-                       state.get(res.get('state')), res.get('data')[0].get('time'), done)
+            sql_cmd = "INSERT INTO job VALUES (NULL ,?,?,?,?,?,?,?,?)"
 
-            db.upsert(sql_cmd)
+            db.upsert(sql_cmd, (args[0], args[1], com_code, code, res.get('data')[0].get('context'),
+                                state.get(res.get('state')), res.get('data')[0].get('time'), done))
             return code + '\n' + res.get('data')[0].get('time') + ' ' + res.get('data')[0].get('context')
         except IndexError:
             return res.get('message')
@@ -90,13 +89,13 @@ def recv(code, *args):
         done = 1 if (res.get('state') == '3' or res.get('state') == '4') else 0
 
         try:
-            sql_cmd = "UPDATE job set content='%s',status='%s',date='%s',done='%s' WHERE track_id='%s'" % \
-                      (res.get('data')[0].get('context'),
-                       state.get(res.get('state')),
-                       res.get('data')[0].get('time'),
-                       done,
-                       code)
-            db.upsert(sql_cmd)
+            sql_cmd = "UPDATE job SET content=?,status=?,date=?,done=? WHERE track_id=?"
+
+            db.upsert(sql_cmd, (res.get('data')[0].get('context'),
+                                state.get(res.get('state')),
+                                res.get('data')[0].get('time'),
+                                done,
+                                code))
             return code + '\n' + res.get('data')[0].get('time') + ' ' + res.get('data')[0].get('context')
         except IndexError:
             return res.get('message')
@@ -106,13 +105,13 @@ def recv(code, *args):
 
 # TODO: what if the user has no history, it must say something.
 def list_query(un):
-    cmd = "SELECT track_id,date,content FROM job WHERE username='%s'" % un
-    return db.select(cmd)
+    cmd = "SELECT track_id,date,content FROM job WHERE username=?"
+    return db.select(cmd, (un,))
 
 
 def delete(tid):
-    cmd = "DELETE FROM job WHERE track_id='%s'" % tid
-    if db.upsert(cmd) == 1:
+    cmd = "DELETE FROM job WHERE track_id=?"
+    if db.upsert(cmd, (tid,)) == 1:
         return 'Delete succeed'
     else:
         return 'The ID you entered is not available.'
