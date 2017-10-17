@@ -3,9 +3,8 @@
 
 
 import telebot
-import logging
+# import logging
 import kuaidi100
-import json
 from config import TOKEN
 
 bot = telebot.TeleBot(TOKEN)
@@ -36,6 +35,7 @@ def bot_help(message):
                      "@BennyThink .")
 
 
+# TODO: what if the user has no history, it must say something.
 @bot.message_handler(commands=['list'])
 def bot_list(message):
     all_info = kuaidi100.list_query(message.chat.username)
@@ -70,13 +70,15 @@ def track_express(message):
     bot.send_message(message.chat.id, r)
 
 
+# TODO: Waiting for test
 @bot.message_handler()
-def cron(code, un, chat_id):
+def cron(code, un, chat_id, db_content):
     # bot.send_chat_action(message.chat.id, 'typing')
-    r = kuaidi100.recv(code, un, chat_id)
     # There is not messageid, so not this line.
     # bot.reply_to(c, r)
-    bot.send_message(chat_id, r)
+    r = kuaidi100.recv(code, un, chat_id)
+    if db_content not in r:
+        bot.send_message(chat_id, r)
 
 
 if __name__ == '__main__':

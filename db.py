@@ -6,7 +6,7 @@ import sqlite3
 
 con = sqlite3.connect('bot.db', check_same_thread=False)
 cur = con.cursor()
-cmd = '''CREATE TABLE IF NOT EXISTS job
+create_table = '''CREATE TABLE IF NOT EXISTS job
 (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username VARCHAR(20),
@@ -18,17 +18,17 @@ cmd = '''CREATE TABLE IF NOT EXISTS job
     date DATETIME,
     done TINYINT
 )'''
-cur.execute(cmd)
+
+cur.execute(create_table)
 con.commit()
 
 
-def upsert(cmd):
-    # print cmd
-    cur.execute(cmd)
+def upsert(cmd, param):
+    cur.execute(cmd, param)
     con.commit()
     return cur.rowcount
 
 
-def select(cmd):
-    cur.execute(cmd)
+def select(cmd, param):
+    cur.execute(cmd, param)
     return cur.fetchall()
