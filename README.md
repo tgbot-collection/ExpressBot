@@ -10,13 +10,32 @@ ExpressBot
 ```
 git clone https://github.com/BennyThink/ExpressBot
 cd ExpressBot
+```
+
+Arch Linux :
+```
+pacman -S python python-pip python-certifi python-chardet python-future python-idna python-pycurl python-requests python-six python-urllib3
+```
+    然后从 AUR 安装  python-pytelegrambotapi .
+
+其它系统：
+```
 pip install -r requirements.txt
 ```
-如果pip时报错，那么就先运行下面这句（Debian系）
-`sudo apt-get install libcurl4-openssl-dev`
+    如果pip时报错，那么就先运行下面这句（Debian系）
+    
+    sudo apt-get install libcurl4-openssl-dev
 
 ### 配置 ###
-修改`config.py`中的TOKEN，以nohub或screen运行`main.py`
+复制 config.py.example 为 config.py，修改`config.py`中的TOKEN：
+
+```
+TOKEN = 'YourToken'
+```
+
+### 运行 ###
+
+以nohub或screen运行`main.py`
 ```
 cd /your/path/ExpressBot
 nohup python main.py

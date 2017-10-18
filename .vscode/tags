@@ -1,0 +1,47 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+PROVIDER	../dec.py	/^PROVIDER = {$/;"	kind:variable	line:5
+PROVIDER	../kuaidi100.py	/^from dec import STATE, PROVIDER$/;"	kind:namespace	line:9
+STATE	../dec.py	/^STATE = {'0': 'Transporting', '1': 'Accepted', '2': 'Trouble', '3': 'Delivered', '4': 'Rejected', '5': 'Delivering',$/;"	kind:variable	line:649
+STATE	../kuaidi100.py	/^from dec import STATE, PROVIDER$/;"	kind:namespace	line:9
+StringIO	../kuaidi100.py	/^import StringIO$/;"	kind:namespace	line:6
+TOKEN	../config.py	/^TOKEN = 'YourToken'$/;"	kind:variable	line:6
+TOKEN	../main.py	/^from config import TOKEN$/;"	kind:namespace	line:8
+auto_detect	../kuaidi100.py	/^def auto_detect(tracker):$/;"	kind:function	line:24
+bot	../main.py	/^bot = telebot.TeleBot(TOKEN)$/;"	kind:variable	line:10
+bot_delete	../main.py	/^def bot_delete(message):$/;"	kind:function	line:50
+bot_help	../main.py	/^def bot_help(message):$/;"	kind:function	line:25
+bot_help	../main.py	/^def bot_help(message):$/;"	kind:function	line:31
+bot_list	../main.py	/^def bot_list(message):$/;"	kind:function	line:38
+bot_quick_delete	../main.py	/^def bot_quick_delete(message):$/;"	kind:function	line:61
+c	../kuaidi100.py	/^c = pycurl.Curl()$/;"	kind:variable	line:20
+certifi	../kuaidi100.py	/^import certifi$/;"	kind:namespace	line:5
+con	../db.py	/^con = sqlite3.connect('bot.db', check_same_thread=False)$/;"	kind:variable	line:7
+config.py	../config.py	1;"	kind:file	line:1
+cron	../main.py	/^def cron(code, mid, cid, db_content):$/;"	kind:function	line:85
+cur	../db.py	/^cur = con.cursor()$/;"	kind:variable	line:8
+db	../kuaidi100.py	/^import db$/;"	kind:namespace	line:8
+db	../timer.py	/^import db$/;"	kind:namespace	line:4
+db.py	../db.py	1;"	kind:file	line:1
+dec.py	../dec.py	1;"	kind:file	line:1
+delete	../kuaidi100.py	/^def delete(tid):$/;"	kind:function	line:127
+json	../kuaidi100.py	/^import json$/;"	kind:namespace	line:7
+kuaidi100	../main.py	/^import kuaidi100$/;"	kind:namespace	line:7
+kuaidi100.py	../kuaidi100.py	1;"	kind:file	line:1
+list_query	../kuaidi100.py	/^def list_query(un):$/;"	kind:function	line:111
+main	../timer.py	/^import main$/;"	kind:namespace	line:5
+main.py	../main.py	1;"	kind:file	line:1
+pycurl	../kuaidi100.py	/^import pycurl$/;"	kind:namespace	line:4
+query_express_status	../kuaidi100.py	/^def query_express_status(com, track_id):$/;"	kind:function	line:43
+recv	../kuaidi100.py	/^def recv(code, *args):$/;"	kind:function	line:58
+s	../timer.py	/^    s = db.select(sql_cmd, (0,))$/;"	kind:variable	line:10
+select	../db.py	/^def select(cmd, param):$/;"	kind:function	line:32
+sqlite3	../db.py	/^import sqlite3$/;"	kind:namespace	line:5
+telebot	../main.py	/^import telebot$/;"	kind:namespace	line:5
+timer.py	../timer.py	1;"	kind:file	line:1
+track_express	../main.py	/^def track_express(message):$/;"	kind:function	line:73
+upsert	../db.py	/^def upsert(cmd, param):$/;"	kind:function	line:26
