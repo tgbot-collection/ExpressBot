@@ -7,7 +7,7 @@ import StringIO
 import json
 import utils
 import db
-from dec import STATE, PROVIDER
+from com_dic import STATE, PROVIDER
 
 # 0	Transporting	Express is being transported
 # 1	Accepted	Express is accepted by the express company
@@ -115,14 +115,13 @@ def list_query(un):
     if len(r) == 0:
         return None
     else:
-
-        test = []
+        r_tmp = []
         for i in r:
             tmp = list(i)
             tmp[1] = PROVIDER.get(tmp[1], 'Default')
-            test.append(tmp)
+            r_tmp.append(tmp)
 
-        return test
+        return r_tmp
 
 
 def delete(tid):

@@ -3,4 +3,6 @@
 
 # configuration
 
-TOKEN = 'YourToken'
+TOKEN = ''
+
+TURING_KEY = ''

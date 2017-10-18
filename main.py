@@ -3,16 +3,12 @@
 
 
 import telebot
-# import logging
+import turing
 import kuaidi100
 import utils
-from config import TOKEN
+from config import TOKEN, TURING_KEY
 
 bot = telebot.TeleBot(TOKEN)
-
-
-# logger = telebot.logger
-# telebot.logger.setLevel(logging.DEBUG)  # Outputs debug messages to console.
 
 
 # start - 输入快递单号来查询
@@ -74,12 +70,15 @@ def bot_quick_delete(message):
 
 @bot.message_handler()
 def track_express(message):
-    if '.' in message.text:
-        bot.send_chat_action(message.chat.id, 'typing')
-        bot.send_message(message.chat.id, utils.reply_fefuse())
-    else:
+    # all digits means express id
+    if message.text.isdigit():
         bot.send_chat_action(message.chat.id, 'typing')
         r = kuaidi100.recv(message.text, message.message_id, message.chat.id)
+        bot.send_message(message.chat.id, r)
+    # use turing bot
+    else:
+        bot.send_chat_action(message.chat.id, 'typing')
+        r = turing.send_turing(TURING_KEY, message.text, message.chat.id)
         bot.send_message(message.chat.id, r)
 
 
@@ -93,3 +92,4 @@ def cron(code, mid, cid, db_content):
 
 if __name__ == '__main__':
     bot.polling()
+    print turing.send_turing('***REMOVED***', '好吧', '23213')
