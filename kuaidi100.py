@@ -106,9 +106,6 @@ def recv(code, *args):
         return db_res[4] + ' ' + PROVIDER.get(db_res[3], 'Default') + '\n' + db_res[7] + ' ' + db_res[5]
 
 
-# TODO: Logic process could not be done in here, cause we need send message separately
-# for quick del
-# TODO: OMG, just send one message instead...
 def list_query(un):
     cmd = "SELECT track_id,type,date,content FROM job WHERE chat_id=?"
     r = db.select(cmd, (un,))

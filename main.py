@@ -60,7 +60,7 @@ def bot_delete(message):
 def bot_quick_delete(message):
     if message.reply_to_message is None:
         bot.send_chat_action(message.chat.id, 'typing')
-        bot.send_message(message.chat.id, utils.reply_fefuse())
+        bot.send_message(message.chat.id, utils.reply_refuse())
     else:
         s = message.reply_to_message.text
         msg = kuaidi100.delete(s.split()[0])
@@ -76,6 +76,9 @@ def track_express(message):
         r = kuaidi100.recv(message.text, message.message_id, message.chat.id)
         bot.send_message(message.chat.id, r)
     # use turing bot
+    elif TURING_KEY == '':
+        bot.send_chat_action(message.chat.id, 'typing')
+        bot.send_message(message.chat.id, utils.reply_refuse())
     else:
         bot.send_chat_action(message.chat.id, 'typing')
         r = turing.send_turing(TURING_KEY, message.text, message.chat.id)
@@ -92,4 +95,3 @@ def cron(code, mid, cid, db_content):
 
 if __name__ == '__main__':
     bot.polling()
-    print turing.send_turing('***REMOVED***', '好吧', '23213')

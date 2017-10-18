@@ -6,4 +6,3 @@
 *.pyc
 
 bot\.db
-config.py

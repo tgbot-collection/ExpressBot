@@ -1,4 +1,8 @@
+#!/usr/bin/python
+# coding:utf-8
+
 import random
+
 refuse_messages = [
     '世上没有什么事情比必然与偶然更难懂了，就像要懂得木头人的爱恋之情一样困难。',
     '咱活到现在，只要是让咱感到羞耻的人，咱都可以说出那个人的名字。这些名字当中还得再加上一个新的名字，那就是汝！',
@@ -22,7 +26,7 @@ not_found_messages = [
 ]
 
 
-def reply_fefuse():
+def reply_refuse():
     return random.choice(refuse_messages)
 
 

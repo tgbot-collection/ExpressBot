@@ -18,16 +18,19 @@ pacman -S python python-pip python-certifi python-chardet python-future python-i
 ```
     然后从 AUR 安装  python-pytelegrambotapi .
 
-其它系统：
+其他系统：
 ```
 pip install -r requirements.txt
 ```
     如果pip时报错，那么就先运行下面这句（Debian系）
     
     sudo apt-get install libcurl4-openssl-dev
+	
+	RHEL系
+	sudo yum install libcurl-devel
 
 ### 配置 ###
-复制 config.py.example 为 config.py，修改`config.py`中的TOKEN：
+修改`config.py`中的TOKEN，TURING_KEY若不配置则不启用机器人功能。
 
 ```
 TOKEN = 'YourToken'
@@ -70,9 +73,11 @@ python main.py
 ## 致谢 ##
 * [coderfox/Kuaidi100API](https://github.com/coderfox/Kuaidi100API)
 * [jaehee~임재희](https://twitter.com/GFW) 感谢你的大力调戏
+* [ヨイツの賢狼ホロ](https://github.com/KenOokamiHoro) 感谢你的commits，我直接无耻的拉过来了。
 
 ## TODO ##
-* 说不定这个机器人以后可以跟你聊天扯淡呢~
+- [x] 这个机器人可以跟你聊天扯淡呢~
+- [ ] SSL 证书问题
 
 ## License ##
 GPL v2
