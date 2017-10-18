@@ -5,6 +5,7 @@ import pycurl
 import certifi
 import StringIO
 import json
+import utils
 import db
 from dec import STATE, PROVIDER
 
@@ -69,7 +70,7 @@ def recv(code, *args):
         com_code, real_com_name = auto_detect(code)
 
         if not com_code:
-            return '亲爱的，我感觉你仿佛在刻意逗我笑~ o(*￣▽￣*)o'
+            return utils.reply_not_found()
         res = query_express_status(com_code, code)
         done = 1 if (res.get('state') == '3' or res.get('state') == '4') else 0
 
@@ -85,7 +86,7 @@ def recv(code, *args):
     elif db_res[8] == 0:
         com_code, real_com_name = auto_detect(code)
         if not com_code:
-            return '亲爱的，我感觉你仿佛在刻意逗我笑~ o(*￣▽￣*)o'
+            return utils.reply_not_found()
         res = query_express_status(com_code, code)
         done = 1 if (res.get('state') == '3' or res.get('state') == '4') else 0
 
@@ -127,9 +128,9 @@ def list_query(un):
 def delete(tid):
     cmd = "DELETE FROM job WHERE track_id=?"
     if db.upsert(cmd, (tid,)) == 1:
-        return '删除成功'
+        return '删除成功 😋'
     else:
-        return '你所输入的运单编号不存在呢哟'
+        return '那个在哪？'
 
 
 if __name__ == '__main__':

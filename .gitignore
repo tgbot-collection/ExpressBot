@@ -1,7 +1,9 @@
 
 \.idea/
+\.vscode/
 /ENV/
 
 *.pyc
 
 bot\.db
+config.py
