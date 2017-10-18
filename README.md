@@ -12,6 +12,7 @@ cd ExpressBot
 pip install -r requirements.txt
 ```
 ### 配置 ###
+sudo apt-get install libcurl4-openssl-dev
 修改`config.py`中的TOKEN，以nohub或screen运行`main.py`
 ```
 nohup python main.py

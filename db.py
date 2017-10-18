@@ -9,7 +9,7 @@ cur = con.cursor()
 create_table = '''CREATE TABLE IF NOT EXISTS job
 (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username VARCHAR(20),
+    message_id VARCHAR(20),
     chat_id VARCHAR(20),
     type VARCHAR(20),
     track_id VARCHAR(20),
