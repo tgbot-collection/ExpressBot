@@ -133,8 +133,4 @@ def delete(tid):
 
 
 if __name__ == '__main__':
-    # print recv('***REMOVED***', 'BennyThink', 260260121)
-    # print recv('***REMOVED***', 'BennyThink', 260260121)
-    # print recv('***REMOVED***', 'BennyThink', 260260121)
-    list_query('260260121')
-    # delete('***REMOVED***')
+    pass
