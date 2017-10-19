@@ -64,6 +64,7 @@ def bot_quick_delete(message):
         bot.send_message(message.chat.id, msg)
 
 
+# TODO: Privacy mode enabled in group: talk to the bot start with a / or bot admin.
 @bot.message_handler()
 def track_express(message):
     """
