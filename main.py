@@ -102,7 +102,7 @@ def cron(code, mid, cid, db_content):
 
 
 if __name__ == '__main__':
-    if DEBUG == 1:
+    if DEBUG == '1':
         import logging
 
         logger = telebot.logger
