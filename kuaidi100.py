@@ -7,7 +7,6 @@ __credits__ = 'ヨイツの賢狼ホロ <horo@yoitsu.moe>'
 
 import pycurl
 import certifi
-import StringIO
 import json
 import utils
 import db
@@ -24,14 +23,19 @@ def auto_detect(tracker):
     :return: company name in pinyin
     """
     url = 'https://www.kuaidi100.com/autonumber/autoComNum?text=' + tracker
-    com_result = StringIO.StringIO()
 
+    try:
+        import StringIO
+        com_result = StringIO.StringIO()
+    except ImportError:
+        import io
+        com_result = io.BytesIO()
     try:
         c.setopt(pycurl.CUSTOMREQUEST, 'POST')
         c.setopt(pycurl.URL, url)
         c.setopt(pycurl.WRITEFUNCTION, com_result.write)
         c.perform()
-    except UnicodeEncodeError, pycurl.error:
+    except (UnicodeEncodeError, pycurl.error):
         pass
 
     try:
@@ -49,8 +53,13 @@ def query_express_status(com, track_id):
     :return: the newest status
     """
     url = 'https://www.kuaidi100.com/query' + '?type=' + com + '&postid=' + track_id
-    exp_result = StringIO.StringIO()
 
+    try:
+        import StringIO
+        exp_result = StringIO.StringIO()
+    except ImportError:
+        import io
+        exp_result = io.BytesIO()
     try:
         c.setopt(pycurl.CUSTOMREQUEST, 'GET')
         c.setopt(pycurl.WRITEFUNCTION, exp_result.write)
@@ -95,6 +104,7 @@ def recv(code, *args):
             return res.get('message')
     elif db_res[8] == 0:
         com_code, real_com_name = auto_detect(code)
+
         if not com_code:
             # TODO: Is it the pythonic way?
             return utils.reply_not_found()

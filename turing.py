@@ -5,9 +5,12 @@
 __author__ = 'Benny <benny@bennythink.com>'
 
 import pycurl
-import StringIO
 import json
-from urllib import urlencode
+
+try:
+    from urllib import urlencode
+except ImportError:
+    from urllib.parse import urlencode
 
 
 def send_turing(key, info, userid):
@@ -18,15 +21,27 @@ def send_turing(key, info, userid):
     :param userid: chat_id, for context parse
     :return: response from Turing Bot, in text.
     """
+    try:
+        info = info.encode('utf-8')
+    except UnicodeDecodeError:
+        pass
+
+    try:
+        import StringIO
+        result = StringIO.StringIO()
+    except ImportError:
+        import io
+        result = io.BytesIO()
+
     c = pycurl.Curl()
     c.setopt(pycurl.SSL_VERIFYPEER, 0)
-    result = StringIO.StringIO()
     data = urlencode({
         "key": key,
-        "info": info.encode('utf-8'),
+        "info": info,
         "userid": userid
 
     })
+
     # TODO: use local cert to prevent from MITM, worst idea ever.
     url = 'https://www.tuling123.com/openapi/api'
 
@@ -34,6 +49,7 @@ def send_turing(key, info, userid):
     c.setopt(pycurl.URL, url)
     c.setopt(pycurl.POSTFIELDS, data)
     c.setopt(pycurl.WRITEFUNCTION, result.write)
+    c.setopt(c.SSL_VERIFYPEER, 0)
     c.perform()
     c.close()
     return json.loads(result.getvalue()).get('text')
