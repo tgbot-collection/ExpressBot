@@ -101,6 +101,12 @@ def cron(code, mid, cid, db_content):
         bot.send_message(chat_id=cid, reply_to_message_id=mid, text=db_content)
 
 
+# TODO: group talk improvements, maybe
+@bot.message_handler(commands=['/talk'])
+def bot_help(message):
+    track_express(message)
+
+
 if __name__ == '__main__':
     if DEBUG == '1':
         import logging
