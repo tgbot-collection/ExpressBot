@@ -6,7 +6,9 @@ ExpressBot
 
 ## 部署环境 ##
 已经在以下平台测试通过：
+
 Windows 10： Python 2.7.13 32bit  Python 3.6.3 32bit
+
 Ubuntu 16.04： Python 2.7.12，Python 3.5 不支持，3.6未测试（因为官方源里最新就只到3.5）
 说句实在话，尽量用 Python 2 吧……
 
