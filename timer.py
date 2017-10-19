@@ -1,6 +1,9 @@
 #!/usr/bin/python
 # coding:utf-8
 
+# timer for cron
+__author__ = 'Benny <benny@bennythink.com>'
+
 import db
 import main
 

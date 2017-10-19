@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # coding:utf-8
 
+# Turing robot, requires TURING_KEY in config.py
+__author__ = 'Benny <benny@bennythink.com>'
 
 import pycurl
 import StringIO
@@ -9,6 +11,13 @@ from urllib import urlencode
 
 
 def send_turing(key, info, userid):
+    """
+    send request to Turing robot, and get a response
+    :param key: TURING_KEY
+    :param info: the message from user
+    :param userid: chat_id, for context parse
+    :return: response from Turing Bot, in text.
+    """
     c = pycurl.Curl()
     c.setopt(pycurl.SSL_VERIFYPEER, 0)
     result = StringIO.StringIO()

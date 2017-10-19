@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # coding:utf-8
 
+# Provides a dict of company code & name
 
 PROVIDER = {
     "shentong": u"申通快递",

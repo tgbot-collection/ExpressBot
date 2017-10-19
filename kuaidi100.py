@@ -1,6 +1,10 @@
 #!/usr/bin/python
 # coding:utf-8
 
+# kuaidi100 api
+__author__ = 'Benny <benny@bennythink.com>'
+__credits__ = 'ヨイツの賢狼ホロ <horo@yoitsu.moe>'
+
 import pycurl
 import certifi
 import StringIO
@@ -9,20 +13,16 @@ import utils
 import db
 from com_dic import STATE, PROVIDER
 
-# 0	Transporting	Express is being transported
-# 1	Accepted	Express is accepted by the express company
-# 2	Trouble	Express is in knotty problem
-# 3	Delivered	Express is successfully delivered
-# 4	Rejected	Express is rejected by the receiver and has been successfully redelivered to the sender
-# 5	Delivering	Express is being delivered
-# 6	Rejecting	Express is rejected by the receiver and is being redelivered to the sender
-
-
 c = pycurl.Curl()
 c.setopt(pycurl.CAINFO, certifi.where())
 
 
 def auto_detect(tracker):
+    """
+    auto detect express company
+    :param tracker: ID
+    :return: company name in pinyin
+    """
     url = 'https://www.kuaidi100.com/autonumber/autoComNum?text=' + tracker
     com_result = StringIO.StringIO()
 
@@ -42,6 +42,12 @@ def auto_detect(tracker):
 
 
 def query_express_status(com, track_id):
+    """
+    query express status
+    :param com: company name in pinyin,
+    :param track_id: id
+    :return: the newest status
+    """
     url = 'https://www.kuaidi100.com/query' + '?type=' + com + '&postid=' + track_id
     exp_result = StringIO.StringIO()
 
@@ -50,17 +56,20 @@ def query_express_status(com, track_id):
         c.setopt(pycurl.WRITEFUNCTION, exp_result.write)
         c.setopt(pycurl.URL, url)
         c.perform()
-        # return json.loads(s[s.index('}]}') + 3:])
         return json.loads(exp_result.getvalue())
     except pycurl.error:
         pass
 
 
 def recv(code, *args):
-    # check if this track is done
-    # No result in database would return none, so do a query and insert
+    """
+    check if this track is done
+    No result in database would return none, so do a query and insert
+    :param code: express id
+    :param args: usually Telegram message_id and chat_id(user_id)
+    :return: message to be sent to the client
+    """
 
-    # TODO: SQL Injection
     try:
         db_res = db.select("SELECT * FROM job WHERE track_id=?", (code,))[0]
     except IndexError:
@@ -70,6 +79,7 @@ def recv(code, *args):
         com_code, real_com_name = auto_detect(code)
 
         if not com_code:
+            # TODO: Is it the pythonic way?
             return utils.reply_not_found()
         res = query_express_status(com_code, code)
         done = 1 if (res.get('state') == '3' or res.get('state') == '4') else 0
@@ -86,6 +96,7 @@ def recv(code, *args):
     elif db_res[8] == 0:
         com_code, real_com_name = auto_detect(code)
         if not com_code:
+            # TODO: Is it the pythonic way?
             return utils.reply_not_found()
         res = query_express_status(com_code, code)
         done = 1 if (res.get('state') == '3' or res.get('state') == '4') else 0
@@ -107,6 +118,11 @@ def recv(code, *args):
 
 
 def list_query(un):
+    """
+    list known user's info from database
+    :param un: chat_id(user_id)
+    :return: a list contains results.
+    """
     cmd = "SELECT track_id,type,date,content FROM job WHERE chat_id=?"
     r = db.select(cmd, (un,))
     if len(r) == 0:
@@ -122,6 +138,11 @@ def list_query(un):
 
 
 def delete(tid):
+    """
+    delete a track record
+    :param tid: express id
+    :return: delete result, success or fail
+    """
     cmd = "DELETE FROM job WHERE track_id=?"
     if db.upsert(cmd, (tid,)) == 1:
         return '删除成功 😋'

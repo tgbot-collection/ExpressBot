@@ -1,6 +1,10 @@
 #!/usr/bin/python
 # coding:utf-8
 
+# refuse message and not found message
+
+__author__ = 'ヨイツの賢狼ホロ <horo@yoitsu.moe>'
+
 import random
 
 refuse_messages = [

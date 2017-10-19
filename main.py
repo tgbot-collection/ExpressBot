@@ -1,21 +1,17 @@
 #!/usr/bin/python
 # coding:utf-8
 
+# Telegram message handle function.
+__author__ = 'Benny <benny@bennythink.com>'
+__credits__ = 'ヨイツの賢狼ホロ <horo@yoitsu.moe>'
 
 import telebot
 import turing
 import kuaidi100
 import utils
-from config import TOKEN, TURING_KEY
+from config import TOKEN, TURING_KEY, DEBUG
 
 bot = telebot.TeleBot(TOKEN)
-
-
-# start - 输入快递单号来查询
-# help - 帮助
-# list - 查看我的查询历史记录
-# delete - 删除某个单号查询记录
-# quickdel - 回复某条查询消息来快速删除单号查询记录
 
 
 @bot.message_handler(commands=['start'])
@@ -70,7 +66,11 @@ def bot_quick_delete(message):
 
 @bot.message_handler()
 def track_express(message):
-    # all digits means express id
+    """
+    process ordinary message, all digits means express id. Otherwise active Turing or refuse message
+    :param message: Telegram message sent by user.
+    :return: None
+    """
     if message.text.isdigit():
         bot.send_chat_action(message.chat.id, 'typing')
         r = kuaidi100.recv(message.text, message.message_id, message.chat.id)
@@ -85,13 +85,27 @@ def track_express(message):
         bot.send_message(message.chat.id, r)
 
 
-# TODO: Improve echo msg
+# TODO: Improve echo msg and params
 @bot.message_handler()
 def cron(code, mid, cid, db_content):
+    """
+    cron job process for timer.py
+    :param code: express id
+    :param mid: message id for reply_to_message
+    :param cid: chat_id(a.k.a user_id)
+    :param db_content: old express status in database
+    :return: None
+    """
     r = kuaidi100.recv(code, mid, cid)
     if db_content not in r:
         bot.send_message(chat_id=cid, reply_to_message_id=mid, text=db_content)
 
 
 if __name__ == '__main__':
+    if DEBUG == 1:
+        import logging
+
+        logger = telebot.logger
+        telebot.logger.setLevel(logging.DEBUG)
+
     bot.polling()
