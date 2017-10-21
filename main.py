@@ -5,10 +5,14 @@
 __author__ = 'Benny <benny@bennythink.com>'
 __credits__ = 'ヨイツの賢狼ホロ <horo@yoitsu.moe>'
 
+import os
+
 import telebot
-import turing
+
 import kuaidi100
+import turing
 import utils
+import youtube
 from config import TOKEN, TURING_KEY, DEBUG
 
 bot = telebot.TeleBot(TOKEN)
@@ -100,12 +104,6 @@ def cron(code, mid, cid, db_content):
     r = kuaidi100.recv(code, mid, cid)
     if db_content not in r:
         bot.send_message(chat_id=cid, reply_to_message_id=mid, text=db_content)
-
-
-# TODO: group talk improvements, maybe
-@bot.message_handler(commands=['/talk'])
-def bot_help(message):
-    track_express(message)
 
 
 if __name__ == '__main__':
