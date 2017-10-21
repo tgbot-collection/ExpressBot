@@ -115,4 +115,4 @@ if __name__ == '__main__':
         logger = telebot.logger
         telebot.logger.setLevel(logging.DEBUG)
 
-    bot.polling()
+    bot.polling(none_stop=True)
