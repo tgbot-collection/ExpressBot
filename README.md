@@ -113,7 +113,7 @@ python main.py
 ### 服务器错误 ###
 唔，可能是快递100的接口炸了吧；稍后重试吧。
 ### SSL InsecurePlatform error###
-哦，你可能用的是 Python 3.5 吧，建议还是用回 Python 2.7吧。
+哦，你可能用的是 Python 3.5 吧，建议还是用回 Python 2.7吧，要不Python 3.6也行吧。
 
 ## 致谢 ##
 * [coderfox/Kuaidi100API](https://github.com/coderfox/Kuaidi100API)
@@ -123,10 +123,10 @@ python main.py
 ## TODO ##
 - [x] 这个机器人可以跟你聊天扯淡呢~
 - [x] Python 3 支持
+- [x] Bug 修复：不显示最新
 - [ ] SSL 证书问题
 - [ ] 下载YouTube视频
 - [ ] 下载Google Play应用
-- [ ] Bug 修复：不显示最新
 
 ## License ##
 GPL v2
