@@ -126,6 +126,7 @@ python main.py
 - [ ] SSL 证书问题
 - [ ] 下载YouTube视频
 - [ ] 下载Google Play应用
+- [ ] Bug 修复：不显示最新
 
 ## License ##
 GPL v2
