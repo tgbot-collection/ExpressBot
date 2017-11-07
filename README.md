@@ -94,6 +94,10 @@ python main.py
 `*/2 * * * * cd /your/path/ExpressBot && python main.py`
 即为两分钟运行一次
 
+###  检查运行状态 ###
+由于因为网络原因，有时程序会抛异常（requests的锅，这个没法控制），所以推荐将`bot_check.sh`加入到crontab中，如下：
+`*/2 * * * * bash /your/path/ExpressBot/bot_check.sh`
+PS，`install.sh`是一键安装脚本，需要root权限，但是我本人没有进行任何测试。还望能够得到PR
 ## 隐私 ##
 首先，请允许我大力的打击你，所有发往此机器人的消息都可能被记录下来。
 但是实际上，此机器人会在数据库中记录查询成功之后的以下信息，使用`/list`命令可以看到：
