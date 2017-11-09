@@ -81,7 +81,7 @@ DEBUG = 0
 ```
 
 ### 运行 ###
-以nohub或screen运行`main.py`，Python 3请用`python3`替换为`python`
+测试目的的话，以nohub或screen运行`main.py`，Python 3请用`python3`替换为`python`
 ```
 cd /your/path/ExpressBot
 nohup python main.py
@@ -95,9 +95,21 @@ python main.py
 即为两分钟运行一次
 
 ###  检查运行状态 ###
-由于因为网络原因，有时程序会抛异常（requests的锅，这个没法控制），所以推荐将`bot_check.sh`加入到crontab中，如下：
-`*/2 * * * * bash /your/path/ExpressBot/bot_check.sh`
-PS，`install.sh`是一键安装脚本，需要root权限，但是我本人没有进行任何测试。还望能够得到PR
+由于因为网络原因，有时程序会抛异常（requests的锅，这个没法控制），所以需要用某种办法守护它。
+
+（**只适用于systemd**）编辑你自己的`expressbot.service`，然后将其复制到`/lib/systemd/system/expressbot.service`,并使用如下命令启动：
+```
+sudo systemctl daemon-reload
+sudo systemctl enable expressbot.service
+```
+查看运行状态
+```sudo systemctl status autorun.service```
+启动
+```sudo systemctl start autorun.service```
+停止
+```sudo systemctl stop autorun.service```
+然后把`bot_check.sh`加入到crontab中，比如说：
+``*/2 * * * * bash /Home/ExpressBot/bot_check.sh` `
 ## 隐私 ##
 首先，请允许我大力的打击你，所有发往此机器人的消息都可能被记录下来。
 但是实际上，此机器人会在数据库中记录查询成功之后的以下信息，使用`/list`命令可以看到：

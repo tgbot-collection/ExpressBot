@@ -7,7 +7,7 @@ cd /home
 git clone https://github.com/BennyThink/ExpressBot
 cd ExpressBot
 apt update
-apt-get install libcurl4-openssl-dev screen
+apt-get install libcurl4-openssl-dev
 pip install -r requirements.txt
 
 echo 'Input your Token'
@@ -25,5 +25,7 @@ echo "DEBUG= '$p'">>config.py
 echo "*/2 * * * * /home/ExpressBot/bot_checker.sh" >> /var/spool/cron/root
 
 # starting bot
-screen -S bot
-python /home/ExpressBot/main.py
+cp expressbot.service /lib/systemd/system/expressbot.service
+systemctl daemon-reload
+systemctl enable expressbot.service
+systemctl start autorun.service
