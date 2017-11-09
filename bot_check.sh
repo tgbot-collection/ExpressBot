@@ -1,19 +1,11 @@
 #!/bin/bash
-# check bot status and reboot it if necessary.
+# check bot status and restart it if necessary.
+# Requires root privilege
 
-ps -elf|grep 'python main.py'|grep -v grep
+systemctl status expressbot.service
 if [ $? -eq 0 ];then
   echo 'running'
 else
   echo 'stop'
-  screen -list|grep bot
-  if [ $? -eq 1 ];then
-    echo 'screen does not exists.'
-    screen -S bot
-    python /home/ExpressBot/main.py
-  else
-    echo 'restoring screen...'
-    screen -r bot
-    python /home/ExpressBot/main.py
-  fi    
+  systemctl start expressbot.service
 fi
