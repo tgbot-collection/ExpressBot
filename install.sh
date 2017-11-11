@@ -2,6 +2,7 @@
 # Install Express Bot
 # Requires root privilege
 # This code is not tested, use at your own risk!!
+# 警告！请勿用于生产环境！！！
 
 
 Green_font_prefix="\033[32m" && Red_font_prefix="\033[31m" && Green_background_prefix="\033[42;37m" && Red_background_prefix="\033[41;37m" && Font_color_suffix="\033[0m"
@@ -23,19 +24,21 @@ if [ -f /etc/redhat-release ];then
  fi
 
  if [[ ${OS} == 'CentOS' ]];then 
- echo '抱歉，本脚本不支持此系统'
+ echo '${Error} 抱歉，本脚本不支持此系统'
  exit 1
  else 
- echo '开始安装...'
+ echo '${Info} 开始安装...'
  fi
- 
- 
- cd /home
+apt update
+apt upgrade
+apt-get install python-dev systemd python-pip libssl-dev libxtst-dev git libghc-gnutls-dev libcurl4-openssl-dev
+apt-get build-dep python-lxml
+pip install lxml --upgrade
+pip install --upgrade pip
+pip install pycurl
+cd /home
 git clone https://github.com/BennyThink/ExpressBot
 cd ExpressBot
-apt update
-apt-get install libcurl4-openssl-dev systemd python-pip libssl-dev libcurl4-gnutls-dev -y
-pip install pycurl -y
 pip install -r requirements.txt
 
 echo 'Input your Token'
@@ -56,4 +59,4 @@ echo "*/2 * * * * /home/ExpressBot/bot_checker.sh" >> /var/spool/cron/root
 cp expressbot.service /lib/systemd/system/expressbot.service
 systemctl daemon-reload
 systemctl enable expressbot.service
-systemctl start autorun.service
+systemctl start expressbot.service
