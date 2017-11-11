@@ -107,11 +107,12 @@ sudo systemctl daemon-reload
 sudo systemctl enable expressbot.service
 ```
 查看运行状态
-```sudo systemctl status autorun.service```
+```sudo systemctl status expressbot.service```
 启动
-```sudo systemctl start autorun.service```
+```sudo systemctl start expressbot.service```
 停止
-```sudo systemctl stop autorun.service```
+```sudo systemctl stop expressbot
+.service```
 然后把`bot_check.sh`加入到crontab中，比如说：
 ``*/2 * * * * bash /Home/ExpressBot/bot_check.sh` `
 ## 隐私 ##
