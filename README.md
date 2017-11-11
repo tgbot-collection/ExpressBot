@@ -143,6 +143,7 @@ sudo systemctl enable expressbot.service
 - [ ] SSL 证书问题
 - [ ] 下载YouTube视频
 - [ ] 下载Google Play应用
+- [ ] 添加测试用例
 
 ## License ##
 GPL v2
