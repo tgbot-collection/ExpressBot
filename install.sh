@@ -34,7 +34,7 @@ if [ -f /etc/redhat-release ];then
 git clone https://github.com/BennyThink/ExpressBot
 cd ExpressBot
 apt update
-apt-get install libcurl4-openssl-dev systemd -y
+apt-get install libcurl4-openssl-dev systemd python-pip -y
 pip install -r requirements.txt
 
 echo 'Input your Token'
