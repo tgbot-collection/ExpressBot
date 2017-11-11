@@ -36,6 +36,10 @@ Ubuntu 16.04： Python 2.7.12，Python 3.5 不支持，3.6未测试（因为官�
 ## 部署方法 ##
 需要部署在可以访问Telegram API的服务器上（或者设置代理），同时支持Python 2和Python 3
 
+### 太长不看版 ###
+使用一键脚本
+`wget -N --no-check-certificate https://raw.githubusercontent.com/BennyThink/ExpressBot/install.sh && chmod +x install.sh && ./install.sh`
+
 ### 克隆代码 ###
 ```
 git clone https://github.com/BennyThink/ExpressBot
