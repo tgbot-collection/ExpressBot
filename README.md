@@ -38,7 +38,7 @@ Ubuntu 16.04： Python 2.7.12，Python 3.5 不支持，3.6未测试（因为官�
 
 ### 太长不看版 ###
 使用一键脚本
-`wget -N --no-check-certificate https://raw.githubusercontent.com/BennyThink/ExpressBot/install.sh && chmod +x install.sh && ./install.sh`
+`wget -N --no-check-certificate https://raw.githubusercontent.com/BennyThink/ExpressBot/master/install.sh && chmod +x install.sh && ./install.sh`
 
 ### 克隆代码 ###
 ```
