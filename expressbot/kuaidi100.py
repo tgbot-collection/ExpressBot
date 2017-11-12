@@ -5,11 +5,13 @@
 __author__ = 'Benny <benny@bennythink.com>'
 __credits__ = 'ヨイツの賢狼ホロ <horo@yoitsu.moe>'
 
-import pycurl
-import certifi
 import json
-import utils
+import pycurl
+
+import certifi
+
 import db
+import utils
 from com_dic import STATE, PROVIDER
 
 c = pycurl.Curl()

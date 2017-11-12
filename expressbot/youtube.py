@@ -9,9 +9,8 @@ from __future__ import unicode_literals
 __author__ = 'Benny <benny@bennythink.com>'
 
 import youtube_dl
-import utils
+from expressbot import utils
 import os
-import time
 
 
 def dl(url_list):

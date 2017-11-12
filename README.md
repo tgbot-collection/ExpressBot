@@ -1,4 +1,4 @@
-ExpressBot
+ExpressBot [![Build Status](https://travis-ci.org/BennyThink/ExpressBot.svg?branch=master)](https://travis-ci.org/BennyThink/ExpressBot)
 ==
 
 帮你查快递、自动追踪快递最新状态的Telegram机器人！
@@ -37,10 +37,9 @@ Windows 10： Python 2.7.13 32bit  Python 3.6.3 32bit
 Ubuntu 16.04： Python 2.7.12，Python 3.5 不支持，3.6未测试（因为官方源里最新就只到3.5）
 说句实在话，尽量用 Python 2 吧……
 
-## 部署方法 ##
+## 部署方法1.自动脚本 ##
 需要部署在可以访问Telegram API的服务器上（或者设置代理），同时支持Python 2和Python 3
 
-### 太长不看版 ###
 使用一键脚本
 ```
 wget -N --no-check-certificate https://raw.githubusercontent.com/BennyThink/ExpressBot/master/install.sh && chmod +x install.sh && ./install.sh
@@ -51,6 +50,7 @@ wget -N --no-check-certificate https://raw.githubusercontent.com/BennyThink/Expr
 停止服务 ./install.sh stop
 ```
 
+## 部署方法2.手动配置 ##
 ### 克隆代码 ###
 ```
 git clone https://github.com/BennyThink/ExpressBot
