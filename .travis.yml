@@ -8,4 +8,4 @@ install:
 # command to run tests
 script:
 # TODO:test suite
-  - test/test_main.sh
+  - tests/test_main.sh
