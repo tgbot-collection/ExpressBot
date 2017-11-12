@@ -1,8 +1,8 @@
 [Unit]
-Description=A Telegram Bot for query expresses
+Description=A Telegram Bot for querying expresses
 After=network.target network-online.target nss-lookup.target
 [Service]
 Type=simple
-ExecStart=/usr/bin/python /home/ExpressBot/main.py
+ExecStart=/usr/bin/python /home/ExpressBot/expressbot/main.py
 [Install]
 WantedBy=multi-user.target

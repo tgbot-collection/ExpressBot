@@ -20,48 +20,68 @@ Error="${Red_font_prefix}[错误]${Font_color_suffix}"
 Tip="${Green_font_prefix}[注意]${Font_color_suffix}"
 Separator_1="——————————————————————————————"
 
-#check OS#
-if [ -f /etc/redhat-release ];then
- OS='CentOS'
- elif [ ! -z "`cat /etc/issue | grep bian`" ];then
- OS='Debian'
- elif [ ! -z "`cat /etc/issue | grep Ubuntu`" ];then
- OS='Ubuntu'
- else
- echo "Not support OS, Please reinstall OS and retry!"
- exit 1
- fi
+Get_Dist_Name()
+{
+    if grep -Eqi "CentOS" /etc/issue || grep -Eq "CentOS" /etc/*-release; then
+        DISTRO='CentOS'
+        PM='yum'
+    elif grep -Eqi "Red Hat Enterprise Linux Server" /etc/issue || grep -Eq "Red Hat Enterprise Linux Server" /etc/*-release; then
+        DISTRO='RHEL'
+        PM='yum'
+    elif grep -Eqi "Aliyun" /etc/issue || grep -Eq "Aliyun" /etc/*-release; then
+        DISTRO='Aliyun'
+        PM='yum'
+    elif grep -Eqi "Fedora" /etc/issue || grep -Eq "Fedora" /etc/*-release; then
+        DISTRO='Fedora'
+        PM='yum'
+    elif grep -Eqi "Amazon Linux AMI" /etc/issue || grep -Eq "Amazon Linux AMI" /etc/*-release; then
+        DISTRO='Amazon'
+        PM='yum'
+    elif grep -Eqi "Debian" /etc/issue || grep -Eq "Debian" /etc/*-release; then
+        DISTRO='Debian'
+        PM='apt'
+    elif grep -Eqi "Ubuntu" /etc/issue || grep -Eq "Ubuntu" /etc/*-release; then
+        DISTRO='Ubuntu'
+        PM='apt'
+    elif grep -Eqi "Raspbian" /etc/issue || grep -Eq "Raspbian" /etc/*-release; then
+        DISTRO='Raspbian'
+        PM='apt'
+    elif grep -Eqi "Deepin" /etc/issue || grep -Eq "Deepin" /etc/*-release; then
+        DISTRO='Deepin'
+        PM='apt'
+    else
+        DISTRO='unknow'
+    fi
 
- #check_sys
- check_sys(){
- if [[ ${OS} == 'CentOS' ]];then 
- echo "${Error} 抱歉，本脚本不支持此系统"
- exit 1
- else 
- echo -e "${Info} 开始执行脚本"
- fi
- }
+}
+
+
  
- #Install_all
- Install_all(){
- Install_something
- Install_main
- Start_service
- }
+# Install_all
+Install_all(){
+if [ "$PM" = "yum" ]; then
+	$PM update
+	$PM install -y epel-release
+	$PM update
+	$PM install -y epel-release
+	$PM groupinstall -y "Development Tools"
+    $PM install -y curl libcurl-devel python-devel python2-pip git openssl-devel
+    Install_main
+    install_service
+    Start_service
+elif [ "$PM" = "apt" ]; then
+	$PM update
+    $PM install -y build-essential curl python-dev python-pip libssl-dev git libcurl4-openssl-dev
+    Install_main
+    install_service
+    Start_service
+fi
+}
+
+
  
- #Install_something
- Install_something(){
-apt update
-apt upgrade
-apt-get install python-dev systemd python-pip libssl-dev libxtst-dev git libghc-gnutls-dev libcurl4-openssl-dev
-apt-get build-dep python-lxml
-pip install lxml --upgrade
-pip install --upgrade pip
-pip install pycurl
- }
- 
- #Install_main
- Install_main(){
+# Install_main
+Install_main(){
 cd /home
 git clone https://github.com/BennyThink/ExpressBot
 cd ExpressBot
@@ -69,41 +89,88 @@ pip install -r requirements.txt
 
 echo 'Input your Token (telegram bot)'
 read p
-echo "TOKEN = '$p'">config.py
+echo "TOKEN = '$p'">/home/Expressbot/expressbot/config.py
 
 echo 'Input your Turing Key, blank/space to disable'
 read p
-echo "TURING_KEY ='$p'">>config.py
+echo "TURING_KEY ='$p'">>/home/Expressbot/expressbot/config.py
 
 echo 'Debug? 0 for no.'
 read p
-echo "DEBUG= '$p'">>config.py
+echo "DEBUG= '$p'">>/home/Expressbot/expressbot/config.py
 
 echo "*/2 * * * * /home/ExpressBot/bot_checker.sh" >> /var/spool/cron/root
+
+}
+
+check_systemd(){
+systemctl --version>>/dev/null
+if [ $? -ne 0 ];then
+    echo -e "${Tip} 非systemd"
+    exit 0
+fi
+}
+
+install_service(){
+check_systemd
 cp expressbot.service /lib/systemd/system/expressbot.service
 systemctl daemon-reload
 systemctl enable expressbot.service
-Start_service
- }
-
- #Start_service
- Start_service(){
-systemctl start expressbot.service
-echo -e "${Info}服务已启动"
 }
 
-#Stop_service
-Stop_service(){
+remove_service(){
+
+check_systemd
 systemctl stop expressbot.service
-echo -e "${Info}服务已停止"
+systemctl disable expressbot.service
+rm /lib/systemd/system/expressbot.service
+systemctl daemon-reload
 }
-#Restart_service
+
+# Start_service
+Start_service(){
+check_systemd
+systemctl start expressbot.service
+if [ $? -eq 0 ];then
+    echo -e "${Info} 服务已启动"
+else
+    echo -e "${Error} 服务启动失败"
+fi
+}
+
+# Stop_service
+Stop_service(){
+check_systemd
+systemctl stop expressbot.service
+if [ $? -eq 0 ];then
+    echo -e "${Info} 服务已停止"
+else
+    echo -e "${Error} 服务停止失败"
+fi
+
+}
+uninstall_all(){
+rm -rf /home/ExpressBot
+# It's better not to remove packages.
+#if [ "$PM" = "yum" ]; then
+#    $PM remove -y libcurl-devel openssl-devel
+#elif [ "$PM" = "apt" ]; then
+#    $PM remove -y libssl-dev libcurl4-openssl-dev
+#fi
+remove_service
+pip uninstall -r requirements.txt
+}
+
+# Restart_service
 Restart_service(){
+check_systemd
 Stop_service
 Start_service
 }
-#Service_status
+
+# Service_status
 Service_status(){
+check_systemd
 systemctl status expressbot.service
 }
 
@@ -113,44 +180,50 @@ menu(){
   ——————————————————————
   ${Green_font_prefix}1.${Font_color_suffix} 一键 安装
   ——————————————————————
-  ${Green_font_prefix}2.${Font_color_suffix} 安装 依赖
-  ${Green_font_prefix}3.${Font_color_suffix} 安装 主程序
+  ${Green_font_prefix}2.${Font_color_suffix} 一键 卸载
   ——————————————————————
-  ${Green_font_prefix}4.${Font_color_suffix} 启动 服务
-  ${Green_font_prefix}5.${Font_color_suffix} 停止 服务
-  ${Green_font_prefix}6.${Font_color_suffix} 重启 服务
-  ${Green_font_prefix}7.${Font_color_suffix} 查看 服务状态
+  ${Green_font_prefix}3.${Font_color_suffix} 启动 服务
+  ${Green_font_prefix}4.${Font_color_suffix} 停止 服务
+  ${Green_font_prefix}5.${Font_color_suffix} 重启 服务
+  ${Green_font_prefix}6.${Font_color_suffix} 查看 服务状态
   ——————————————————————
  "
-	echo && stty erase '^H' && read -p "请输入数字 [1-15]：" num
+	read -p "请输入数字 [1-6]：" num
 case "$num" in
 	1)
 	Install_all
 	;;
 	2)
-	Install_something
+	uninstall_all
 	;;
 	3)
-	Install_main
-	;;
-	4)
 	Start_service
 	;;
-	5)
+	4)
 	Stop_service
 	;;
-	6)
+	5)
 	Restart_service
 	;;
-	7)
+	6)
 	Service_status
 	;;
 	*)
-	echo -e "${Error} 请输入正确的数字 [1-7]"
+	echo -e "${Error} 请输入正确的数字 [1-6]"
 	;;
 esac
 }
-check_sys
+
+
+# main goes here...
+Get_Dist_Name
+
+# check distribution
+if [ "${DISTRO}" = "unknow" ]; then
+    Echo "${Error} 无法获取发行版名称，或者不支持当前发行版"
+    exit 1
+fi
+
 action=$1
 if [[ ! -z $action ]]; then
 	if [[ $action = "start" ]]; then
