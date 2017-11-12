@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
-python expressbot/main.py
+# TODO
+# python expressbot/main.py
