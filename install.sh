@@ -3,14 +3,18 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
 
 #=================================================
-#	System Required: Debian 6+/Ubuntu 14.04+
+#	System Requirements:
+#   Debian 6+, Ubuntu 14.04+, CentOS 7+,
+#   better with systemd.
 #	Version: 3.2.0
 #	Blog: blog.lvcshu.club
 #	Author: johnpoint
+#   Maintain: BennyThink
 #   Install Express Bot
 #   Requires root privilege
-#   This code is not tested, use at your own risk!!
-#   警告！请勿用于生产环境！！！
+#   This code is tested under Ubuntu 16.04 & CentOS 7
+#   Publish under GNU General Public License v2
+#   USE AT YOUR OWN RISK!!!
 #=================================================
 
 sh_ver="3.2.0"
@@ -63,9 +67,7 @@ if [ "$PM" = "yum" ]; then
 	$PM update
 	$PM install -y epel-release
 	$PM update
-	$PM install -y epel-release
-	$PM groupinstall -y "Development Tools"
-    $PM install -y curl libcurl-devel python-devel python2-pip git openssl-devel
+    $PM install -y  curl python-devel python2-pip git openssl-devel
     Install_main
     install_service
     Start_service
@@ -89,15 +91,15 @@ pip install -r requirements.txt
 
 echo 'Input your Token (telegram bot)'
 read p
-echo "TOKEN = '$p'">/home/Expressbot/expressbot/config.py
+echo "TOKEN = '$p'">/home/ExpressBot/expressbot/config.py
 
 echo 'Input your Turing Key, blank/space to disable'
 read p
-echo "TURING_KEY ='$p'">>/home/Expressbot/expressbot/config.py
+echo "TURING_KEY ='$p'">>/home/ExpressBot/expressbot/config.py
 
 echo 'Debug? 0 for no.'
 read p
-echo "DEBUG= '$p'">>/home/Expressbot/expressbot/config.py
+echo "DEBUG= '$p'">>/home/ExpressBot/expressbot/config.py
 
 echo "*/2 * * * * /home/ExpressBot/bot_checker.sh" >> /var/spool/cron/root
 
@@ -150,6 +152,7 @@ fi
 
 }
 uninstall_all(){
+pip uninstall -y -r /home/ExpressBot/requirements.txt
 rm -rf /home/ExpressBot
 # It's better not to remove packages.
 #if [ "$PM" = "yum" ]; then
@@ -158,7 +161,6 @@ rm -rf /home/ExpressBot
 #    $PM remove -y libssl-dev libcurl4-openssl-dev
 #fi
 remove_service
-pip uninstall -r requirements.txt
 }
 
 # Restart_service

@@ -98,15 +98,15 @@ DEBUG = 0
 ### 运行 ###
 测试目的的话，以nohub或screen运行`main.py`，Python 3请用`python3`替换为`python`
 ```
-cd /your/path/ExpressBot
+cd /your/path/ExpressBot/expressbot
 nohup python main.py
 # 或者
-cd /your/path/ExpressBot/
+cd /your/path/ExpressBot/expressbot
 screen -S tgbot
 python main.py
 ```
 将timer加入到任务计划中（Linux为crontab），如下
-`*/2 * * * * cd /your/path/ExpressBot && python main.py`
+`*/2 * * * * cd /your/path/ExpressBot/expressbot && python main.py`
 即为两分钟运行一次
 
 ###  检查运行状态 ###
@@ -158,6 +158,7 @@ sudo systemctl stop expressbot.service
 * [coderfox/Kuaidi100API](https://github.com/coderfox/Kuaidi100API)
 * [jaehee~임재희](https://twitter.com/GFW) 感谢你的大力调戏
 * [ヨイツの賢狼ホロ](https://github.com/KenOokamiHoro) 感谢你的commits，我直接无耻的拉过来了。
+* [johnpoint](https://github.com/johnpoint) 一键安装脚本的大部分编写工作
 
 ## TODO ##
 - [x] 这个机器人可以跟你聊天扯淡呢~
