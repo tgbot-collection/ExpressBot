@@ -6,7 +6,7 @@ ExpressBot
 
 [@bennyblog_bot](https://t.me/bennyblog_bot)
 
-[@xiaowu_bot](https://t.me/bennyblog_bot)
+[@xiaowu_bot](https://t.me/xiaowu_bot)
 
 这个机器人不只是能聊天、查快递哦！详细信息可以看功能和TODO
 
