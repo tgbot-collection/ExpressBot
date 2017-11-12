@@ -41,6 +41,11 @@ Ubuntu 16.04： Python 2.7.12，Python 3.5 不支持，3.6未测试（因为官�
 ```
 wget -N --no-check-certificate https://raw.githubusercontent.com/BennyThink/ExpressBot/master/install.sh && chmod +x install.sh && ./install.sh
 ```
+快捷操作
+```
+启动服务 ./install.sh start
+停止服务 ./install.sh stop
+```
 
 ### 克隆代码 ###
 ```
@@ -109,14 +114,21 @@ sudo systemctl daemon-reload
 sudo systemctl enable expressbot.service
 ```
 查看运行状态
-```sudo systemctl status expressbot.service```
+```
+sudo systemctl status expressbot.service
+```
 启动
-```sudo systemctl start expressbot.service```
+```
+sudo systemctl start expressbot.service
+```
 停止
-```sudo systemctl stop expressbot
-.service```
+```
+sudo systemctl stop expressbot.service
+```
 然后把`bot_check.sh`加入到crontab中，比如说：
-``*/2 * * * * bash /Home/ExpressBot/bot_check.sh` `
+``
+*/2 * * * * bash /Home/ExpressBot/bot_check.sh
+``
 ## 隐私 ##
 首先，请允许我大力的打击你，所有发往此机器人的消息都可能被记录下来。
 但是实际上，此机器人会在数据库中记录查询成功之后的以下信息，使用`/list`命令可以看到：
