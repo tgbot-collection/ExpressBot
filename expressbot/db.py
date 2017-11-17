@@ -4,8 +4,9 @@
 # database connection
 
 import sqlite3
+import os
 
-con = sqlite3.connect('bot.db', check_same_thread=False)
+con = sqlite3.connect(os.getcwd() + os.sep + 'bot.db', check_same_thread=False)
 cur = con.cursor()
 create_table = '''CREATE TABLE IF NOT EXISTS job
 (
