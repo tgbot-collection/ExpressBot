@@ -131,7 +131,7 @@ sudo systemctl stop expressbot.service
 ```
 然后把`bot_check.sh`加入到crontab中，比如说：
 ``
-*/2 * * * * bash /home/ExpressBot/bot_check.sh
+* * * * * bash /home/ExpressBot/bot_check.sh
 ``
 ## 隐私 ##
 首先，请允许我大力的打击你，所有发往此机器人的消息都可能被记录下来。
@@ -151,7 +151,7 @@ sudo systemctl stop expressbot.service
 ## FAQ ##
 ### 服务器错误 ###
 唔，可能是快递100的接口炸了吧；稍后重试吧。
-### SSL InsecurePlatform error###
+### SSL InsecurePlatform error ###
 哦，你可能用的是 Python 3.5 吧，建议还是用回 Python 2.7吧，要不Python 3.6也行吧。
 
 ## 致谢 ##
