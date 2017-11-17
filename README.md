@@ -130,9 +130,9 @@ sudo systemctl start expressbot.service
 sudo systemctl stop expressbot.service
 ```
 然后把`bot_check.sh`加入到crontab中，比如说：
-``
-* * * * * bash /home/ExpressBot/bot_check.sh
-``
+`
+*/2 * * * * bash /home/ExpressBot/bot_check.sh
+`
 ## 隐私 ##
 首先，请允许我大力的打击你，所有发往此机器人的消息都可能被记录下来。
 但是实际上，此机器人会在数据库中记录查询成功之后的以下信息，使用`/list`命令可以看到：
