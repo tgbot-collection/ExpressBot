@@ -10,8 +10,16 @@ import telebot
 import kuaidi100
 import turing
 import utils
-from config import TOKEN, TURING_KEY, DEBUG
+import os
 
+TOKEN = os.environ.get('TOKEN')
+TURING_KEY = os.environ.get('TURING_KEY')
+DEBUG = os.environ.get('DEBUG')
+if not (TOKEN and TURING_KEY and DEBUG):
+    print 'using config file'
+    from config import TOKEN, TURING_KEY, DEBUG
+else:
+    print 'using environ'
 bot = telebot.TeleBot(TOKEN)
 
 
