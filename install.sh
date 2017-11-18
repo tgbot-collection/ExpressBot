@@ -64,10 +64,10 @@ Get_Dist_Name()
 # Install_all
 Install_all(){
 if [ "$PM" = "yum" ]; then
-	$PM update
 	$PM install -y epel-release
 	$PM update
-    $PM install -y  curl python-devel python2-pip git openssl-devel  libcurl-devel gcc 
+    $PM install -y python-pip git
+
     Install_main
     install_service
     Start_service
@@ -87,6 +87,11 @@ Install_main(){
 cd /home
 git clone https://github.com/BennyThink/ExpressBot
 cd ExpressBot
+if [ "$PM" = "yum" ]; then
+    echo 'centosssssssssss'
+    sed -i '$d' requirements.txt
+    cat requirements.txt
+fi
 pip install -r requirements.txt
 
 echo 'Input your Token (telegram bot)'
@@ -121,7 +126,7 @@ systemctl enable expressbot.service
 }
 
 remove_service(){
-
+sed -i '$d' /var/spool/cron/root
 check_systemd
 systemctl stop expressbot.service
 systemctl disable expressbot.service
