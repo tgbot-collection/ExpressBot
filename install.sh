@@ -151,7 +151,7 @@ check_systemd
 if [ $? -eq 0 ];then
     echo -e "${Error} 服务未启动"
 else
-    echo -e "${Info} 服务停止失败，请检查是否正确安装"
+    echo -e "${Info} 正在停止服务。。。"
 fi
 systemctl stop expressbot.service
 if [ $? -eq 0 ];then
@@ -231,7 +231,7 @@ Get_Dist_Name
 
 # check distribution
 if [ "${DISTRO}" = "unknow" ]; then
-    Echo "${Error} 无法获取发行版名称，或者不支持当前发行版"
+    Echo -e "${Error} 无法获取发行版名称，或者不支持当前发行版"
     exit 1
 fi
 
