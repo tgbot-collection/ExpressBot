@@ -33,13 +33,12 @@ ExpressBot [![Build Status](https://travis-ci.org/BennyThink/ExpressBot.svg?bran
 
 Windows 10： Python 2.7.13 32bit  Python 3.6.3 32bit
 
-Ubuntu 16.04： Python 2.7.12，Python 3.5 不支持，3.6未测试（因为官方源里最新就只到3.5）
+Ubuntu 16.04、CentOS 7、Debian 9： Python 2.7
 
-CentOS： Python 2.7
 
 ## 部署方法1.自动脚本 ##
 
-一键脚本只支持Python 2：
+一键脚本只支持Python 2，已经在Ubuntu 16.04、CentOS 7、Debian 9的64位版本上测试通过：
 
 ```
 wget -N --no-check-certificate https://raw.githubusercontent.com/BennyThink/ExpressBot/master/install.sh && chmod +x install.sh && ./install.sh
@@ -49,7 +48,8 @@ wget -N --no-check-certificate https://raw.githubusercontent.com/BennyThink/Expr
 启动服务 ./install.sh start
 停止服务 ./install.sh stop
 ```
-注：CentOS下可能有些事多，比如偶然发现安装完epel之后竟然就有pycurl了；如果提示`wget: command not found`请先安装wget
+注：CentOS下可能有些事多，比如偶然发现安装完epel之后竟然就有pycurl了；如果提示`wget: command not found`请先安装wget；
+有的时候可能会红字报错，但是只要`requirements.txt`里的东西正常安装了，那么一般来说就不会出问题的。
 
 ## 部署方法2.手动配置 ##
 如果一键脚本失败，可以试试手动配置
@@ -73,7 +73,7 @@ pip install -r requirements.txt
     如果pip时报错，那么就先运行下面这句（Debian系）
     sudo apt-get install libcurl4-openssl-dev
 	
-	RHEL系
+	RHEL系（跟你说，出错了别赖我哦）
 	sudo yum install libcurl-devel
 
 #### Windows  ####
