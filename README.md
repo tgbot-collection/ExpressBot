@@ -26,21 +26,21 @@ ExpressBot [![Build Status](https://travis-ci.org/BennyThink/ExpressBot.svg?bran
 > delete - 删除某个单号查询记录
 >
 > quickdel - 回复某条查询消息来快速删除单号查询记录
->
-> talk - 群组聊天呼叫机器人
  
 ## 部署环境 ##
+需要部署在可以访问Telegram API的服务器上（或者设置代理），同时支持Python 2和Python 3
 已经在以下平台测试通过：
 
 Windows 10： Python 2.7.13 32bit  Python 3.6.3 32bit
 
 Ubuntu 16.04： Python 2.7.12，Python 3.5 不支持，3.6未测试（因为官方源里最新就只到3.5）
-说句实在话，尽量用 Python 2 吧……
+
+CentOS： Python 2.7
 
 ## 部署方法1.自动脚本 ##
-需要部署在可以访问Telegram API的服务器上（或者设置代理），同时支持Python 2和Python 3
 
-使用一键脚本
+一键脚本只支持Python 2：
+
 ```
 wget -N --no-check-certificate https://raw.githubusercontent.com/BennyThink/ExpressBot/master/install.sh && chmod +x install.sh && ./install.sh
 ```
@@ -49,8 +49,10 @@ wget -N --no-check-certificate https://raw.githubusercontent.com/BennyThink/Expr
 启动服务 ./install.sh start
 停止服务 ./install.sh stop
 ```
+注：CentOS下可能有些事多，比如偶然发现安装完epel之后竟然就有pycurl了；如果提示`wget: command not found`请先安装wget
 
 ## 部署方法2.手动配置 ##
+如果一键脚本失败，可以试试手动配置
 ### 克隆代码 ###
 ```
 git clone https://github.com/BennyThink/ExpressBot
