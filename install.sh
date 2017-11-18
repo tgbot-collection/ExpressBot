@@ -6,7 +6,7 @@ export PATH
 #	System Requirements:
 #   Debian 6+, Ubuntu 14.04+, CentOS 7+,
 #   better with systemd.
-#	Version: 4.0.0
+#	Version: 4.0.1
 #	Blog: blog.lvcshu.club
 #	Author: johnpoint
 #   Maintain: BennyThink
@@ -17,7 +17,7 @@ export PATH
 #   USE AT YOUR OWN RISK!!!
 #=================================================
 
-sh_ver="4.0.0"
+sh_ver="4.0.1"
 Green_font_prefix="\033[32m" && Red_font_prefix="\033[31m" && Green_background_prefix="\033[42;37m" && Red_background_prefix="\033[41;37m" && Font_color_suffix="\033[0m"
 Info="${Green_font_prefix}[信息]${Font_color_suffix}"
 Error="${Red_font_prefix}[错误]${Font_color_suffix}"
@@ -137,10 +137,10 @@ systemctl daemon-reload
 # Start_service
 Start_service(){
 check_systemd
-if [ $? -nq 0 ];then
-    echo -e "${Info} 服务未启动"
-else
+if [ $? -eq 0 ];then
     echo -e "${Info} 服务已启动"
+else
+    echo -e "${Info} 服务未启动"
 fi
 systemctl start expressbot.service
 if [ $? -eq 0 ];then
