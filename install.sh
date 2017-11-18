@@ -6,7 +6,7 @@ export PATH
 #	System Requirements:
 #   Debian 6+, Ubuntu 14.04+, CentOS 7+,
 #   better with systemd.
-#	Version: 3.2.0
+#	Version: 3.2.1
 #	Blog: blog.lvcshu.club
 #	Author: johnpoint
 #   Maintain: BennyThink
