@@ -67,7 +67,7 @@ if [ "$PM" = "yum" ]; then
 	$PM update
 	$PM install -y epel-release
 	$PM update
-    $PM install -y  curl python-devel python2-pip git openssl-devel
+    $PM install -y  curl python-devel python2-pip git openssl-devel  libcurl-devel gcc 
     Install_main
     install_service
     Start_service
