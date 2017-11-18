@@ -67,13 +67,13 @@ if [ "$PM" = "yum" ]; then
 	$PM install -y epel-release
 	$PM update
     $PM install -y python-pip git
-
     Install_main
     install_service
     Start_service
 elif [ "$PM" = "apt" ]; then
 	$PM update
     $PM install -y build-essential curl python-dev python-pip libssl-dev git libcurl4-openssl-dev
+    pip install  setuptools
     Install_main
     install_service
     Start_service
