@@ -49,7 +49,7 @@ wget -N --no-check-certificate https://raw.githubusercontent.com/BennyThink/Expr
 启动服务 ./install.sh start
 停止服务 ./install.sh stop
 ```
-注：CentOS下可能有些事多，比如偶然发现安装完epel之后竟然就有pycurl了；如果提示`wget: command not found`请先安装wget
+注：CentOS下可能有些事多，比如偶然发现安装完epel之后竟然就有pycurl了；如果提示`wget: command not found`请先安装wget `yum install wget`
 
 ## 部署方法2.手动配置 ##
 如果一键脚本失败，可以试试手动配置
