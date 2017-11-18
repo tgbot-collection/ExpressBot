@@ -35,7 +35,14 @@ Windows 10： Python 2.7.13 32bit  Python 3.6.3 32bit
 
 Ubuntu 16.04： Python 2.7.12，Python 3.5 不支持，3.6未测试（因为官方源里最新就只到3.5）
 
-CentOS： Python 2.7
+CentOS： Python 2.7 
+```
+关于Centos：
+BennyThink:反正我是测试通过了
+johnpoint：反正我这边没有成功过
+     ——————各位自便
+```
+
 
 ## 部署方法1.自动脚本 ##
 
