@@ -148,13 +148,17 @@ fi
 # Stop_service
 Stop_service(){
 check_systemd
+if [ $? -eq 0 ];then
+    echo -e "${Error} 服务未启动"
+else
+    echo -e "${Info} 服务停止失败，请检查是否正确安装"
+fi
 systemctl stop expressbot.service
 if [ $? -eq 0 ];then
-    echo -e "${Info} 服务已停止"
+    echo -e "${Error} 服务已停止"
 else
-    echo -e "${Error} 服务停止失败"
+    echo -e "${Info} 服务停止失败，请检查是否正确安装"
 fi
-
 }
 uninstall_all(){
 pip uninstall -y -r /home/ExpressBot/requirements.txt
