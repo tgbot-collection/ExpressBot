@@ -193,6 +193,13 @@ Start_service
 Service_status(){
 check_systemd
 systemctl status expressbot.service>/dev/null
+if [ $? -eq 0 ];then
+  echo -e "${Info}服务已经启动"
+  exit 0
+else
+  echo -e "${Error}服务未启动"
+  exit 0
+fi
 }
 
 menu(){
