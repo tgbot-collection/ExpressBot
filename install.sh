@@ -197,6 +197,7 @@ if [ $? -eq 0 ];then
 else
   status=${Error}服务未启动
 fi
+
 Service_status(){
 systemctl status expressbot.service
 }
@@ -215,7 +216,7 @@ menu(){
   ${Green_font_prefix}5.${Font_color_suffix} 重启 服务
   ${Green_font_prefix}6.${Font_color_suffix} 查看 服务状态
   ——————————————————————
-  $status
+  服务运行状态：$status
  "
 	read -p "请输入数字 [1-6]：" num
 case "$num" in
