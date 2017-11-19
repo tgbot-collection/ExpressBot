@@ -4,8 +4,8 @@
 
 systemctl status expressbot.service>/dev/null
 if [ $? -eq 0 ];then
-  echo 'running'
+  echo 'running' >/dev/null
 else
-  echo 'stop'
-  systemctl start expressbot.service
+  echo 'stop' >/dev/null
+  systemctl start expressbot.service &>/dev/null
 fi
