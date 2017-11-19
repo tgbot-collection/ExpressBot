@@ -35,6 +35,13 @@ Windows 10： Python 2.7.13 32bit  Python 3.6.3 32bit
 
 Ubuntu 16.04、CentOS 7、Debian 9： Python 2.7
 
+```
+关于Centos：
+BennyThink:反正我是测试通过了
+johnpoint：反正我这边没有成功过
+     ——————各位自便
+```
+
 
 ## 部署方法1.自动脚本 ##
 
@@ -48,8 +55,7 @@ wget -N --no-check-certificate https://raw.githubusercontent.com/BennyThink/Expr
 启动服务 ./install.sh start
 停止服务 ./install.sh stop
 ```
-注：CentOS下可能有些事多，比如偶然发现安装完epel之后竟然就有pycurl了；如果提示`wget: command not found`请先安装wget；
-有的时候可能会红字报错，但是只要`requirements.txt`里的东西正常安装了，那么一般来说就不会出问题的。
+注：CentOS下可能有些事多，比如偶然发现安装完epel之后竟然就有pycurl了；如果提示`wget: command not found`请先安装wget `yum install wget`
 
 ## 部署方法2.手动配置 ##
 如果一键脚本失败，可以试试手动配置

@@ -6,18 +6,18 @@ export PATH
 #	System Requirements:
 #   Debian 6+, Ubuntu 14.04+, CentOS 7+,
 #   better with systemd.
-#	Version: 3.2.1
+#	Version: 4.3.0
 #	Blog: blog.lvcshu.club
 #	Author: johnpoint
 #   Maintain: BennyThink
 #   Install Express Bot
 #   Requires root privilege
-#   This code is tested under Ubuntu 16.04 & CentOS 7
+#   This code is tested under Ubuntu 16.04, CentOS 7 and Debian 9.
 #   Publish under GNU General Public License v2
 #   USE AT YOUR OWN RISK!!!
 #=================================================
 
-sh_ver="3.2.0"
+sh_ver="4.3.0"
 Green_font_prefix="\033[32m" && Red_font_prefix="\033[31m" && Green_background_prefix="\033[42;37m" && Red_background_prefix="\033[41;37m" && Font_color_suffix="\033[0m"
 Info="${Green_font_prefix}[信息]${Font_color_suffix}"
 Error="${Red_font_prefix}[错误]${Font_color_suffix}"
@@ -88,9 +88,8 @@ cd /home
 git clone https://github.com/BennyThink/ExpressBot
 cd ExpressBot
 if [ "$PM" = "yum" ]; then
-    echo 'centosssssssssss'
+    echo 'centosssssssssss:-)'
     sed -i '$d' requirements.txt
-    cat requirements.txt
 fi
 pip install -r requirements.txt
 
@@ -137,24 +136,39 @@ systemctl daemon-reload
 # Start_service
 Start_service(){
 check_systemd
-systemctl start expressbot.service
+systemctl status expressbot.service>/dev/null
 if [ $? -eq 0 ];then
-    echo -e "${Info} 服务已启动"
+  echo -e "${Info}服务已经启动"
+  exit 0
 else
-    echo -e "${Error} 服务启动失败"
+  echo -e "${Info}服务正在启动"
+  systemctl start expressbot.service
+fi
+systemctl status expressbot.service>/dev/null
+if [ $? -eq 0 ];then
+  echo -e "${Info}服务启动成功"
+  exit 0
+else
+  echo -e "${Error}服务启动失败"
 fi
 }
 
 # Stop_service
 Stop_service(){
 check_systemd
-systemctl stop expressbot.service
+systemctl status expressbot.service>/dev/null
 if [ $? -eq 0 ];then
-    echo -e "${Info} 服务已停止"
+  echo -e "${Info}正在停止服务"
+  systemctl stop expressbot.service
 else
-    echo -e "${Error} 服务停止失败"
+  echo -e "${Error}服务已经停止"
 fi
-
+systemctl status expressbot.service>/dev/null
+if [ $? -eq 0 ];then
+  echo -e "${Error}服务停止失败"
+else
+  echo -e "${Info}服务已停止"
+fi
 }
 uninstall_all(){
 pip uninstall -y -r /home/ExpressBot/requirements.txt
@@ -178,7 +192,7 @@ Start_service
 # Service_status
 Service_status(){
 check_systemd
-systemctl status expressbot.service
+systemctl status expressbot.service>/dev/null
 }
 
 menu(){
@@ -227,7 +241,7 @@ Get_Dist_Name
 
 # check distribution
 if [ "${DISTRO}" = "unknow" ]; then
-    Echo "${Error} 无法获取发行版名称，或者不支持当前发行版"
+    Echo -e "${Error} 无法获取发行版名称，或者不支持当前发行版"
     exit 1
 fi
 
