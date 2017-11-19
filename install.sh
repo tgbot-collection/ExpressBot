@@ -190,17 +190,17 @@ Start_service
 }
 
 # Service_status
-Service_status(){
 check_systemd
 systemctl status expressbot.service>/dev/null
 if [ $? -eq 0 ];then
-  echo -e "${Info}服务已经启动"
-  exit 0
+  status=${Info}服务已经启动
 else
-  echo -e "${Error}服务未启动"
-  exit 0
+  status=${Error}服务未启动
 fi
+Service_status(){
+systemctl status expressbot.service
 }
+
 
 menu(){
 	echo -e "  Express Bot一键管理脚本 ${Red_font_prefix}[v${sh_ver}]${Font_color_suffix}
@@ -215,6 +215,7 @@ menu(){
   ${Green_font_prefix}5.${Font_color_suffix} 重启 服务
   ${Green_font_prefix}6.${Font_color_suffix} 查看 服务状态
   ——————————————————————
+  $status
  "
 	read -p "请输入数字 [1-6]：" num
 case "$num" in
