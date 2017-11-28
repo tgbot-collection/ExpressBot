@@ -33,7 +33,7 @@ def bot_help(message):
 def bot_help(message):
     bot.send_chat_action(message.chat.id, 'typing')
     bot.send_message(message.chat.id,
-                     "咱能帮汝查询快（shui）递（biao）信息啦~ 有问题的话就去 @BennyThink 呗。")
+                     "咱能帮汝查询快（shuǐ）递（biǎo）信息啦~ 有问题的话就去 @BennyThink 呗。")
 
 
 @bot.message_handler(commands=['list'])
