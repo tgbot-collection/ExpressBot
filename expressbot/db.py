@@ -6,7 +6,8 @@
 import sqlite3
 import os
 
-con = sqlite3.connect(os.getcwd() + os.sep + 'bot.db', check_same_thread=False)
+# temporary fix
+con = sqlite3.connect('/home/ExpressBot/expressbot/bot.db', check_same_thread=False)
 cur = con.cursor()
 create_table = '''CREATE TABLE IF NOT EXISTS job
 (
