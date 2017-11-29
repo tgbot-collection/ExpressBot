@@ -116,6 +116,8 @@ python main.py
 将timer加入到任务计划中（Linux为crontab），如下
 `*/2 * * * * cd /your/path/ExpressBot/expressbot && python main.py`
 即为两分钟运行一次
+**由于一些问题，计划任务目前只支持在Linux上使用，并且是程序目录为`/home/ExpressBot`才可以
+查看TODO获取更多信息**
 
 ###  检查运行状态 ###
 由于因为网络原因，有时程序会抛异常（requests的锅，这个没法控制），所以需要用某种办法守护它。
@@ -176,8 +178,16 @@ sudo systemctl stop expressbot.service
 - [ ] 下载YouTube视频
 - [ ] 下载Google Play应用
 - [ ] 添加测试用例
-- [ ] Google搜索？
+- [ ] Google搜索
 
+## bug fix ##
+* `db.py`中数据库路径的处理方式，在执行计划任务的时候，会导致使用根目录下的`bot.db`，所以目前暂时使用绝对路径；
+还有，如果用户查询了追踪中的快递，然后block了机器人，这将会导致机器人发送消息时抛出异常：
+```telebot.apihelper.ApiException: A request to the Telegram API was unsuccessful. The server returned HTTP 403 Forbidden. Response body:
+[{"ok":false,"error_code":403,"description":"Forbidden: bot was blocked by the user"}]
+```
+捕获一下就可以了。
+比较好的解决方式：在配置文件中指定数据库（项目）路径
 
 ## License ##
 GPL v2
