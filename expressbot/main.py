@@ -108,7 +108,10 @@ def cron(code, mid, cid, db_content):
     """
     r = kuaidi100.recv(code, mid, cid)
     if db_content not in r:
-        bot.send_message(chat_id=cid, reply_to_message_id=mid, text=r)
+        try:
+            bot.send_message(chat_id=cid, reply_to_message_id=mid, text=r)
+        except telebot.apihelper.ApiException as e:
+            print(e.message)
 
 
 if __name__ == '__main__':
