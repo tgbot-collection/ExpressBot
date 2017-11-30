@@ -4,7 +4,7 @@ ExpressBot [![Build Status](https://travis-ci.org/BennyThink/ExpressBot.svg?bran
 帮你查快递、自动追踪快递最新状态的Telegram机器人！
 成品可戳
 
-[@bennyblog_bot](https://t.me/bennyblog_bot)
+[@bennyblog_bot](https://t.me/bennyblog_bot)（此机器人由俺长期维护，但是**不提供任何保证**）
 
 [@xiaowu_bot](https://t.me/xiaowu_bot)
 
@@ -27,6 +27,11 @@ ExpressBot [![Build Status](https://travis-ci.org/BennyThink/ExpressBot.svg?bran
 >
 > quickdel - 回复某条查询消息来快速删除单号查询记录
  
+## 使用方法 ##
+添加机器人，直接发送运单编号即可查询（并添加到追踪中）；
+如果你的单号带有字母，请使用`/start danhao123`；
+如果你需要一次性追踪多个单号，请`/start 123,123`，使用英文半角逗号分隔（当然了，更新了就惨了)
+
 ## 部署环境 ##
 需要部署在可以访问Telegram API的服务器上（或者设置代理），同时支持Python 2和Python 3
 已经在以下平台测试通过：
@@ -95,11 +100,12 @@ pip3 install -r requirements.txt
 ```
 
 ### 配置 ###
-修改`config.py`进行配置，TOKEN为Bot的API，TURING_KEY若不配置则不启用机器人功能，DEBUG为设置是否在控制台输出debug信息，0为不输出
+修改`config.py`进行配置，TOKEN为Bot的API，TURING_KEY若不配置则不启用机器人功能，DEBUG为设置是否在控制台输出debug信息，0为不输出；`DB_PATH`为数据库文件的绝对路径
 
 ```
 TOKEN = 'Your TOKEN'
 TURING_KEY = 'Your Key'
+DB_PATH='/your/path/ExpressBot/expressbot'
 DEBUG = 0
 ```
 
@@ -160,9 +166,9 @@ sudo systemctl stop expressbot.service
 
 ## FAQ ##
 ### 服务器错误 ###
-唔，可能是快递100的接口炸了吧；稍后重试吧。
+唔，可能是快递100的接口炸了吧；稍后重试。
 ### SSL InsecurePlatform error ###
-哦，你可能用的是 Python 3.5 吧，建议还是用回 Python 2.7吧，要不Python 3.6也行吧。
+哦，你可能用的是 Python 3.5 吧，建议 Python 2.7 吧，要不Python 3.6也行吧。
 
 ## 致谢 ##
 * [coderfox/Kuaidi100API](https://github.com/coderfox/Kuaidi100API)
@@ -175,19 +181,24 @@ sudo systemctl stop expressbot.service
 - [x] Python 3 支持
 - [x] Bug 修复：不显示最新
 - [ ] SSL 证书问题
-- [ ] 下载YouTube视频
-- [ ] 下载Google Play应用
-- [ ] 添加测试用例
-- [ ] Google搜索
+- [ ] 下载YouTube视频：已有了
+- [ ] 下载Google Play应用：也有了
+- [ ] 添加测试用例：这玩意咋测试啊！
+- [ ] Google搜索：有点多此一举的感觉
+- [x] 单消息多单号处理：`/start 123,123` 英文半角逗号
+- [ ] 接入电商：还是想都别想吧
+- [ ] 是否需要重构`send_chat_action`来达到代码复用的目的
+- [ ] 有时会收到重复消息，原因未知
 
 ## bug fix ##
-* `db.py`中数据库路径的处理方式，在执行计划任务的时候，会导致使用根目录下的`bot.db`，所以目前暂时使用绝对路径；
+- [x] `db.py`中数据库路径的处理方式，在执行计划任务的时候，会导致使用根目录下的`bot.db`，所以目前暂时使用绝对路径；
 还有，如果用户查询了追踪中的快递，然后block了机器人，这将会导致机器人发送消息时抛出异常：
 ```telebot.apihelper.ApiException: A request to the Telegram API was unsuccessful. The server returned HTTP 403 Forbidden. Response body:
 [{"ok":false,"error_code":403,"description":"Forbidden: bot was blocked by the user"}]
 ```
 捕获一下就可以了。
-比较好的解决方式：在配置文件中指定数据库（项目）路径
+目前的解决方式：在配置文件中指定数据库（项目）路径
+- [x] 带字母的单号：请发送于`/start`命令后，如`/start sfc2233`
 
 ## License ##
 GPL v2
