@@ -105,6 +105,8 @@ echo 'Debug? 0 for no.'
 read p
 echo "DEBUG= '$p'">>/home/ExpressBot/expressbot/config.py
 
+echo "DB_PATH = r'/home/ExpressBot/expressbot/bot.db'">>/home/ExpressBot/expressbot/config.py
+
 echo "* * * * * /home/ExpressBot/bot_checker.sh" >> /var/spool/cron/root
 
 }
