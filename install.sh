@@ -107,7 +107,6 @@ echo "DEBUG= '$p'">>/home/ExpressBot/expressbot/config.py
 
 echo "DB_PATH = r'/home/ExpressBot/expressbot/bot.db'">>/home/ExpressBot/expressbot/config.py
 
-echo "* * * * * /home/ExpressBot/bot_checker.sh" >> /var/spool/cron/root
 
 }
 
@@ -121,13 +120,12 @@ fi
 
 install_service(){
 check_systemd
-cp expressbot.service /lib/systemd/system/expressbot.service
+cp expressbot.config.service /lib/systemd/system/expressbot.service
 systemctl daemon-reload
 systemctl enable expressbot.service
 }
 
 remove_service(){
-sed -i '$d' /var/spool/cron/root
 check_systemd
 systemctl stop expressbot.service
 systemctl disable expressbot.service

@@ -48,7 +48,7 @@ johnpoint：反正我这边没有成功过
 ```
 
 
-## 部署方法1.自动脚本 ##
+## 部署方法1.自动脚本（配置文件模式) ##
 
 一键脚本只支持Python 2，已经在Ubuntu 16.04、CentOS 7、Debian 9的64位版本上测试通过：
 
@@ -100,6 +100,7 @@ pip3 install -r requirements.txt
 ```
 
 ### 配置 ###
+**为了方便更新，其实是推荐在环境变量中设置的**
 修改`config.py`进行配置，TOKEN为Bot的API，TURING_KEY若不配置则不启用机器人功能，DEBUG为设置是否在控制台输出debug信息，0为不输出；`DB_PATH`为数据库文件的绝对路径
 
 ```
@@ -108,6 +109,16 @@ TURING_KEY = 'Your Key'
 DB_PATH='/your/path/ExpressBot/expressbot'
 DEBUG = 0
 ```
+备注：
+systemd无法直接使用`.bashrc`等文件的环境变量，第一种方法是编辑对应的service配置文件：
+```[Service]
+Environment="TOKEN=12345"
+Environment="DBPATH=/home/ExpressBot/expressbot/bot.db"
+Environment="TURING_KEY=111111"
+Environment="DEBUG=0"
+```
+第二种是运行`systemctl --user import-environment`导入，运行`systemctl --user show-environment`查看。
+更多资料参考[Arch Linux Systemd wiki](https://wiki.archlinux.org/index.php/Systemd/User#Environment_variables)
 
 ### 运行 ###
 测试目的的话，以nohub或screen运行`main.py`，Python 3请用`python3`替换为`python`
@@ -145,10 +156,9 @@ sudo systemctl start expressbot.service
 ```
 sudo systemctl stop expressbot.service
 ```
-然后把`bot_check.sh`加入到crontab中，比如说：
-`
-*/2 * * * * bash /home/ExpressBot/bot_check.sh
-`
+我使用了`restart=always`参数，这就意味着无论因为什么原因，只要进程不在了，systemd就会立刻帮我们重启。详情可以参见`systemd.service`手册。
+那个……用`bot_check.sh`有点太low了。哈哈。
+
 ## 隐私 ##
 首先，请允许我大力的打击你，所有发往此机器人的消息都可能被记录下来。
 但是实际上，此机器人会在数据库中记录查询成功之后的以下信息，使用`/list`命令可以看到：
@@ -189,6 +199,7 @@ sudo systemctl stop expressbot.service
 - [ ] 接入电商：还是想都别想吧
 - [ ] 是否需要重构`send_chat_action`来达到代码复用的目的
 - [ ] 有时会收到重复消息，原因未知
+- [ ] 一键脚本支持环境变量安装模式
 
 ## bug fix ##
 - [x] `db.py`中数据库路径的处理方式，在执行计划任务的时候，会导致使用根目录下的`bot.db`，所以目前暂时使用绝对路径；
