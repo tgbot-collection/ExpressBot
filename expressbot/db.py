@@ -5,7 +5,9 @@
 
 import sqlite3
 import os
-from config import DB_PATH
+import config
+
+DB_PATH = os.environ.get('TOKEN') or config.DB_PATH
 
 con = sqlite3.connect(DB_PATH, check_same_thread=False)
 cur = con.cursor()
