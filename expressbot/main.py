@@ -27,7 +27,7 @@ def bot_help(message):
     if message.text == '/start':
         bot.send_chat_action(message.chat.id, 'typing')
         bot.send_message(message.chat.id, '直接把运单号告诉咱就好啦 ~')
-    elif message.text.index(','):
+    elif ',' in message.text:
         msg = message.text.split()[1].split(',')
         for item_tid in msg:
             bot.send_chat_action(message.chat.id, 'typing')
