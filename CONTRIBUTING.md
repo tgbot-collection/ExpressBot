@@ -9,7 +9,7 @@ Though this project is designed to help Chinese users, it is still very importan
 ## 3. USE TAB(INDENT SIZE 4)
 Yes, please use TAB with indent size of 4 in all `py` and `sh` files. By the way, shell scripts should be ended with LF.
 
-## 4. TEST YOUR LOCAL COMMITS BEFORE YOUR COMMITS
+## 4. TEST YOUR LOCAL COMMITS BEFORE PUSHING
 Test your own local commits, make sure it's working, and then make push to remote repository.
 
 ## 5. DO NOT ABUSE SEMANTIC VERSIONING

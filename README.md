@@ -48,9 +48,9 @@ johnpoint：反正我这边没有成功过
 ```
 
 
-## 部署方法1.自动脚本（配置文件模式) ##
+## 部署方法1.自动脚本（配置文件/环境变量模式) ##
 
-一键脚本只支持Python 2，已经在Ubuntu 16.04、CentOS 7、Debian 9的64位版本上测试通过：
+一键脚本只支持Python 2、systemd，已经在Ubuntu 16.04、CentOS 7、Debian 9的64位版本上测试通过：
 
 ```
 wget -N --no-check-certificate https://raw.githubusercontent.com/BennyThink/ExpressBot/master/install.sh && chmod +x install.sh && ./install.sh
