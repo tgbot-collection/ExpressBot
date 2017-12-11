@@ -12,12 +12,12 @@ export PATH
 #   Maintain: BennyThink
 #   Install Express Bot
 #   Requires root privilege
-#   This code is tested under Ubuntu 16.04, CentOS 7 and Debian 9.
+#   This code is tested under Ubuntu 16.04/14.04, CentOS 7 and Debian 9.
 #   Publish under GNU General Public License v2
 #   USE AT YOUR OWN RISK!!!
 #=================================================
 
-sh_ver="4.3.1"
+sh_ver="4.4.0"
 Green_font_prefix="\033[32m" && Red_font_prefix="\033[31m" && Green_background_prefix="\033[42;37m" && Red_background_prefix="\033[41;37m" && Font_color_suffix="\033[0m"
 Info="${Green_font_prefix}[信息]${Font_color_suffix}"
 Error="${Red_font_prefix}[错误]${Font_color_suffix}"
@@ -60,30 +60,67 @@ Get_Dist_Name()
 }
 
 
- 
 # Install_all
 Install_all(){
+dep_prepare
+Install_pip
+if [ $1 -eq 1 ];then
+    Install_config 10
+else
+    Install_config 20
+fi
+install_service
+Start_service
+}
+
+
+dep_prepare(){
 if [ "$PM" = "yum" ]; then
 	$PM install -y epel-release
 	$PM update
     $PM install -y python-pip git
-    Install_main
-    install_service
-    Start_service
+
 elif [ "$PM" = "apt" ]; then
 	$PM update
     $PM install -y build-essential curl python-dev python-pip libssl-dev git libcurl4-openssl-dev
     pip install  setuptools
-    Install_main
-    install_service
-    Start_service
 fi
 }
 
 
- 
+Install_config(){
+
+echo 'Input your Token (telegram bot)'
+read p
+TOKEN=$p
+
+echo 'Input your Turing Key, space to disable'
+read p
+TURING_KEY=$p
+
+echo 'Debug? 0 for no.'
+read p
+DEBUG=$p
+
+systemctl --version>>/dev/null
+if [ $? -eq 0 -a $1 -eq 10 ];then
+    echo -e "${Tip} EEEEEnviron"
+    cp expressbot.environ.service /lib/systemd/system/expressbot.service
+    sed -i "s/12345/$TOKEN/" /lib/systemd/system/expressbot.service
+    sed -i "s/111111/$TURING_KEY/" /lib/systemd/system/expressbot.service
+    sed -i "s/0/$DEBUG/" /lib/systemd/system/expressbot.service
+else
+    echo -e "${Tip} FFFFFile"
+    echo "TOKEN = '$TOKEN'">/home/ExpressBot/expressbot/config.py
+    echo "TURING_KEY ='$TURING_KEY'">>/home/ExpressBot/expressbot/config.py
+    echo "DEBUG= '$DEBUG'">>/home/ExpressBot/expressbot/config.py
+    echo "DB_PATH = r'/home/ExpressBot/expressbot/bot.db'">>/home/ExpressBot/expressbot/config.py
+fi
+}
+
+
 # Install_main
-Install_main(){
+Install_pip(){
 cd /home
 git clone https://github.com/BennyThink/ExpressBot
 cd ExpressBot
@@ -92,38 +129,27 @@ if [ "$PM" = "yum" ]; then
     sed -i '$d' requirements.txt
 fi
 pip install -r requirements.txt
-
-echo 'Input your Token (telegram bot)'
-read p
-echo "TOKEN = '$p'">/home/ExpressBot/expressbot/config.py
-
-echo 'Input your Turing Key, blank/space to disable'
-read p
-echo "TURING_KEY ='$p'">>/home/ExpressBot/expressbot/config.py
-
-echo 'Debug? 0 for no.'
-read p
-echo "DEBUG= '$p'">>/home/ExpressBot/expressbot/config.py
-
-echo "DB_PATH = r'/home/ExpressBot/expressbot/bot.db'">>/home/ExpressBot/expressbot/config.py
-
-
 }
+
 
 check_systemd(){
 systemctl --version>>/dev/null
 if [ $? -ne 0 ];then
     echo -e "${Tip} 非systemd"
-    exit 0
+    exit 1
 fi
 }
 
+
 install_service(){
 check_systemd
-cp expressbot.config.service /lib/systemd/system/expressbot.service
+if [ ! -f /lib/systemd/system/expressbot.service ];then
+    cp expressbot.config.service /lib/systemd/system/expressbot.service
+fi
 systemctl daemon-reload
 systemctl enable expressbot.service
 }
+
 
 remove_service(){
 check_systemd
@@ -132,6 +158,7 @@ systemctl disable expressbot.service
 rm /lib/systemd/system/expressbot.service
 systemctl daemon-reload
 }
+
 
 # Start_service
 Start_service(){
@@ -153,6 +180,7 @@ else
 fi
 }
 
+
 # Stop_service
 Stop_service(){
 check_systemd
@@ -170,6 +198,8 @@ else
   echo -e "${Info}服务已停止"
 fi
 }
+
+
 uninstall_all(){
 pip uninstall -y -r /home/ExpressBot/requirements.txt
 rm -rf /home/ExpressBot
@@ -182,6 +212,7 @@ rm -rf /home/ExpressBot
 remove_service
 }
 
+
 # Restart_service
 Restart_service(){
 check_systemd
@@ -189,48 +220,55 @@ Stop_service
 Start_service
 }
 
+
 # Service_status
 Service_status(){
 check_systemd
 systemctl status expressbot.service
 }
 
+
 menu(){
 	echo -e "  Express Bot一键管理脚本 ${Red_font_prefix}[v${sh_ver}]${Font_color_suffix}
   ---- 主程序：BennyThink  | 脚本：johnpoint ----
+  ****      服务配置仅支持systemd系统        ****
   ——————————————————————
-  ${Green_font_prefix}1.${Font_color_suffix} 一键 安装
+  ${Green_font_prefix}1.${Font_color_suffix} 一键 安装（环境变量）
+  ${Green_font_prefix}2.${Font_color_suffix} 一键 安装（配置文件）
   ——————————————————————
-  ${Green_font_prefix}2.${Font_color_suffix} 一键 卸载
+  ${Green_font_prefix}3.${Font_color_suffix} 一键 卸载
   ——————————————————————
-  ${Green_font_prefix}3.${Font_color_suffix} 启动 服务
-  ${Green_font_prefix}4.${Font_color_suffix} 停止 服务
-  ${Green_font_prefix}5.${Font_color_suffix} 重启 服务
-  ${Green_font_prefix}6.${Font_color_suffix} 查看 服务状态
+  ${Green_font_prefix}4.${Font_color_suffix} 启动 服务（systemd）
+  ${Green_font_prefix}5.${Font_color_suffix} 停止 服务（systemd）
+  ${Green_font_prefix}6.${Font_color_suffix} 重启 服务（systemd）
+  ${Green_font_prefix}7.${Font_color_suffix} 查看 服务状态（systemd）
   ——————————————————————
  "
-	read -p "请输入数字 [1-6]：" num
+	read -p "请输入数字 [1-7]：" num
 case "$num" in
 	1)
-	Install_all
+	Install_all 1
 	;;
 	2)
-	uninstall_all
+	Install_all 2
 	;;
 	3)
-	Start_service
+	uninstall_all
 	;;
 	4)
-	Stop_service
+	Start_service
 	;;
 	5)
-	Restart_service
+	Stop_service
 	;;
 	6)
+	Restart_service
+	;;
+	7)
 	Service_status
 	;;
 	*)
-	echo -e "${Error} 请输入正确的数字 [1-6]"
+	echo -e "${Error} 请输入正确的数字 [1-7]"
 	;;
 esac
 }
@@ -238,10 +276,9 @@ esac
 
 # main goes here...
 Get_Dist_Name
-
 # check distribution
 if [ "${DISTRO}" = "unknow" ]; then
-    Echo -e "${Error} 无法获取发行版名称，或者不支持当前发行版"
+    echo -e "${Error} 无法获取发行版名称，或者不支持当前发行版"
     exit 1
 fi
 

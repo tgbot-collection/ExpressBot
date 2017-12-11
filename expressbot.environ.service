@@ -1,14 +1,15 @@
 [Unit]
 Description=A Telegram Bot for querying expresses
 After=network.target network-online.target nss-lookup.target
+
 [Service]
 Environment="TOKEN=12345"
 Environment="DB_PATH=/home/ExpressBot/expressbot/bot.db"
 Environment="TURING_KEY=111111"
 Environment="DEBUG=0"
 Restart=always
-
 Type=simple
 ExecStart=/usr/bin/python /home/ExpressBot/expressbot/main.py
+
 [Install]
 WantedBy=multi-user.target
