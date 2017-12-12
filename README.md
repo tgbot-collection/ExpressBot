@@ -38,7 +38,7 @@ ExpressBot [![Build Status](https://travis-ci.org/BennyThink/ExpressBot.svg?bran
 
 Windows 10： Python 2.7.13 32bit  Python 3.6.3 32bit
 
-Ubuntu 16.04、CentOS 7、Debian 9： Python 2.7
+Ubuntu 16.04/14.04、CentOS 7、Debian 9： Python 2.7
 
 ```
 关于Centos：
@@ -100,7 +100,8 @@ pip3 install -r requirements.txt
 ```
 
 ### 配置 ###
-**为了方便更新，其实是推荐在环境变量中设置的**
+**为了方便更新，其实是推荐在环境变量中设置的，这样可以随时更新而不用考虑merge**
+
 修改`config.py`进行配置，TOKEN为Bot的API，TURING_KEY若不配置则不启用机器人功能，DEBUG为设置是否在控制台输出debug信息，0为不输出；`DB_PATH`为数据库文件的绝对路径
 
 ```
@@ -157,7 +158,8 @@ sudo systemctl start expressbot.service
 sudo systemctl stop expressbot.service
 ```
 我使用了`restart=always`参数，这就意味着无论因为什么原因，只要进程不在了，systemd就会立刻帮我们重启。详情可以参见`systemd.service`手册。
-那个……用`bot_check.sh`有点太low了。哈哈。
+用`bot_check.sh`有点太low了。哈哈。
+
 
 ## 隐私 ##
 首先，请允许我大力的打击你，所有发往此机器人的消息都可能被记录下来。
@@ -178,7 +180,7 @@ sudo systemctl stop expressbot.service
 ### 服务器错误 ###
 唔，可能是快递100的接口炸了吧；稍后重试。
 ### SSL InsecurePlatform error ###
-哦，你可能用的是 Python 3.5 吧，建议 Python 2.7 吧，要不Python 3.6也行吧。
+哦，你可能用的是 Python 3.5 吧，我也不太了解具体原因。建议 Python 2.7 吧，要不Python 3.6也行吧。
 
 ## 致谢 ##
 * [coderfox/Kuaidi100API](https://github.com/coderfox/Kuaidi100API)
@@ -190,16 +192,16 @@ sudo systemctl stop expressbot.service
 - [x] 这个机器人可以跟你聊天扯淡呢~
 - [x] Python 3 支持
 - [x] Bug 修复：不显示最新
+- [x] 一键脚本支持环境变量安装模式：在安装时选择环境变量模式还是配置模式，仅支持systemd
+- [x] 单消息多单号处理：`/start 123,123` 英文半角逗号
 - [ ] SSL 证书问题
 - [ ] 下载YouTube视频：已有了
 - [ ] 下载Google Play应用：也有了
 - [ ] 添加测试用例：这玩意咋测试啊！
 - [ ] Google搜索：有点多此一举的感觉
-- [x] 单消息多单号处理：`/start 123,123` 英文半角逗号
 - [ ] 接入电商：还是想都别想吧
 - [ ] 是否需要重构`send_chat_action`来达到代码复用的目的
 - [ ] 有时会收到重复消息，原因未知
-- [ ] 一键脚本支持环境变量安装模式
 
 ## bug fix ##
 - [x] `db.py`中数据库路径的处理方式，在执行计划任务的时候，会导致使用根目录下的`bot.db`，所以目前暂时使用绝对路径；
