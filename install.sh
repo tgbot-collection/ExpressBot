@@ -6,7 +6,6 @@ export PATH
 #	System Requirements:
 #   Debian 6+, Ubuntu 14.04+, CentOS 7+,
 #   better with systemd.
-#	Version: 4.3.1
 #	Blog: blog.lvcshu.club
 #	Author: johnpoint
 #   Maintain: BennyThink
@@ -17,7 +16,7 @@ export PATH
 #   USE AT YOUR OWN RISK!!!
 #=================================================
 
-sh_ver="4.4.0"
+sh_ver="4.3.2"
 Green_font_prefix="\033[32m" && Red_font_prefix="\033[31m" && Green_background_prefix="\033[42;37m" && Red_background_prefix="\033[41;37m" && Font_color_suffix="\033[0m"
 Info="${Green_font_prefix}[信息]${Font_color_suffix}"
 Error="${Red_font_prefix}[错误]${Font_color_suffix}"
@@ -109,6 +108,8 @@ if [ $? -eq 0 -a $1 -eq 10 ];then
     sed -i "s/12345/$TOKEN/" /lib/systemd/system/expressbot.service
     sed -i "s/111111/$TURING_KEY/" /lib/systemd/system/expressbot.service
     sed -i "s/0/$DEBUG/" /lib/systemd/system/expressbot.service
+    echo "export TOKEN = '$TOKEN'">>/root/.bashrc
+    echo "export DB_PATH = '/home/ExpressBot/expressbot/bot.db'">>/root/.bashrc
 else
     echo -e "${Tip} FFFFFile"
     echo "TOKEN = '$TOKEN'">/home/ExpressBot/expressbot/config.py
@@ -116,6 +117,7 @@ else
     echo "DEBUG= '$DEBUG'">>/home/ExpressBot/expressbot/config.py
     echo "DB_PATH = r'/home/ExpressBot/expressbot/bot.db'">>/home/ExpressBot/expressbot/config.py
 fi
+echo "*/5 * * * * . /root/.bashrc && /usr/bin/python /home/ExpressBot/expressbot/timer.py" >> /var/spool/cron/root
 }
 
 
@@ -275,6 +277,13 @@ esac
 
 
 # main goes here...
+
+# Check if user is root
+if [ $(id -u) != "0" ]; then
+    echo "Error: You must be root to run this script, please switch to root."
+    exit 1
+fi
+
 Get_Dist_Name
 # check distribution
 if [ "${DISTRO}" = "unknow" ]; then
