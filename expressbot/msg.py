@@ -11,24 +11,25 @@ import sqlite3
 import time
 
 ENABLE = False
-con = sqlite3.connect('logger.db', check_same_thread=False)
-cur = con.cursor()
-create_table = '''CREATE TABLE IF NOT EXISTS msg
-(
-    ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    user_id VARCHAR(10),
-    username VARCHAR(20),
-    realname VARCHAR(30),
-    chat TEXT,
-    time DATETIME
-)'''
-cur.execute(create_table)
 
 
 def msg_logger(fun):
     def wrapper(*args, **kwargs):
         res = fun(*args, **kwargs)
         if ENABLE:
+            con = sqlite3.connect('logger.db', check_same_thread=False)
+            cur = con.cursor()
+            create_table = '''CREATE TABLE IF NOT EXISTS msg
+            (
+                ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                user_id VARCHAR(10),
+                username VARCHAR(20),
+                realname VARCHAR(30),
+                chat TEXT,
+                time DATETIME
+            )'''
+            cur.execute(create_table)
+
             sql = 'INSERT INTO msg VALUES (NULL ,?,?,?,?,?)'
             # user
             cur.execute(sql, (
