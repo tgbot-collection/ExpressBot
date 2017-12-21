@@ -13,6 +13,7 @@ import turing
 import utils
 import os
 import config
+from msg import msg_logger
 
 TOKEN = os.environ.get('TOKEN') or config.TOKEN
 TURING_KEY = os.environ.get('TURING_KEY') or config.TURING_KEY
@@ -89,6 +90,7 @@ def bot_quick_delete(message):
 
 # TODO: Privacy mode enabled in group: talk to the bot start with a / or bot admin.
 @bot.message_handler()
+@msg_logger
 def track_express(message):
     """
     process ordinary message, all digits means express id. Otherwise active Turing or refuse message
@@ -103,11 +105,13 @@ def track_express(message):
     # use turing bot
     elif TURING_KEY == '':
         bot.send_chat_action(message.chat.id, 'typing')
-        bot.send_message(message.chat.id, utils.reply_refuse())
+        r = utils.reply_refuse()
+        bot.send_message(message.chat.id, r)
     else:
         bot.send_chat_action(message.chat.id, 'typing')
         r = turing.send_turing(TURING_KEY, message.text, message.chat.id)
         bot.send_message(message.chat.id, r)
+    return r
 
 
 # TODO: Improve echo msg and params
@@ -136,4 +140,4 @@ if __name__ == '__main__':
         logger = telebot.logger
         telebot.logger.setLevel(logging.DEBUG)
 
-    bot.polling(none_stop=True)
+    bot.polling(none_stop=False)
