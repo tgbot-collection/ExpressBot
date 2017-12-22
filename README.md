@@ -137,13 +137,15 @@ python main.py
 
 ### (6). 计划任务 ###
 如果需要追踪更新并推送，那么需要添加到计划任务中, 以Linux为例
-修改`bot_check.sh`，替换为`TOKEN`、`DB_PATH`你的信息并保存：
+仿造`bot_check.sh`创建你的文件，替换其中`TOKEN`、`DB_PATH`为你的信息并保存：
 
 然后`crontab`，添加如下
-```*/2 * * * * bash /home/ExpressBot/bot_check.sh```
+```*/2 * * * * bash /your/path/bot_check.sh```
 即为两分钟运行一次
 
-**一键脚本会自动安装计划任务**
+**一键脚本会自动安装计划任务，位置在`/home/bot_check.sh`**
+
+_我承认这样把TOKEN加入到配置文件中有些不太好，但是，shell脚本加载`.bashrc`却不起作用，很奇怪，于是只好这样了。_
 
 ###  (7). 检查运行状态 ###
 由于因为网络原因，有时程序会抛异常（requests的锅，这个没法控制），所以需要用某种办法守护它。
