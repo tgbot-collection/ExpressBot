@@ -123,7 +123,7 @@ echo "export TOKEN='$TOKEN'">>/home/bot_check.sh
 echo "export DB_PATH='/home/ExpressBot/expressbot/bot.db'">>/home/bot_check.sh
 echo "python /home/ExpressBot/expressbot/timer.py">>/home/bot_check.sh
 
-echo "*/5 * * * * bash /home/ExpressBot/bot_check.sh" >> /var/spool/cron/root
+echo "*/5 * * * * bash /home/bot_check.sh" >> /var/spool/cron/root
 }
 
 
