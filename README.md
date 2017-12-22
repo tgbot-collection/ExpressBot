@@ -136,19 +136,12 @@ python main.py
 ```
 
 ### (6). 计划任务 ###
-如果需要追踪更新并推送，那么需要添加到计划任务中
-* systemd环境变量模式
-以Linux为例，如果你使用的是systemd环境变量模式，那么需要在`.bashrc`（假如是root用户的话）中添加如下两行（TOKEN需要自行替换）：
-```
-export TOKEN='46Rmid3w5hJn2ui7wI'
-export DB_PATH='/home/ExpressBot/expressbot/bot.db'
-```
+如果需要追踪更新并推送，那么需要添加到计划任务中, 以Linux为例
+修改`bot_check.sh`，替换为`TOKEN`、`DB_PATH`你的信息并保存：
+
 然后`crontab`，添加如下
-`*/2 * * * * . /root/.bashrc && /usr/bin/python /home/ExpressBot/expressbot/timer.py`
+```*/2 * * * * bash /home/ExpressBot/bot_check.sh```
 即为两分钟运行一次
-* 配置文件模式
-如果你使用的是配置文件模式，那么就简单了，直接添加如下到cron即可：
-`*/2 * * * * /usr/bin/python /home/ExpressBot/expressbot/timer.py`
 
 **一键脚本会自动安装计划任务**
 

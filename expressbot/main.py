@@ -129,25 +129,6 @@ def track_express(message):
     return r
 
 
-# TODO: Improve echo msg and params
-@bot.message_handler()
-def cron(code, mid, cid, db_content):
-    """
-    cron job process for timer.py
-    :param code: express id
-    :param mid: message id for reply_to_message
-    :param cid: chat_id(a.k.a user_id)
-    :param db_content: old express status in database
-    :return: None
-    """
-    r = kuaidi100.recv(code, mid, cid)
-    if db_content not in r:
-        try:
-            bot.send_message(chat_id=cid, reply_to_message_id=mid, text=r)
-        except telebot.apihelper.ApiException as e:
-            print(e.message)
-
-
 if __name__ == '__main__':
     if DEBUG == '1':
         import logging

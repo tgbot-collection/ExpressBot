@@ -6,3 +6,5 @@
 *.pyc
 
 bot\.db
+
+bot_check\.sh
