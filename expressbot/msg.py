@@ -9,8 +9,9 @@ __author__ = 'Benny <benny@bennythink.com>'
 
 import sqlite3
 import time
+import os
 
-ENABLE = False
+ENABLE = os.environ.get('logger')
 
 
 def msg_logger(fun):
@@ -38,6 +39,7 @@ def msg_logger(fun):
             # bot
             cur.execute(sql, (0, 'bot', 'bot', res, time.ctime()))
             con.commit()
+
         return res
 
     return wrapper
