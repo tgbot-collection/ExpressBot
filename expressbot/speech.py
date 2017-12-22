@@ -1,6 +1,5 @@
 #!/usr/bin/python
 # coding:utf-8
-
 # ExpressBot - speech.py
 # 2017/12/21 21:22
 # Speech API handler
@@ -28,9 +27,9 @@ def recognition(wav_file):
         return r.recognize_google(audio, language='cmn-Hans-CN')
 
     except sr.UnknownValueError:
-        return "Google Speech Recognition could not understand audio"
+        return "Google Speech Recognition could not understand audio.4C7"
     except sr.RequestError as e:
-        return "Could not request results from Google Speech Recognition service; {0}".format(e)
+        return "Could not request results from Google Speech Recognition service.4C7; {0}".format(e)
 
 
 def voice_to_text(ogg_path, ogg_name):
