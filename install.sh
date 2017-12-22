@@ -77,11 +77,11 @@ dep_prepare(){
 if [ "$PM" = "yum" ]; then
 	$PM install -y epel-release
 	$PM update
-    $PM install -y python-pip git
+    $PM install -y python-pip git ffmpeg
 
 elif [ "$PM" = "apt" ]; then
 	$PM update
-    $PM install -y build-essential curl python-dev python-pip libssl-dev git libcurl4-openssl-dev
+    $PM install -y build-essential curl python-dev python-pip libssl-dev git libcurl4-openssl-dev ffmpeg
     pip install  setuptools
 fi
 }

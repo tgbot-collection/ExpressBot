@@ -7,7 +7,7 @@ ExpressBot [![Build Status](https://travis-ci.org/BennyThink/ExpressBot.svg?bran
 
 [@xiaowu_bot](https://t.me/xiaowu_bot)
 
-这个机器人不只是能聊天、查快递哦！详细信息可以看功能和TODO
+这个机器人不只是能聊天、查快递哦！信不信发语音给它也可以！详细信息可以看功能和TODO
 
 ## 功能 ##
 * 查快递
@@ -98,8 +98,11 @@ pip3 install wheel
 pip3 install pycurl-7.43.0-cp36-cp36m-win32.whl
 pip3 install -r requirements.txt
 ```
+### (3). 准备ffmpeg ##
+如果你是Windows，从[这里](https://ffmpeg.org/)下载ffmpeg的二进制，放到PATH中；
+如果你是Linux发行版，直接用包管理器安装就可以，Debian系可以使用`sudo apt install ffmpeg`，RHEL可以使用`yum install ffmpeg`
 
-### (3). 配置 ###
+### (4). 配置 ###
 **为了方便更新，其实是推荐在环境变量中设置的，这样可以随时更新而不用考虑merge**
 
 修改`config.py`进行配置，TOKEN为Bot的API，TURING_KEY若不配置则不启用机器人功能，DEBUG为设置是否在控制台输出debug信息，0为不输出；`DB_PATH`为数据库文件的绝对路径
@@ -121,7 +124,7 @@ Environment="DEBUG=0"
 第二种是运行`systemctl --user import-environment`导入，运行`systemctl --user show-environment`查看。
 更多资料参考[Arch Linux Systemd wiki](https://wiki.archlinux.org/index.php/Systemd/User#Environment_variables)
 
-### (4). 运行 ###
+### (5). 运行 ###
 测试目的的话，以nohub或screen运行`main.py`，Python 3请用`python3`替换为`python`
 ```
 cd /your/path/ExpressBot/expressbot
@@ -132,7 +135,7 @@ screen -S tgbot
 python main.py
 ```
 
-### (5). 计划任务 ###
+### (6). 计划任务 ###
 如果需要追踪更新并推送，那么需要添加到计划任务中
 * systemd环境变量模式
 以Linux为例，如果你使用的是systemd环境变量模式，那么需要在`.bashrc`（假如是root用户的话）中添加如下两行（TOKEN需要自行替换）：
@@ -149,7 +152,7 @@ export DB_PATH='/home/ExpressBot/expressbot/bot.db'
 
 **一键脚本会自动安装计划任务**
 
-###  (6). 检查运行状态 ###
+###  (7). 检查运行状态 ###
 由于因为网络原因，有时程序会抛异常（requests的锅，这个没法控制），所以需要用某种办法守护它。
 * systemd
 编辑你自己的`expressbot.service`，然后将其复制到`/lib/systemd/system/expressbot.service`,并使用如下命令启动：
@@ -185,13 +188,14 @@ sudo systemctl stop expressbot.service
 * status 快递状态
 * date 最新物流更新时间
 
+**如果你发送了语音，那么语音文件会被放到`/tmp`目录下**
 我不保证我能够有节操不去查看数据库，但是我保证我会妥善保护数据库、不外泄。
 
 所以，你要是不想用，就不用吧；或者，查完就删掉也是可以的。
 
 ## 另类用法：消息记录机器人 ##
-有一个文件叫`msg.py`，如果为了debug等需求，或者想记录、备份群组消息，可以将开头的`ENABLE = False`改成`ENABLE = True`，这样会把消息记录到`logger.db`中。
-当然了，此时你就不能设置图灵API了（甚至应该将查询快递的功能也废掉免得机器人乱说话）。
+有一个文件叫`msg.py`，如果为了debug等需求，或者想记录、备份群组消息，可以将开头的`ENABLE = False`改成`ENABLE = True`，这样会把消息记录到`logger.db`中（懒得设置，所以可能直接存在`/`）。
+当然了，群组中你就不能设置图灵API了（甚至应该将查询快递的功能也废掉免得机器人乱说话）。
 另外，群组中需要开启机器人的隐私模式。
 
 ## FAQ ##
@@ -203,10 +207,13 @@ sudo systemctl stop expressbot.service
 可能是刚刚生成单号，快递100还没有数据
 
 ## 致谢 ##
-* [coderfox/Kuaidi100API](https://github.com/coderfox/Kuaidi100API)
+* [coderfox/Kuaidi100API](https://github.com/coderfox/Kuaidi100API) 快递100的原生API
 * [jaehee~임재희](https://twitter.com/GFW) 感谢你的大力调戏
 * [ヨイツの賢狼ホロ](https://github.com/KenOokamiHoro) 感谢你的commits，我直接无耻的拉过来了。
 * [johnpoint](https://github.com/johnpoint) 一键安装脚本的大部分编写工作
+* [speech_recognition](https://github.com/Uberi/speech_recognition) 提供多种语音识别的封装
+* [pydub](https://github.com/jiaaro/pydub) 提供ffmpeg的封装
+* [ffmpeg](https://ffmpeg.org/) 用于音频文件转码
 
 ## TODO ##
 - [x] 这个机器人可以跟你聊天扯淡呢~
@@ -214,6 +221,7 @@ sudo systemctl stop expressbot.service
 - [x] Bug 修复：不显示最新
 - [x] 一键脚本支持环境变量安装模式：在安装时选择环境变量模式还是配置模式，仅支持systemd
 - [x] 单消息多单号处理：`/start 123,123` 英文半角逗号
+- [x] 语音识别
 - [ ] SSL 证书问题
 - [ ] 下载YouTube视频：已有了
 - [ ] 下载Google Play应用：也有了
@@ -223,7 +231,7 @@ sudo systemctl stop expressbot.service
 - [ ] 是否需要重构`send_chat_action`来达到代码复用的目的
 - [ ] 有时会收到重复消息，原因未知
 - [ ] systemd与cron相爱相杀：真的有必要写两次吗
-- [ ] 语音识别
+- [ ] 有些时候追踪更新还是不好用，为啥呢？
 
 ## bug fix ##
 - [x] `db.py`中数据库路径的处理方式，在执行计划任务的时候，会导致使用根目录下的`bot.db`，所以目前暂时使用绝对路径；
