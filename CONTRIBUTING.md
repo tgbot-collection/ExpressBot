@@ -14,3 +14,6 @@ Test your own local commits, make sure it's working, and then make push to remot
 
 ## 5. DO NOT ABUSE SEMANTIC VERSIONING
 Careful when you bump version number, also try to read [Semantic versioning](http://semver.org/)
+
+## 6. VOICE RECOGNITION
+Currently this version uses a free demo API.

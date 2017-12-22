@@ -7,13 +7,14 @@ __credits__ = 'ヨイツの賢狼ホロ <horo@yoitsu.moe>'
 __version__ = '1.0.2'
 
 import telebot
-
 import kuaidi100
 import turing
 import utils
 import os
 import config
 from msg import msg_logger
+import speech
+import requests
 
 TOKEN = os.environ.get('TOKEN') or config.TOKEN
 TURING_KEY = os.environ.get('TURING_KEY') or config.TURING_KEY
@@ -89,15 +90,28 @@ def bot_quick_delete(message):
 
 
 # TODO: Privacy mode enabled in group: talk to the bot start with a / or bot admin.
-@bot.message_handler()
+@bot.message_handler(content_types=['text', 'voice'])
 @msg_logger
 def track_express(message):
     """
-    process ordinary message, all digits means express id. Otherwise active Turing or refuse message
+    process text/voice message, all digits means express id. Otherwise sends Turing or refuse message
     :param message: Telegram message sent by user.
     :return: None
     """
-    # parse multiple track_id
+    if os.name == 'nt':
+        temp = os.environ.get('TMP')
+    else:
+        temp = '/tmp'
+    if message.voice:
+        # download the file
+        file_info = bot.get_file(message.voice.file_id)
+        voice_file = requests.get('https://api.telegram.org/file/bot{0}/{1}'.format(TOKEN, file_info.file_path))
+        file_path = temp + os.sep
+        with open(file_path + message.voice.file_id + '.ogg', 'wb') as f:
+            f.write(voice_file.content)
+
+        message.text = speech.voice_to_text(file_path, message.voice.file_id + '.ogg')
+
     if message.text.isdigit():
         bot.send_chat_action(message.chat.id, 'typing')
         r = kuaidi100.recv(message.text, message.message_id, message.chat.id)
@@ -111,6 +125,7 @@ def track_express(message):
         bot.send_chat_action(message.chat.id, 'typing')
         r = turing.send_turing(TURING_KEY, message.text, message.chat.id)
         bot.send_message(message.chat.id, r)
+
     return r
 
 
@@ -140,4 +155,4 @@ if __name__ == '__main__':
         logger = telebot.logger
         telebot.logger.setLevel(logging.DEBUG)
 
-    bot.polling(none_stop=False)
+    bot.polling(none_stop=True)
