@@ -34,12 +34,13 @@ def msg_logger(fun):
             sql = 'INSERT INTO msg VALUES (NULL ,?,?,?,?,?)'
             # user
             if args[0].chat.last_name is None:
-                args[0].chat.last_name=''
+                args[0].chat.last_name = ''
             cur.execute(sql, (
                 args[0].chat.id, args[0].chat.username, args[0].chat.first_name + args[0].chat.last_name, args[0].text,
-                time.ctime(args[0].date)))
+                time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(args[0].date))
+            ))
             # bot
-            cur.execute(sql, (0, 'bot', 'bot', res, time.ctime()))
+            cur.execute(sql, (0, 'bot', 'bot', res, time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(args[0].date))))
             con.commit()
 
         return res
