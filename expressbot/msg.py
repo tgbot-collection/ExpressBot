@@ -15,8 +15,8 @@ ENABLE = os.environ.get('logger')
 
 
 def msg_logger(fun):
-    def wrapper(*args, **kwargs):
-        res = fun(*args, **kwargs)
+    def wrapper(*args):
+        res = fun(*args)
         if ENABLE:
             con = sqlite3.connect('logger.db', check_same_thread=False)
             cur = con.cursor()
@@ -35,12 +35,12 @@ def msg_logger(fun):
             # user
             if args[0].chat.last_name is None:
                 args[0].chat.last_name = ''
+            log_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(args[0].date))
             cur.execute(sql, (
-                args[0].chat.id, args[0].chat.username, args[0].chat.first_name + args[0].chat.last_name, args[0].text,
-                time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(args[0].date))
-            ))
+                args[0].chat.id, args[0].chat.username, args[0].chat.first_name + args[0].chat.last_name,
+                args[0].text, log_time))
             # bot
-            cur.execute(sql, (0, 'bot', 'bot', res, time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(args[0].date))))
+            cur.execute(sql, (0, 'bot', 'bot', res, log_time))
             con.commit()
 
         return res

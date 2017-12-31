@@ -217,6 +217,7 @@ sudo systemctl stop expressbot.service
 - [x] 一键脚本支持环境变量安装模式：在安装时选择环境变量模式还是配置模式，仅支持systemd
 - [x] 单消息多单号处理：`/start 123,123` 英文半角逗号
 - [x] 语音识别
+- [ ] 使用requests，抛弃pycurl
 - [ ] SSL 证书问题
 - [ ] 下载YouTube视频：已有了
 - [ ] 下载Google Play应用：也有了
