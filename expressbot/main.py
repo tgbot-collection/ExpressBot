@@ -121,11 +121,9 @@ def track_express(message):
         bot.send_chat_action(message.chat.id, 'typing')
         r = utils.reply_refuse()
         bot.send_message(message.chat.id, r)
-        return r
     elif message.text.isdigit():
         bot.send_chat_action(message.chat.id, 'typing')
         r = kuaidi100.recv(message.text, message.message_id, message.chat.id)
-
         if u'单号不存在或者已经过期' in r:
             bot.send_message(message.chat.id, '汝的单号可能刚刚生成，暂无信息，已经加入到任务队列中')
             sql_cmd = "INSERT INTO job VALUES (NULL ,?,?,?,? ,'刚刚录入耶' ,'Started',?,0)"

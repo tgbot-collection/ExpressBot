@@ -133,8 +133,8 @@ cd /home
 git clone https://github.com/BennyThink/ExpressBot
 cd ExpressBot
 if [ "$PM" = "yum" ]; then
-    echo 'centosssssssssss:-)'
-    sed -i '$d' requirements.txt
+    echo 'CentOS:-)'
+    # sed -i '$d' requirements.txt
 fi
 pip install -r requirements.txt
 }

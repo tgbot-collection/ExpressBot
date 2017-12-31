@@ -6,16 +6,10 @@ __author__ = 'Benny <benny@bennythink.com>'
 __credits__ = 'ヨイツの賢狼ホロ <horo@yoitsu.moe>'
 
 import json
-import pycurl
-
-import certifi
-
+import requests
 import db
 import utils
 from com_dic import STATE, PROVIDER
-
-c = pycurl.Curl()
-c.setopt(pycurl.CAINFO, certifi.where())
 
 
 def auto_detect(tracker):
@@ -25,23 +19,10 @@ def auto_detect(tracker):
     :return: company name in pinyin
     """
     url = 'https://www.kuaidi100.com/autonumber/autoComNum?text=' + tracker
+    result = requests.get(url).text
 
     try:
-        import StringIO
-        com_result = StringIO.StringIO()
-    except ImportError:
-        import io
-        com_result = io.BytesIO()
-    try:
-        c.setopt(pycurl.CUSTOMREQUEST, 'POST')
-        c.setopt(pycurl.URL, url)
-        c.setopt(pycurl.WRITEFUNCTION, com_result.write)
-        c.perform()
-    except (UnicodeEncodeError, pycurl.error):
-        pass
-
-    try:
-        r = json.loads(com_result.getvalue()).get('auto')[0].get('comCode')
+        r = json.loads(result).get('auto')[0].get('comCode')
         return r, PROVIDER.get(r, 'Default')
     except (IndexError, ValueError):
         return False, 'Default'
@@ -55,21 +36,7 @@ def query_express_status(com, track_id):
     :return: the newest status
     """
     url = 'https://www.kuaidi100.com/query' + '?type=' + com + '&postid=' + track_id
-
-    try:
-        import StringIO
-        exp_result = StringIO.StringIO()
-    except ImportError:
-        import io
-        exp_result = io.BytesIO()
-    try:
-        c.setopt(pycurl.CUSTOMREQUEST, 'GET')
-        c.setopt(pycurl.WRITEFUNCTION, exp_result.write)
-        c.setopt(pycurl.URL, url)
-        c.perform()
-        return json.loads(exp_result.getvalue())
-    except pycurl.error:
-        pass
+    return json.loads(requests.get(url).text)
 
 
 def recv(code, *args):
