@@ -7,7 +7,7 @@ ExpressBot [![Build Status](https://travis-ci.org/BennyThink/ExpressBot.svg?bran
 
 [@xiaowu_bot](https://t.me/xiaowu_bot)（↑说得我好像提供保证一样，敲）
 
-这个机器人不只是能聊天、查快递哦！信不信发语音给它也可以！详细信息可以看功能和TODO
+这个机器人不只是能聊天、查快递哦！信不信发语音给它也可以！还能搜美剧日剧！详细信息可以看功能和TODO
 
 ## 功能 ##
 * 查快递
@@ -25,14 +25,28 @@ ExpressBot [![Build Status](https://travis-ci.org/BennyThink/ExpressBot.svg?bran
 > delete - 删除某个单号查询记录
 >
 > quickdel - 回复某条查询消息来快速删除单号查询记录
- 
-## 使用方法 ##
+>
+> query - 查询美剧、电影
+>
+> yyets - 查询下载链接
+
+## 使用方法1：查快递 ##
 添加机器人，直接发送运单编号即可查询（并添加到追踪中）；
 如果你的单号带有字母，请使用`/start danhao123`；
 如果你需要一次性追踪多个单号，请`/start 123,123`，使用英文半角逗号分隔（当然了，更新了就惨了)
 
+## 使用方法2：闲聊 ##
+直接发送消息即可，也可以发送语音（普通话）
+
+## 使用方法3：查美剧 ##
+查询美剧/日剧：`/query 逃避`
+获得S01E03链接：`/yyets 神盾局 S01 E03`
+获得S03E03,05,12链接：`/yyets 神盾局 S03 E03,05,12`
+获得S03全部链接：`/yyets 神盾局 S03 E0`
+
 ## 部署环境 ##
 需要部署在可以访问Telegram API的服务器上（或者设置代理），同时支持Python 2和Python 3
+**Python 3的支持可能存在一些问题！！**
 已经在以下平台测试通过：
 
 Windows 10： Python 2.7.13 32bit  Python 3.6.3 32bit

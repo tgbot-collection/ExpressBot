@@ -17,6 +17,7 @@ import speech
 import requests
 import db
 import time
+import yyets
 
 TOKEN = os.environ.get('TOKEN') or config.TOKEN
 TURING_KEY = os.environ.get('TURING_KEY') or config.TURING_KEY
@@ -52,6 +53,12 @@ def bot_help(message):
                      "直接发送运单编号即可查询（并添加到追踪中）；\
                      如果汝的单号带有字母，请使用/start danhao123；\
                      如果汝需要一次性追踪多个单号，请/start 123,1234，使用英文半角逗号分隔。")
+
+    bot.send_message(message.chat.id,
+                     "查询美剧/日剧：/query 逃避\n"
+                     "获得S01E03链接：/yyets 神盾局 S01 E03\n"
+                     "获得S03E03,05,12链接：/yyets 神盾局 S03 E03,05,12\n"
+                     "获得S03全部链接：/yyets 神盾局 S03 E0\n")
 
 
 @bot.message_handler(commands=['list'])
@@ -92,6 +99,26 @@ def bot_quick_delete(message):
         msg = kuaidi100.delete(s.split()[0])
         bot.send_chat_action(message.chat.id, 'typing')
         bot.send_message(message.chat.id, msg)
+
+
+# TODO: Message too long
+@bot.message_handler(commands=['yyets'])
+def bot_yyets(message):
+    message.text = ' '.join(message.text.split())
+    if 'S' in message.text and 'E' in message.text and len(message.text.split()) == 4:
+        bot.send_chat_action(message.chat.id, 'typing')
+        msg = yyets.process(message.text)
+        bot.send_message(message.chat.id, msg)
+    else:
+        bot.send_chat_action(message.chat.id, 'typing')
+        bot.send_message(message.chat.id, '输入格式有误，例：/yyets 神盾局 S01 E02')
+
+
+@bot.message_handler(commands=['query'])
+def bot_query(message):
+    bot.send_chat_action(message.chat.id, 'typing')
+    msg = yyets.query_resource(message.text)
+    bot.send_message(message.chat.id, msg)
 
 
 @bot.message_handler(content_types=['text', 'voice'])
