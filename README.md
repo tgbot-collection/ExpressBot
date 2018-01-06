@@ -5,8 +5,6 @@ ExpressBot [![Build Status](https://travis-ci.org/BennyThink/ExpressBot.svg?bran
 
 [@bennyblog_bot](https://t.me/bennyblog_bot)（此机器人由俺长期维护，但是**不提供任何保证**）
 
-[@xiaowu_bot](https://t.me/xiaowu_bot)（↑说得我好像提供保证一样，敲）
-
 这个机器人不只是能聊天、查快递哦！信不信发语音给它也可以！还能搜美剧日剧！详细信息可以看功能和TODO
 
 ## 功能 ##
