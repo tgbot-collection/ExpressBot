@@ -6,18 +6,20 @@ __author__ = 'Benny <benny@bennythink.com>'
 __credits__ = 'ヨイツの賢狼ホロ <horo@yoitsu.moe>'
 __version__ = '1.1.1'
 
+import os
+import time
+
 import telebot
-import kuaidi100
+import requests
+
 import turing
 import utils
-import os
 import config
 from msg import msg_logger
 import speech
-import requests
 import db
-import time
 import yyets
+import kuaidi100
 
 TOKEN = os.environ.get('TOKEN') or config.TOKEN
 TURING_KEY = os.environ.get('TURING_KEY') or config.TURING_KEY

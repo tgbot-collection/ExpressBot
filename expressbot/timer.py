@@ -5,10 +5,12 @@
 __author__ = 'Benny <benny@bennythink.com>'
 
 import sqlite3
-import kuaidi100
 import os
-import config
+
 import telebot
+
+import kuaidi100
+import config
 
 TOKEN = os.environ.get('TOKEN') or config.TOKEN
 DB_PATH = os.environ.get('DB_PATH') or config.DB_PATH
