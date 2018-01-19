@@ -234,10 +234,10 @@ sudo systemctl stop expressbot.service
 - [x] 语音识别
 - [x] 使用requests，抛弃pycurl
 - [x] 即使订单刚刚生成，也可以加入到追踪列表中而不是报错
+- [x] 搜索电影（目前准备使用人人影视的接口）
 - [ ] 添加其他聊天机器人支持[ref](https://github.com/evolsnow/robot)
 - [ ] 闹钟
 - [ ] 备忘录
-- [ ] 搜索电影（目前准备使用人人影视的接口）
 - [ ] RSS订阅（json）……这个…………？？？
 - [ ] 下载文献的机器人？
 - [ ] SSL 证书问题

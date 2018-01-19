@@ -5,6 +5,7 @@
 
 import sqlite3
 import os
+
 import config
 
 DB_PATH = os.environ.get('DB_PATH') or config.DB_PATH

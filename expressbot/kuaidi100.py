@@ -7,6 +7,7 @@ __credits__ = 'ヨイツの賢狼ホロ <horo@yoitsu.moe>'
 
 import json
 import requests
+
 import db
 import utils
 from com_dic import STATE, PROVIDER
