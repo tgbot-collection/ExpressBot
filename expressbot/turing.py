@@ -6,6 +6,7 @@ __author__ = 'Benny <benny@bennythink.com>'
 
 import json
 import requests
+import urllib3
 
 
 def send_turing(key, info, userid):
@@ -25,6 +26,7 @@ def send_turing(key, info, userid):
     }
 
     # TODO: use local cert to prevent from MITM, worst idea ever.
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     url = 'https://www.tuling123.com/openapi/api'
     result = requests.post(url, json=data, verify=False).text
     return json.loads(result).get('text')

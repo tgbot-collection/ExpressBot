@@ -46,12 +46,13 @@ def breaker(user_msg):
 
 def query_resource(user_full_message):
     name = user_full_message[6:].lstrip(' ').rstrip(' ')
+
     search_result = search_resource(name)
     msg = ''
     s = search_result.get('data')
     if s is None:
-        return '没有对应的资源'
-    if len(s) > 1:
+        return '没有对应的资源，使用方法/query 逃避可耻'
+    elif len(s) > 1:
 
         for key in range(len(s)):
             msg = msg + ('%d. %s %s' % (key, s[key].get('channel'), s[key].get('title'))) + '\n'
@@ -103,7 +104,8 @@ def process(user_full_message):
     all_address = ''
     if ',' in choice:
         for item in choice.split(','):
-            all_address = all_address + u'***第%s集***\n' % int(item) + get_link(dl.get('episodes')[episode_length - int(item)])
+            all_address = all_address + u'***第%s集***\n' % int(item) + get_link(
+                dl.get('episodes')[episode_length - int(item)])
     else:
         try:
             choice = int(choice)
@@ -118,7 +120,8 @@ def process(user_full_message):
 
                 all_address = all_address + u'***第%s集***\n' % c + get_link(dl.get('episodes')[episode_length - c])
         else:
-            all_address = all_address + u'***第%s集***\n' % choice + get_link(dl.get('episodes')[episode_length - int(choice)])
+            all_address = all_address + u'***第%s集***\n' % choice + get_link(
+                dl.get('episodes')[episode_length - int(choice)])
 
     return all_address
 

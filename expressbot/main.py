@@ -4,7 +4,7 @@
 # Telegram message handle function.
 __author__ = 'Benny <benny@bennythink.com>'
 __credits__ = 'ヨイツの賢狼ホロ <horo@yoitsu.moe>'
-__version__ = '1.1.1'
+__version__ = '1.1.2'
 
 import os
 import time
@@ -120,7 +120,11 @@ def bot_yyets(message):
 def bot_query(message):
     bot.send_chat_action(message.chat.id, 'typing')
     msg = yyets.query_resource(message.text)
-    bot.send_message(message.chat.id, msg)
+    if msg == '':
+        bot.send_message(message.chat.id, '好像出了点错误，使用方法/query 逃避可耻')
+
+    else:
+        bot.send_message(message.chat.id, msg)
 
 
 @bot.message_handler(content_types=['text', 'voice'])
