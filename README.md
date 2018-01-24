@@ -34,18 +34,18 @@ ExpressBot [![Build Status](https://travis-ci.org/BennyThink/ExpressBot.svg?bran
 如果你需要一次性追踪多个单号，请`/start 123,123`，使用英文半角逗号分隔（当然了，更新了就惨了)
 
 ## 使用方法2：闲聊 ##
-直接发送消息即可，也可以发送语音（普通话）
+直接发送消息即可，也可以发送语音（中文普通话）
 
 ## 使用方法3：查美剧 ##
-查询美剧/日剧：`/query 逃避`
-获得S01E03链接：`/yyets 神盾局 S01 E03`
-获得S03E03,05,12链接：`/yyets 神盾局 S03 E03,05,12`
+查询美剧/日剧：`/query 逃避`，
+获得S01E03链接：`/yyets 神盾局 S01 E03`，
+获得S03E03,05,12链接：`/yyets 神盾局 S03 E03,05,12`，
 获得S03全部链接：`/yyets 神盾局 S03 E0`
 
 ## 部署环境 ##
 需要部署在可以访问Telegram API的服务器上（或者设置代理），同时支持Python 2和Python 3
 **Python 3的支持可能存在一些问题！！**
-已经在以下平台测试通过：
+已经在以下平台测试通过（目前主要测试于Windows/Ubuntu的Python 2.7：
 
 Windows 10： Python 2.7.13 32bit  Python 3.6.3 32bit
 
@@ -72,7 +72,7 @@ wget -N --no-check-certificate https://raw.githubusercontent.com/BennyThink/Expr
 启动服务 ./install.sh start
 停止服务 ./install.sh stop
 ```
-注：CentOS下可能有些事多，比如偶然发现安装完epel之后竟然就有pycurl了；如果提示`wget: command not found`请先安装wget `yum install wget`
+注：CentOS下如果提示`wget: command not found`请先安装wget `yum install wget`
 
 ## 部署方法2.手动配置 ##
 如果一键脚本失败，可以试试手动配置
@@ -84,39 +84,34 @@ cd ExpressBot
 ### (2). 准备环境 ###
 #### Arch Linux  ####
 ```
-pacman -S python python-pip python-certifi python-chardet python-future python-idna python-pycurl python-requests python-six python-urllib3
+pacman -S python python-pip python-certifi python-chardet python-future python-idna python-requests python-six python-urllib3
 ```
     然后从 AUR 安装  python-pytelegrambotapi .
 
 #### 其他发行版、macOS ####
-Python3 请使用`pip3`
+Python3 请使用`pip3`替换`pip`
 ```
 pip install -r requirements.txt
 ```
-    如果pip时报错，那么就先运行下面这句（Debian系）
-    sudo apt-get install libcurl4-openssl-dev
-	
-	RHEL系（跟你说，出错了别赖我哦）
-	sudo yum install libcurl-devel
 
 #### Windows  ####
 从[Python官网](https://www.python.org/)下载并安装Python，切换到项目目录，如果是 Python 2:
 ```
 pip install -r requirements.txt
 ```
-如果是 Python 3,点击[此处下载](http://www.lfd.uci.edu/~gohlke/pythonlibs/zhckc95n/pycurl-7.43.0-cp36-cp36m-win32.whl)`pycurl`，执行如下命令：
+如果是 Python 3，执行如下命令：
 ```
-pip3 install wheel
-pip3 install pycurl-7.43.0-cp36-cp36m-win32.whl
 pip3 install -r requirements.txt
 ```
 ### (3). 准备ffmpeg ##
-如果你是Windows，从[这里](https://ffmpeg.org/)下载ffmpeg的二进制，放到PATH中；
-如果你是Linux发行版，直接用包管理器安装就可以，Debian系可以使用`sudo apt install ffmpeg`，RHEL可以使用`yum install ffmpeg`
+ffmpeg是为了支持音频识别。
+
+如果你是Windows，从[这里](https://ffmpeg.org/)下载ffmpeg的二进制exe文件，放到PATH中；
+如果你是Linux发行版，直接用包管理器安装就可以（编译或者下载二进制也行），Debian系可以使用`sudo apt install ffmpeg`，RHEL可以使用`yum install ffmpeg`
 
 ### (4). 配置 ###
-**为了方便更新，其实是推荐在环境变量中设置的，这样可以随时更新而不用考虑merge**
-
+**为了方便更新，推荐在环境变量中设置的TOKEN，这样可以随时更新而不用考虑merge**
+#### 配置文件版本 ####
 修改`config.py`进行配置，TOKEN为Bot的API，TURING_KEY若不配置则不启用机器人功能，DEBUG为设置是否在控制台输出debug信息，0为不输出；`DB_PATH`为数据库文件的绝对路径
 
 ```
@@ -125,7 +120,7 @@ TURING_KEY = 'Your Key'
 DB_PATH='/your/path/ExpressBot/expressbot'
 DEBUG = 0
 ```
-备注：
+#### systemd版本 ####
 systemd无法直接使用`.bashrc`等文件的环境变量，第一种方法是编辑对应的service配置文件：
 ```[Service]
 Environment="TOKEN=12345"
@@ -157,7 +152,7 @@ python main.py
 
 **一键脚本会自动安装计划任务，位置在`/home/bot_check.sh`**
 
-_我承认这样把TOKEN加入到配置文件中有些不太好，但是，shell脚本加载`.bashrc`却不起作用，很奇怪，于是只好这样了。_
+_我承认这样把TOKEN加入到配置文件中有些不太好，但是鉴于bash坑太多了，还没有爬出来，于是只好这样了。_
 
 ###  (7). 检查运行状态 ###
 由于因为网络原因，有时程序会抛异常（requests的锅，这个没法控制），所以需要用某种办法守护它。
@@ -179,14 +174,14 @@ sudo systemctl start expressbot.service
 ```
 sudo systemctl stop expressbot.service
 ```
-我使用了`restart=always`参数，这就意味着无论因为什么原因，只要进程不在了，systemd就会立刻帮我们重启。详情可以参见`systemd.service`手册。
-`bot_check.sh`已经过时了。
+我使用了`restart=always`参数，这就意味着无论因为什么原因，只要进程不在了，systemd就会立刻帮我们重启（实际运行中我是使用的是`on-failure`）。详情可以参见`systemd.service`手册。
+
 * 其他系统
 可以考虑使用对应系统的init，或者使用`supervisor`
 
 ## 隐私 ##
 首先，请允许我大力的打击你，所有发往此机器人的消息都可能被记录下来。
-但是实际上，此机器人比较良心，默认只会在数据库中记录查询成功之后的以下信息，使用`/list`命令可以看到：
+但是实际上，此机器人比较良心，**默认**只会在数据库中记录查询成功之后的以下信息，使用`/list`命令可以看到：
 * message_id 每条消息的id，用于任务计划跟踪物流发送回复
 * chat_id 也是用户ID，用于标记回复给谁
 * type 快递公司名称
@@ -201,7 +196,9 @@ sudo systemctl stop expressbot.service
 所以，你要是不想用，就不用吧；或者，查完就删掉也是可以的。
 
 ## 另类用法：消息记录机器人 ##
-有一个文件叫`msg.py`，如果为了debug等需求，或者想记录、备份群组消息，可以将开头的`ENABLE = False`改成`ENABLE = True`，这样会把消息记录到`logger.db`中（懒得设置，所以可能直接存在`/`）。
+有一个文件叫`msg.py`，如果为了debug等需求（比如说journalctl发现抛异常了，此时如果能够找到造成此次异常的聊天消息那就是最好的了），或者想记录、备份群组消息，可以将开头的`ENABLE = os.environ.get('logger')`改成`ENABLE = True`（或加入环境变量）。
+
+这样和机器人之间的消息会被记录到`logger.db`中（懒得设置，所以可能直接存在`/`）。
 当然了，群组中你就不能设置图灵API了（甚至应该将查询快递的功能也废掉免得机器人乱说话）。
 另外，群组中需要开启机器人的隐私模式。
 
@@ -209,7 +206,7 @@ sudo systemctl stop expressbot.service
 ### 服务器错误 ###
 唔，可能是快递100的接口炸了吧；稍后重试。
 ### SSL InsecurePlatform error ###
-哦，你可能用的是 Python 3.5 吧，我也不太了解具体原因。建议 Python 2.7 吧，要不Python 3.6也行吧。
+哦，你可能用的是 Python 3.5 吧，我也不太了解具体原因。试试 Python 2.7 或者Python 3.6吧。
 ### 查询不到结果 ###
 可能是刚刚生成单号，快递100还没有数据
 
@@ -234,19 +231,17 @@ sudo systemctl stop expressbot.service
 - [x] 即使订单刚刚生成，也可以加入到追踪列表中而不是报错
 - [x] 搜索电影（目前准备使用人人影视的接口）
 - [ ] 添加其他聊天机器人支持[ref](https://github.com/evolsnow/robot)
+- [x] SSL 证书问题：目前暂时禁用了`InsecureRequestWarning`
 - [ ] 闹钟
 - [ ] 备忘录
 - [ ] RSS订阅（json）……这个…………？？？
 - [ ] 下载文献的机器人？
-- [ ] SSL 证书问题
 - [ ] 添加测试用例：这玩意咋测试啊！
 - [ ] Google搜索：有点多此一举的感觉
 - [ ] 接入电商：还是想都别想吧
 - [ ] 是否需要重构`send_chat_action`来达到代码复用的目的
 - [ ] 有时会收到重复消息，原因未知
 - [ ] systemd与cron相爱相杀：真的有必要写两次吗
-
-
 
 
 ## bug fix ##
@@ -257,7 +252,7 @@ sudo systemctl stop expressbot.service
 ```
 捕获一下就可以了。
 目前的解决方式：在配置文件中指定数据库（项目）路径
-- [x] 带字母的单号：请发送于`/start`命令后，如`/start sfc2233`
+- [x] 带字母的单号：请发送于`/start`命令后，如`/start sfc2233`，没办法，谁让它非得能聊天呢。
 
 ## License ##
 GPL v2

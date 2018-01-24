@@ -81,7 +81,7 @@ if [ "$PM" = "yum" ]; then
 
 elif [ "$PM" = "apt" ]; then
 	$PM update
-    $PM install -y build-essential curl python-dev python-pip git ffmpeg
+    $PM install -y build-essential python-dev python-pip git ffmpeg
     pip install  setuptools
 fi
 }
