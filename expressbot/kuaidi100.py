@@ -24,6 +24,8 @@ def auto_detect(tracker):
 
     try:
         r = json.loads(result).get('auto')[0].get('comCode')
+        if r == u'shunfeng':
+            pass
         return r, PROVIDER.get(r, 'Default')
     except (IndexError, ValueError):
         return False, 'Default'
@@ -48,6 +50,13 @@ def recv(code, *args):
     :param args: usually Telegram message_id and chat_id(user_id)
     :return: message to be sent to the client
     """
+    # check the undone job length and send warning if necessary.
+    sql_cmd = 'SELECT track_id,message_id,chat_id,content FROM job WHERE done=?'
+    # recommend 4-6 hours on cron
+    message = ''
+    if len(db.select(sql_cmd, (0,))) > 300:
+        message += u'由于快递100的免费版接口存在每IP每日最高2000查询的限制，查询次数即将接近上限。\
+        您的查询可能会失败\n'
 
     try:
         db_res = db.select("SELECT * FROM job WHERE track_id=?", (code,))[0]
@@ -56,6 +65,8 @@ def recv(code, *args):
 
     if len(db_res) == 0:
         com_code, real_com_name = auto_detect(code)
+        if com_code == u'shunfeng':
+            return u'不好意思，快递100说顺丰的接口有一点点小问题。俺会尽快调整API的。'
 
         if not com_code:
             # TODO: Is it the pythonic way?
@@ -68,15 +79,17 @@ def recv(code, *args):
 
             db.upsert(sql_cmd, (args[0], args[1], com_code, code, res.get('data')[0].get('context'),
                                 STATE.get(res.get('state')), res.get('data')[0].get('time'), done))
-            return code + ' ' + real_com_name + '\n' + res.get('data')[0].get('time') + ' ' + res.get('data')[0].get(
+            message += code + ' ' + real_com_name + '\n' + res.get('data')[0].get('time') + ' ' + res.get('data')[
+                0].get(
                 'context')
         except IndexError:
-            return res.get('message')
+            message += res.get('message')
     elif db_res[8] == 0:
         com_code, real_com_name = auto_detect(code)
+        if com_code == u'shunfeng':
+            return u'不好意思，快递100说顺丰的接口有一点点小问题。俺会尽快调整API的。'
 
         if not com_code:
-            # TODO: Is it the pythonic way?
             return utils.reply_not_found()
         res = query_express_status(com_code, code)
         done = 1 if (res.get('state') == '3' or res.get('state') == '4') else 0
@@ -89,12 +102,21 @@ def recv(code, *args):
                                 res.get('data')[0].get('time'),
                                 done,
                                 code))
-            return code + ' ' + real_com_name + '\n' + res.get('data')[0].get('time') + ' ' + res.get('data')[0].get(
+            message += code + ' ' + real_com_name + '\n' + res.get('data')[0].get('time') + ' ' + res.get('data')[
+                0].get(
                 'context')
         except IndexError:
-            return res.get('message')
+            message += res.get('message')
     else:
-        return db_res[4] + ' ' + PROVIDER.get(db_res[3], 'Default') + '\n' + db_res[7] + ' ' + db_res[5]
+        message += db_res[4] + ' ' + PROVIDER.get(db_res[3], 'Default') + '\n' + db_res[7] + ' ' + db_res[5]
+
+    # TODO: 快递100的顺丰接口被废了，使用移动版
+    if message == u'非法访问:IP禁止访问':
+        message = '''由于快递100的免费版接口存在每IP每日最高2000查询的限制，目前已经超过此限制。                
+                因此您此次的查询被取消。\n
+                建议稍后尝试，或者按照 https://github.com/BennyThink/ExpressBot 部署自己的机器人'''
+
+    return message
 
 
 def list_query(un):

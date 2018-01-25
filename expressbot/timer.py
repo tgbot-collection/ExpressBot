@@ -6,6 +6,8 @@ __author__ = 'Benny <benny@bennythink.com>'
 
 import sqlite3
 import os
+import time
+import random
 
 import telebot
 
@@ -29,9 +31,13 @@ def cron(code, mid, cid, db_content):
     :param db_content: old express status in database
     :return: None
     """
-    r = kuaidi100.recv(code, mid, cid)
+    # cancel cron job.
+    if len(s) > 80:
+        return
 
-    if db_content not in r:
+    r = kuaidi100.recv(code, mid, cid)
+    # suppress maximum 2000 queries
+    if db_content not in r and r != u'非法访问:IP禁止访问':
         try:
             bot.send_message(chat_id=cid, reply_to_message_id=mid, text=r)
         except telebot.apihelper.ApiException as e:
@@ -49,8 +55,10 @@ def select(cmd):
 
 
 if __name__ == '__main__':
-
     sql_cmd = 'SELECT track_id,message_id,chat_id,content FROM job WHERE done=0'
     s = select(sql_cmd)
+    delay = random.uniform(1, 4)
+
     for i in s:
         cron(i[0], i[1], i[2], i[3])
+        time.sleep(delay)
