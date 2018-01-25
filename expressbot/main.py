@@ -33,7 +33,7 @@ bot = telebot.TeleBot(TOKEN)
 def bot_help(message):
     if message.text == '/start':
         bot.send_chat_action(message.chat.id, 'typing')
-        bot.send_message(message.chat.id, '直接把运单号告诉咱就好啦 ~')
+        bot.send_message(message.chat.id, '直接把运单号告诉咱就好啦 ~\n详细信息可以戳 /help')
     elif ',' in message.text:
         msg = message.text.split()[1].split(',')
         for item_tid in msg:
@@ -50,7 +50,9 @@ def bot_help(message):
 def bot_help(message):
     bot.send_chat_action(message.chat.id, 'typing')
     bot.send_message(message.chat.id,
-                     "咱能帮汝查询快（shuǐ）递（biǎo）信息啦~ 有问题的话就去 @BennyThink 呗。")
+                     "咱能帮汝查询快（shuǐ）递（biǎo）信息啦~ 有问题的话就去 @BennyThink 呗。\n"
+                     "⚠⚠由于快递100的接口限制，可能会导致超出查询上限，目前已暂停轮询推送。\n"
+                     "项目地址 https://github.com/BennyThink/ExpressBot 欢迎PR")
     bot.send_message(message.chat.id,
                      "直接发送运单编号即可查询（并添加到追踪中）；\
                      如果汝的单号带有字母，请使用/start danhao123；\
@@ -69,9 +71,6 @@ def bot_list(message):
     if all_info:
         for i in all_info:
             bot.send_chat_action(message.chat.id, 'typing')
-
-            # print type(i[2])
-
             bot.send_message(
                 message.chat.id, i[0] + '  ' + i[1] + '\n' + i[2] + i[3])
     else:

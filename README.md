@@ -6,6 +6,15 @@ ExpressBot [![Build Status](https://travis-ci.org/BennyThink/ExpressBot.svg?bran
 [@bennyblog_bot](https://t.me/bennyblog_bot)（此机器人由俺长期维护，但是**不提供任何保证**）
 
 这个机器人不只是能聊天、查快递哦！信不信发语音给它也可以！还能搜美剧日剧！详细信息可以看功能和TODO
+**由于数据库中记录的未完成订单数量比较大，为了避免再次被快递100封IP，目前暂时停止了轮询推送功能。对您造成的不便敬请谅解！**
+
+# 关于 #
+由于最近机器人使用量突然飙升，使用轮询模式很容易导致快递100的免费API使用量超过2000次/天而导致被封IP，所以目前打算更换API。
+暂时只发现了这么一个比较好的选择：
+* 快递鸟：支持物流更新推送，只要这边写好就可以了；缺点是需要实名认证，又要多一个配置项。
+
+欢迎各位有能力的人提交PR或者其他快递API的建议！感激不尽
+**现在顺丰的查询依旧存在问题，不知道哪个API能够用**
 
 ## 功能 ##
 * 查快递
@@ -147,8 +156,8 @@ python main.py
 仿造`bot_check.sh`创建你的文件，替换其中`TOKEN`、`DB_PATH`为你的信息并保存：
 
 然后`crontab`，添加如下
-```*/2 * * * * bash /your/path/bot_check.sh```
-即为两分钟运行一次
+```*/30 * * * * bash /your/path/bot_check.sh```
+即为30分钟运行一次
 
 **一键脚本会自动安装计划任务，位置在`/home/bot_check.sh`**
 
@@ -209,6 +218,10 @@ sudo systemctl stop expressbot.service
 哦，你可能用的是 Python 3.5 吧，我也不太了解具体原因。试试 Python 2.7 或者Python 3.6吧。
 ### 查询不到结果 ###
 可能是刚刚生成单号，快递100还没有数据
+### 顺丰 ###
+目前暂时没有找到可靠的REST API的顺丰快递查询接口。
+## 查询失败 ##
+目前正打算更换快递api，看样子好像快递鸟是个比较好的选择（支持推送），但是需要实名认证……
 
 ## 致谢 ##
 * [coderfox/Kuaidi100API](https://github.com/coderfox/Kuaidi100API) 快递100的原生API
@@ -230,29 +243,14 @@ sudo systemctl stop expressbot.service
 - [x] 使用requests，抛弃pycurl
 - [x] 即使订单刚刚生成，也可以加入到追踪列表中而不是报错
 - [x] 搜索电影（目前准备使用人人影视的接口）
-- [ ] 添加其他聊天机器人支持[ref](https://github.com/evolsnow/robot)
 - [x] SSL 证书问题：目前暂时禁用了`InsecureRequestWarning`
-- [ ] 闹钟
-- [ ] 备忘录
-- [ ] RSS订阅（json）……这个…………？？？
-- [ ] 下载文献的机器人？
-- [ ] 添加测试用例：这玩意咋测试啊！
-- [ ] Google搜索：有点多此一举的感觉
-- [ ] 接入电商：还是想都别想吧
+- [ ] 添加其他聊天机器人支持[ref](https://github.com/evolsnow/robot)
 - [ ] 是否需要重构`send_chat_action`来达到代码复用的目的
 - [ ] 有时会收到重复消息，原因未知
 - [ ] systemd与cron相爱相杀：真的有必要写两次吗
+- [ ] 更换快递api，放弃轮询模式
+- [ ] 给全体用户发送广播：管理员专用
 
-
-## bug fix ##
-- [x] `db.py`中数据库路径的处理方式，在执行计划任务的时候，会导致使用根目录下的`bot.db`，所以目前暂时使用绝对路径；
-还有，如果用户查询了追踪中的快递，然后block了机器人，这将会导致机器人发送消息时抛出异常：
-```telebot.apihelper.ApiException: A request to the Telegram API was unsuccessful. The server returned HTTP 403 Forbidden. Response body:
-[{"ok":false,"error_code":403,"description":"Forbidden: bot was blocked by the user"}]
-```
-捕获一下就可以了。
-目前的解决方式：在配置文件中指定数据库（项目）路径
-- [x] 带字母的单号：请发送于`/start`命令后，如`/start sfc2233`，没办法，谁让它非得能聊天呢。
 
 ## License ##
 GPL v2
