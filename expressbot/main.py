@@ -9,17 +9,17 @@ __version__ = '1.1.2'
 import os
 import time
 
-import telebot
 import requests
+import telebot
 
+import config
+import db
+import kuaidi100
 import turing
 import utils
-import config
-from msg import msg_logger
 import speech
-import db
 import yyets
-import kuaidi100
+from msg import msg_logger
 
 TOKEN = os.environ.get('TOKEN') or config.TOKEN
 TURING_KEY = os.environ.get('TURING_KEY') or config.TURING_KEY

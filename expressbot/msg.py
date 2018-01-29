@@ -7,9 +7,9 @@
 
 __author__ = 'Benny <benny@bennythink.com>'
 
+import os
 import sqlite3
 import time
-import os
 
 ENABLE = os.environ.get('logger')
 

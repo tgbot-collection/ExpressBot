@@ -7,8 +7,8 @@
 
 __author__ = 'Benny <benny@bennythink.com>'
 
-from pydub import AudioSegment
 import speech_recognition as sr
+from pydub import AudioSegment
 
 
 def convert(ogg_path, ogg_name):

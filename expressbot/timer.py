@@ -4,15 +4,15 @@
 # timer for cron
 __author__ = 'Benny <benny@bennythink.com>'
 
-import sqlite3
 import os
-import time
 import random
+import sqlite3
+import time
 
 import telebot
 
-import kuaidi100
 import config
+import kuaidi100
 
 TOKEN = os.environ.get('TOKEN') or config.TOKEN
 DB_PATH = os.environ.get('DB_PATH') or config.DB_PATH
