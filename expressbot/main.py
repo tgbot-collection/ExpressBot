@@ -102,14 +102,20 @@ def bot_quick_delete(message):
         bot.send_message(message.chat.id, msg)
 
 
-# TODO: Message too long
+# TODO: Not so Pythonic
 @bot.message_handler(commands=['yyets'])
 def bot_yyets(message):
+    n = 4096
     message.text = ' '.join(message.text.split())
     if 'S' in message.text and 'E' in message.text and len(message.text.split()) == 4:
         bot.send_chat_action(message.chat.id, 'typing')
         msg = yyets.process(message.text)
-        bot.send_message(message.chat.id, msg)
+        if len(msg) > n:
+            all_msg = [msg[i:i + n] for i in xrange(0, len(msg), n)]
+            for item in all_msg:
+                bot.send_message(message.chat.id, item)
+        else:
+            bot.send_message(message.chat.id, msg)
     else:
         bot.send_chat_action(message.chat.id, 'typing')
         bot.send_message(message.chat.id, '输入格式有误，例：/yyets 神盾局 S01 E02')
