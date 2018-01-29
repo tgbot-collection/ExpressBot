@@ -185,6 +185,11 @@ def track_express(message):
     return r
 
 
+def send_message(chat_id, msg):
+    bot.send_chat_action(chat_id, 'typing')
+    bot.send_message(chat_id, msg)
+
+
 if __name__ == '__main__':
     if DEBUG == '1':
         import logging
