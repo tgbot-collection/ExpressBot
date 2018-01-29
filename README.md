@@ -130,7 +130,7 @@ DB_PATH='/your/path/ExpressBot/expressbot'
 DEBUG = 0
 ```
 #### systemd版本 ####
-systemd无法直接使用`.bashrc`等文件的环境变量，第一种方法是编辑对应的service配置文件：
+systemd无法直接使用`.bashrc`等文件的环境变量，第一种方法是编辑对应的service配置文件（推荐也在`.bashrc`中包含你的TOKEN）：
 ```[Service]
 Environment="TOKEN=12345"
 Environment="DBPATH=/home/ExpressBot/expressbot/bot.db"
