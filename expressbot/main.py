@@ -4,7 +4,7 @@
 # Telegram message handle function.
 __author__ = 'Benny <benny@bennythink.com>'
 __credits__ = 'ヨイツの賢狼ホロ <horo@yoitsu.moe>'
-__version__ = '1.1.2'
+__version__ = '1.2.0'
 
 import os
 import time
@@ -29,12 +29,11 @@ DEBUG = os.environ.get('DEBUG') or config.DEBUG
 bot = telebot.TeleBot(TOKEN)
 
 
-# TODO: Do I need to refactor `send_chat_action`?
 @bot.message_handler(commands=['start'])
 def bot_help(message):
     if message.text == '/start':
         bot.send_chat_action(message.chat.id, 'typing')
-        bot.send_message(message.chat.id, '直接把运单号告诉咱就好啦 ~\n详细信息可以戳 /help')
+        bot.send_message(message.chat.id, '哎哟欢迎😗我能查快递，陪聊，查美剧电影 ~\n要不戳这里试试看 /help')
     elif ',' in message.text:
         msg = message.text.split()[1].split(',')
         for item_tid in msg:
@@ -60,10 +59,8 @@ def bot_help(message):
                      如果汝需要一次性追踪多个单号，请/start 123,1234，使用英文半角逗号分隔。")
 
     bot.send_message(message.chat.id,
-                     "查询美剧/日剧：/query 逃避\n"
-                     "获得S01E03链接：/yyets 神盾局 S01 E03\n"
-                     "获得S03E03,05,12链接：/yyets 神盾局 S03 E03,05,12\n"
-                     "获得S03全部链接：/yyets 神盾局 S03 E0\n")
+                     "查询美剧/日剧/电影：/query 蝙蝠侠\n"
+                     "查询美剧下载链接：/yyets 神盾局，之后按照提示点击按钮\n")
 
 
 @bot.message_handler(commands=['list'])
@@ -103,7 +100,6 @@ def bot_quick_delete(message):
         bot.send_message(message.chat.id, msg)
 
 
-# all callback
 @bot.callback_query_handler(func=lambda call: True)
 def test_callback(call):
     previous = call.data

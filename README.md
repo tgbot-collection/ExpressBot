@@ -6,7 +6,7 @@ ExpressBot [![Build Status](https://travis-ci.org/BennyThink/ExpressBot.svg?bran
 [@bennyblog_bot](https://t.me/bennyblog_bot)（此机器人由俺长期维护，但是**不提供任何保证**）
 
 这个机器人不只是能聊天、查快递哦！信不信发语音给它也可以！还能搜美剧日剧！详细信息可以看功能和TODO
-**由于数据库中记录的未完成订单数量比较大，为了避免再次被快递100封IP，目前暂时停止了轮询推送功能。对您造成的不便敬请谅解！**
+**由于数据库中记录的未完成订单数量比较大，为了避免再次被快递100封IP，目前可能随时停止轮询推送功能。对您造成的不便敬请谅解！**
 
 # 关于 #
 由于最近机器人使用量突然飙升，使用轮询模式很容易导致快递100的免费API使用量超过2000次/天而导致被封IP，所以目前打算更换API。
@@ -46,10 +46,9 @@ ExpressBot [![Build Status](https://travis-ci.org/BennyThink/ExpressBot.svg?bran
 直接发送消息即可，也可以发送语音（中文普通话）
 
 ## 使用方法3：查美剧 ##
-查询美剧/日剧：`/query 逃避`，
-获得S01E03链接：`/yyets 神盾局 S01 E03`，
-获得S03E03,05,12链接：`/yyets 神盾局 S03 E03,05,12`，
-获得S03全部链接：`/yyets 神盾局 S03 E0`
+* 查询美剧/日剧/电影：`/query 蝙蝠侠`
+* 获得下载链接：`/yyets 神盾局`，之后点击按钮操作
+
 
 ## 部署环境 ##
 需要部署在可以访问Telegram API的服务器上（或者设置代理），同时支持Python 2和Python 3
@@ -222,6 +221,9 @@ sudo systemctl stop expressbot.service
 目前暂时没有找到可靠的REST API的顺丰快递查询接口。
 ## 查询失败 ##
 目前正打算更换快递api，看样子好像快递鸟是个比较好的选择（支持推送），但是需要实名认证……
+## query和yyets的区别 ##
+`yyets`用于通过点击InlineKeyboardButton获取到正确的下载链接，但是前提要求是只能有一个检索结果；`query`则是用于检索全部信息。
+比如说我想下载诺兰的黑暗骑士崛起，我就可以通过`query`找到唯一的名字，然后使用`/yyets 《蝙蝠侠：黑暗骑士崛起》(The Dark Knight Rises)`获取到唯一的结果。
 
 ## 致谢 ##
 * [coderfox/Kuaidi100API](https://github.com/coderfox/Kuaidi100API) 快递100的原生API
@@ -231,6 +233,7 @@ sudo systemctl stop expressbot.service
 * [speech_recognition](https://github.com/Uberi/speech_recognition) 提供多种语音识别的封装
 * [pydub](https://github.com/jiaaro/pydub) 提供ffmpeg的封装
 * [ffmpeg](https://ffmpeg.org/) 用于音频文件转码
+* [人人影视字幕组](http://www.zimuzu.tv/) 提供海量影视资源及API
 
 ## TODO ##
 按完成状态、优先级排列
@@ -244,12 +247,11 @@ sudo systemctl stop expressbot.service
 - [x] 即使订单刚刚生成，也可以加入到追踪列表中而不是报错
 - [x] 搜索电影（目前准备使用人人影视的接口）
 - [x] SSL 证书问题：目前暂时禁用了`InsecureRequestWarning`
+- [x] 给全体用户发送广播：管理员专用
+- [ ] 人人影视 Access Key
 - [ ] 添加其他聊天机器人支持[ref](https://github.com/evolsnow/robot)
-- [ ] 是否需要重构`send_chat_action`来达到代码复用的目的
-- [ ] 有时会收到重复消息，原因未知
-- [ ] systemd与cron相爱相杀：真的有必要写两次吗
+- [ ] systemd与bash相爱相杀：真的有必要写两次吗
 - [ ] 更换快递api，放弃轮询模式
-- [ ] 给全体用户发送广播：管理员专用
 
 
 ## License ##
