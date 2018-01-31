@@ -4,7 +4,7 @@
 # Telegram message handle function.
 __author__ = 'Benny <benny@bennythink.com>'
 __credits__ = 'ヨイツの賢狼ホロ <horo@yoitsu.moe>'
-__version__ = '1.2.0'
+__version__ = '1.2.1'
 
 import os
 import time
@@ -30,7 +30,7 @@ bot = telebot.TeleBot(TOKEN)
 
 
 @bot.message_handler(commands=['start'])
-def bot_help(message):
+def bot_start(message):
     if message.text == '/start':
         bot.send_chat_action(message.chat.id, 'typing')
         bot.send_message(message.chat.id, '哎哟欢迎😗我能查快递，陪聊，查美剧电影 ~\n要不戳这里试试看 /help')
@@ -39,11 +39,11 @@ def bot_help(message):
         for item_tid in msg:
             bot.send_chat_action(message.chat.id, 'typing')
             r = kuaidi100.recv(item_tid, message.message_id, message.chat.id)
-            bot.send_message(message.chat.id, r)
+            bot.send_message(message.chat.id, r, parse_mode='Markdown')
     else:
         bot.send_chat_action(message.chat.id, 'typing')
         r = kuaidi100.recv(message.text.split()[1], message.message_id, message.chat.id)
-        bot.send_message(message.chat.id, r)
+        bot.send_message(message.chat.id, r, parse_mode='Markdown')
 
 
 @bot.message_handler(commands=['help'])
@@ -51,16 +51,17 @@ def bot_help(message):
     bot.send_chat_action(message.chat.id, 'typing')
     bot.send_message(message.chat.id,
                      "咱能帮汝查询快（shuǐ）递（biǎo）信息啦~ 有问题的话就去 @BennyThink 呗。\n"
-                     "⚠⚠由于快递100的接口限制，可能会导致超出查询上限，目前已暂停轮询推送。\n"
-                     "项目地址 https://github.com/BennyThink/ExpressBot 欢迎PR")
+                     "**⚠由于快递100的接口限制，可能会导致超出查询上限，目前已暂停轮询推送⚠**\n"
+                     "项目地址 https://github.com/BennyThink/ExpressBot 欢迎PR", parse_mode='Markdown')
     bot.send_message(message.chat.id,
-                     "直接发送运单编号即可查询（并添加到追踪中）；\
-                     如果汝的单号带有字母，请使用/start danhao123；\
-                     如果汝需要一次性追踪多个单号，请/start 123,1234，使用英文半角逗号分隔。")
+                     "直接发送运单编号即可查询（并添加到追踪中）\n"
+                     "如果汝的单号带有字母，请使用`/start danhao123`\n"
+                     "如果汝需要一次性追踪多个单号，请`/start 123,1234`，使用英文半角逗号分隔。",
+                     parse_mode='Markdown')
 
     bot.send_message(message.chat.id,
-                     "查询美剧/日剧/电影：/query 蝙蝠侠\n"
-                     "查询美剧下载链接：/yyets 神盾局，之后按照提示点击按钮\n")
+                     "查询美剧/日剧/电影：`/query 蝙蝠侠`\n"
+                     "查询美剧下载链接：`/yyets 神盾局`，之后按照提示点击按钮\n", parse_mode='Markdown')
 
 
 @bot.message_handler(commands=['list'])
@@ -81,7 +82,7 @@ def bot_delete(message):
     if message.text == '/delete':
         bot.send_chat_action(message.chat.id, 'typing')
         bot.send_message(
-            message.chat.id, '/delete 123456789\n像这样把汝的运单编号加到 /delete 之后就好啦~/')
+            message.chat.id, '`/delete 123456789`\n像这样把汝的运单编号加到 `/delete` 之后就好啦~/', parse_mode='Markdown')
     else:
         msg = kuaidi100.delete(message.text[8:])
         bot.send_chat_action(message.chat.id, 'typing')
@@ -113,7 +114,7 @@ def test_callback(call):
         bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id, reply_markup=markup)
 
     else:
-        bot.answer_callback_query(call.id, '您要的信息取回来惹')
+        bot.answer_callback_query(call.id, '汝要的信息取回来惹')
         bot.send_message(call.message.chat.id, yyets.get_tv_link(call.data))
 
 
@@ -122,7 +123,7 @@ def bot_yyets(message):
     markup = types.InlineKeyboardMarkup()
     if ' ' not in message.text:
         bot.send_chat_action(message.chat.id, 'typing')
-        bot.send_message(message.chat.id, '输入格式有误，例：/yyets 神盾局特工')
+        bot.send_message(message.chat.id, '输入格式有误，例：`/yyets 神盾局特工`', parse_mode='Markdown')
     else:
         bot.send_chat_action(message.chat.id, 'typing')
         season_count, msg = yyets.get_season_count(message.text.split(' ')[1])
@@ -144,7 +145,7 @@ def bot_query(message):
     bot.send_chat_action(message.chat.id, 'typing')
     msg = yyets.query_resource(message.text)
     if msg == '':
-        bot.send_message(message.chat.id, '好像出了点错误，使用方法/query 逃避可耻却有用')
+        bot.send_message(message.chat.id, '好像出了点错误，使用方法`/query 逃避可耻却有用`', parse_mode='Markdown')
     else:
         bot.send_message(message.chat.id, msg)
 
@@ -188,7 +189,7 @@ def track_express(message):
                        kuaidi100.auto_detect(message.text)[0], message.text,
                        time.strftime("%Y-%m-%d %H:%M:%S")))
         else:
-            bot.send_message(message.chat.id, r)
+            bot.send_message(message.chat.id, r, parse_mode='Markdown')
     # use turing bot
     elif TURING_KEY == '':
         bot.send_chat_action(message.chat.id, 'typing')

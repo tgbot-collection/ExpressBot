@@ -55,8 +55,7 @@ def recv(code, *args):
     # recommend 4-6 hours on cron
     message = ''
     if len(db.select(sql_cmd, (0,))) > 300:
-        message += u'由于快递100的免费版接口存在每IP每日最高2000查询的限制，查询次数即将接近上限。\
-        您的查询可能会失败\n'
+        message += u'由于快递100的免费版接口存在每IP每日最高2000查询的限制，查询次数即将接近上限。*您的查询可能会失败*'
 
     try:
         db_res = db.select("SELECT * FROM job WHERE track_id=?", (code,))[0]
