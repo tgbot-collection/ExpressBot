@@ -11,6 +11,7 @@ import time
 
 import requests
 import telebot
+from telebot import types
 
 import config
 import db
@@ -102,23 +103,44 @@ def bot_quick_delete(message):
         bot.send_message(message.chat.id, msg)
 
 
-# TODO: Not so Pythonic
+# all callback
+@bot.callback_query_handler(func=lambda call: True)
+def test_callback(call):
+    previous = call.data
+    markup = types.InlineKeyboardMarkup(2)
+    if len(call.data.split(' ')) == 2:
+        episode_count, _ = yyets.get_episode_count(call.data)
+        for button in range(1, episode_count + 1):
+            markup.add(types.InlineKeyboardButton("第%s集" % button, callback_data='%s %s' % (previous, button)))
+        bot.edit_message_text('那么看第几集好呢😘', chat_id=call.message.chat.id, message_id=call.message.message_id)
+
+        bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id, reply_markup=markup)
+
+    else:
+        bot.answer_callback_query(call.id, '您要的信息取回来惹')
+        bot.send_message(call.message.chat.id, yyets.get_tv_link(call.data))
+
+
 @bot.message_handler(commands=['yyets'])
 def bot_yyets(message):
-    n = 4096
-    message.text = ' '.join(message.text.split())
-    if 'S' in message.text and 'E' in message.text and len(message.text.split()) == 4:
+    markup = types.InlineKeyboardMarkup()
+    if ' ' not in message.text:
         bot.send_chat_action(message.chat.id, 'typing')
-        msg = yyets.process(message.text)
-        if len(msg) > n:
-            all_msg = [msg[i:i + n] for i in xrange(0, len(msg), n)]
-            for item in all_msg:
-                bot.send_message(message.chat.id, item)
-        else:
-            bot.send_message(message.chat.id, msg)
+        bot.send_message(message.chat.id, '输入格式有误，例：/yyets 神盾局特工')
     else:
         bot.send_chat_action(message.chat.id, 'typing')
-        bot.send_message(message.chat.id, '输入格式有误，例：/yyets 神盾局 S01 E02')
+        season_count, msg = yyets.get_season_count(message.text.split(' ')[1])
+        if season_count == 0:
+            bot.send_message(message.chat.id, msg)
+            return
+        elif season_count == 255:
+            bot.send_message(message.chat.id, msg)
+            return
+        for button in range(1, season_count + 1):
+            markup.add(types.InlineKeyboardButton
+                       ("第%s季" % button,
+                        callback_data='%s %s' % (message.text.split(' ')[1], button)))
+        bot.send_message(message.chat.id, "你想看第几季呢？请点击选择", reply_markup=markup)
 
 
 @bot.message_handler(commands=['query'])
@@ -126,8 +148,7 @@ def bot_query(message):
     bot.send_chat_action(message.chat.id, 'typing')
     msg = yyets.query_resource(message.text)
     if msg == '':
-        bot.send_message(message.chat.id, '好像出了点错误，使用方法/query 逃避可耻')
-
+        bot.send_message(message.chat.id, '好像出了点错误，使用方法/query 逃避可耻却有用')
     else:
         bot.send_message(message.chat.id, msg)
 
@@ -136,7 +157,7 @@ def bot_query(message):
 @msg_logger
 def track_express(message):
     """
-    process text/voice message, all digits means express id. Otherwise sends Turing or refuse message
+    get_season_count text/voice message, all digits means express id. Otherwise sends Turing or refuse message
     :param message: Telegram message sent by user.
     :return: None
     """
