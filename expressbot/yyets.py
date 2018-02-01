@@ -105,9 +105,9 @@ def get_episode_count(data):
 
     _, dl = get_season_count(data.split(' ')[0])
     n = int(data.split(' ')[1])
-    length = len(dl.get('data').get('list'))
-    return len(dl.get('data').get('list')[length - 1 - n].get('episodes')), dl.get('data').get('list')[
-        length - 1 - n].get('episodes')
+    length = int(dl.get('data').get('list')[0].get('season'))
+    return len(dl.get('data').get('list')[length - n].get('episodes')), dl.get('data').get('list')[
+        length - n].get('episodes')
 
 
 def get_tv_link(data):
@@ -161,4 +161,4 @@ def iter_link(dl_app, dl_hr_mp4):
 
 
 if __name__ == '__main__':
-    print(get_season_count('神盾局'))
+    print(get_tv_link('闪电侠 3 18'))
