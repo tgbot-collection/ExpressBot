@@ -108,8 +108,8 @@ if [ $? -eq 0 -a $1 -eq 10 ];then
     sed -i "s/12345/$TOKEN/" /lib/systemd/system/expressbot.service
     sed -i "s/111111/$TURING_KEY/" /lib/systemd/system/expressbot.service
     sed -i "s/0/$DEBUG/" /lib/systemd/system/expressbot.service
-    echo "export TOKEN = '$TOKEN'">>/root/.bashrc
-    echo "export DB_PATH = '/home/ExpressBot/expressbot/bot.db'">>/root/.bashrc
+    echo "export TOKEN='$TOKEN'">>/root/.bashrc
+    echo "export DB_PATH='/home/ExpressBot/expressbot/bot.db'">>/root/.bashrc
 else
     echo -e "${Tip} FFFFFile"
     echo "TOKEN = '$TOKEN'">/home/ExpressBot/expressbot/config.py
