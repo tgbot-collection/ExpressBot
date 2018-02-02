@@ -8,17 +8,26 @@
 __author__ = 'Benny <benny@bennythink.com>'
 
 import db
+import os
 import sys
+import time
 
-from main import send_message
+import telebot
+
+import config
+
+TOKEN = os.environ.get('TOKEN') or config.TOKEN
+DB_PATH = os.environ.get('DB_PATH') or config.DB_PATH
 
 
 def broadcast(msg):
+    bot = telebot.TeleBot(TOKEN)
     cmd = 'SELECT DISTINCT chat_id FROM job'
     user_list = db.select(cmd, '')
 
     for chat_id in user_list:
-        send_message(chat_id[0], msg)
+        bot.send_message(chat_id[0], msg)
+        time.sleep(0.1)
 
 
 def get_undone_count():
