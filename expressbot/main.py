@@ -4,7 +4,7 @@
 # Telegram message handle function.
 __author__ = 'Benny <benny@bennythink.com>'
 __credits__ = 'ヨイツの賢狼ホロ <horo@yoitsu.moe>'
-__version__ = '1.2.1'
+__version__ = '1.2.2'
 
 import os
 import time
@@ -215,6 +215,9 @@ def track_express(message):
     return r
 
 
+# TODO: Exception in thread WorkerThread2... 'NoneType' object has no attribute 'Empty'
+# In Python 2, we need a bot action to stop this from happening.
+# Deprecated.
 def send_message(chat_id, msg):
     bot.send_chat_action(chat_id, 'typing')
     bot.send_message(chat_id, msg)
