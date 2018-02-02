@@ -104,13 +104,25 @@ def bot_quick_delete(message):
 @bot.callback_query_handler(func=lambda call: True)
 def test_callback(call):
     previous = call.data
-    markup = types.InlineKeyboardMarkup(2)
+    btn_list = []
+    size = 3
+    markup = types.InlineKeyboardMarkup(size)
+
     if len(call.data.split(' ')) == 2:
         episode_count, _ = yyets.get_episode_count(call.data)
-        for button in range(1, episode_count + 1):
-            markup.add(types.InlineKeyboardButton("第%s集" % button, callback_data='%s %s' % (previous, button)))
-        bot.edit_message_text('那么看第几集好呢😘', chat_id=call.message.chat.id, message_id=call.message.message_id)
 
+        for button in range(1, episode_count + 1):
+            btn_list.append(types.InlineKeyboardButton("第%s集" % button, callback_data='%s %s' % (previous, button)))
+        for i in range(0, len(btn_list), size):
+            part = btn_list[i:i + size]
+            if len(part) == 3:
+                markup.add(part[0], part[1], part[2])
+            elif len(part) == 2:
+                markup.add(part[0], part[1])
+            else:
+                markup.add(part[0])
+
+        bot.edit_message_text('那么看第几集好呢😘', chat_id=call.message.chat.id, message_id=call.message.message_id)
         bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id, reply_markup=markup)
 
     else:
