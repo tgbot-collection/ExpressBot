@@ -3,7 +3,7 @@ Description=A Telegram Bot for querying expresses
 After=network.target network-online.target nss-lookup.target
 
 [Service]
-Restart=always
+Restart=on-failure
 Type=simple
 ExecStart=/usr/bin/python /home/ExpressBot/expressbot/main.py
 

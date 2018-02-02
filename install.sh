@@ -211,12 +211,8 @@ fi
 uninstall_all(){
 pip uninstall -y -r /home/ExpressBot/requirements.txt
 rm -rf /home/ExpressBot
-# It's better not to remove packages.
-#if [ "$PM" = "yum" ]; then
-#    $PM remove -y libcurl-devel openssl-devel
-#elif [ "$PM" = "apt" ]; then
-#    $PM remove -y libssl-dev libcurl4-openssl-dev
-#fi
+# TODO: remove the last two lines in .bashrc
+
 remove_service
 }
 

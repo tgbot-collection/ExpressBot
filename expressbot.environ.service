@@ -7,7 +7,7 @@ Environment="TOKEN=12345"
 Environment="DB_PATH=/home/ExpressBot/expressbot/bot.db"
 Environment="TURING_KEY=111111"
 Environment="DEBUG=0"
-Restart=always
+Restart=on-failure
 Type=simple
 ExecStart=/usr/bin/python /home/ExpressBot/expressbot/main.py
 
