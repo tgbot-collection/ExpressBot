@@ -31,9 +31,6 @@ def cron(code, mid, cid, db_content):
     :param db_content: old express status in database
     :return: None
     """
-    # cancel cron job.
-    if len(s) > 80:
-        return
 
     r = kuaidi100.recv(code, mid, cid)
     # suppress maximum 2000 queries
