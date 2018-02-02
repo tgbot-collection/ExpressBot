@@ -3,7 +3,7 @@
 
 # ExpressBot - broadcast.py
 # 2018/1/29 11:51
-# TODO: need fix
+# TODO: temporary fix
 
 __author__ = 'Benny <benny@bennythink.com>'
 
@@ -26,6 +26,7 @@ def broadcast(msg):
     user_list = db.select(cmd, '')
 
     for chat_id in user_list:
+        # TODO: if the user has block our bot, exception.
         bot.send_message(chat_id[0], msg)
         time.sleep(0.1)
 
