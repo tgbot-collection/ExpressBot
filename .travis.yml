@@ -2,9 +2,9 @@ language: python
 python:
   - "2.7"
   - "3.6"
-# command to install dependencies
 install:
   - pip install -r requirements.txt
 script:
-# TODO:test suite
-  - python tests/build.py
+  - python tests/build_test.py
+  - python tests/turing_test.py
+  - python tests/yyets_test.py
