@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # coding:utf-8
 
-# ExpressBot - build.py
+# ExpressBot - build_test.py
 # 2017/11/12 20:52
 # 
 
