@@ -317,7 +317,7 @@ Linux下（Ubuntu 16.04）Python 2，TeleBot实例必须要执行一个操作（
 - [x] 搜索电影（目前准备使用人人影视的接口）
 - [x] SSL 证书问题：目前暂时禁用了`InsecureRequestWarning`
 - [x] 给全体用户发送广播：管理员专用
-- [ ] **TravisCI 测试用例**
+- [ ] **TravisCI 测试用例** 部分完成
 - [ ] 人人影视 Access Key
 - [ ] 添加其他聊天机器人支持[ref](https://github.com/evolsnow/robot)
 - [ ] systemd与bash相爱相杀：真的有必要写两次吗

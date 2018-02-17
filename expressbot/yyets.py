@@ -106,6 +106,7 @@ def get_episode_count(data):
     _, dl = get_season_count(data.split(' ')[0])
     n = int(data.split(' ')[1])
     length = int(dl.get('data').get('list')[0].get('season'))
+    length = 1 if length == 101 else length
     return len(dl.get('data').get('list')[length - n].get('episodes')), dl.get('data').get('list')[
         length - n].get('episodes')
 
@@ -161,4 +162,4 @@ def iter_link(dl_app, dl_hr_mp4):
 
 
 if __name__ == '__main__':
-    print(get_tv_link('闪电侠 3 18'))
+    get_season_count('unnatural')

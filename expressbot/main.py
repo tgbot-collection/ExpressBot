@@ -133,23 +133,23 @@ def test_callback(call):
 @bot.message_handler(commands=['yyets'])
 def bot_yyets(message):
     markup = types.InlineKeyboardMarkup()
-    if ' ' not in message.text:
+    if message.text.count(' ')>1:
         bot.send_chat_action(message.chat.id, 'typing')
         bot.send_message(message.chat.id, '输入格式有误，例：`/yyets 神盾局特工`', parse_mode='Markdown')
-    else:
-        bot.send_chat_action(message.chat.id, 'typing')
-        season_count, msg = yyets.get_season_count(message.text.split(' ')[1])
-        if season_count == 0:
-            bot.send_message(message.chat.id, msg)
-            return
-        elif season_count == 255:
-            bot.send_message(message.chat.id, msg)
-            return
-        for button in range(1, season_count + 1):
-            markup.add(types.InlineKeyboardButton
-                       ("第%s季" % button,
-                        callback_data='%s %s' % (message.text.split(' ')[1], button)))
-        bot.send_message(message.chat.id, "你想看第几季呢？请点击选择", reply_markup=markup)
+        return
+    bot.send_chat_action(message.chat.id, 'typing')
+    season_count, msg = yyets.get_season_count(message.text.split(' ')[1])
+    if season_count == 0:
+        bot.send_message(message.chat.id, msg)
+        return
+    elif season_count == 255:
+        bot.send_message(message.chat.id, msg)
+        return
+    for button in range(1, season_count + 1):
+        markup.add(types.InlineKeyboardButton
+                   ("第%s季" % button,
+                    callback_data='%s %s' % (message.text.split(' ')[1], button)))
+    bot.send_message(message.chat.id, "你想看第几季呢？请点击选择", reply_markup=markup)
 
 
 @bot.message_handler(commands=['query'])

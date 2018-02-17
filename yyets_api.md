@@ -204,6 +204,11 @@ keyword=为url编码的剧集信息
 **但是得到的文件是无法播放的，加密了。根据beyond compare的分析，文件中很多一部分都被加密了。**
 **看样子需要逆向，最好能拿到源代码**
 
+已被逆向，参考 如下两个链接：
+* [JasonKhew96](https://github.com/BennyThink/ExpressBot/issues/3)
+* [yyets-restorer](https://github.com/BennyThink/yyets-restorer)
+
+
 此时复制链接得到的大致如下：
 yyets://N=逃避可耻却有用.NIGERUHA.HAJIDAGA.YAKUNITATSU.Ep01.Chi_Jap.HDTVrip.1280X720-ZhuixinFanV2.mp4|S=733967923|H=fa1a42ee8066da0aa2b66ca470814489160ad214|
 **人人影视专用链是如何生成的？是否可以想办法逆向一下？**
