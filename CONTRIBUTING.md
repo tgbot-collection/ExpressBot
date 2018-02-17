@@ -17,3 +17,6 @@ Careful when you bump version number, also try to read [Semantic versioning](htt
 
 ## 6. VOICE RECOGNITION
 Currently this version uses a free demo API.
+
+## 7. REBASE YOUR COMMIT IF NECESSARY.
+Rebase your commit if they're doing the same thing.
