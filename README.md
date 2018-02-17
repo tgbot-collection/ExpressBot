@@ -270,7 +270,7 @@ python /home/Expressbot/expressbot/broadcast.py 大家好
 ### 查询失败 ###
 目前正打算更换快递api，看样子好像快递鸟是个比较好的选择（支持推送），但是需要实名认证……
 ### query和yyets的区别 ###
-`yyets`用于通过点击InlineKeyboardButton获取到正确的下载链接，但是前提要求是只能有一个检索结果；`query`则是用于检索全部信息。
+`yyets`用于通过点击InlineKeyboardButton获取到正确的下载链接，但是前提要求是只能有一个检索结果（多个结果只返回第一个）；`query`则是用于检索全部信息。
 比如说我想下载诺兰的黑暗骑士崛起，我就可以通过`query`找到唯一的名字，然后使用`/yyets 《蝙蝠侠：黑暗骑士崛起》(The Dark Knight Rises)`获取到唯一的结果。
 ### timer.py, broadcast.py###
 在某些系统下，运行python timer.py会报错，大致内容如下：
