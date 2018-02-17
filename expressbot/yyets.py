@@ -59,11 +59,14 @@ def get_season_count(tv_name):
     :return: download link, `0, err_msg` or `season count, dl link`
     """
     search_result = search_resource(tv_name)
+    # return the first result!
+    if len(search_result.get('data')) > 1:
+        search_result.update(data=[search_result.get('data')[0]])
 
     if search_result.get('data') is None:
         return 0, '没有这个资源'
-    elif len(search_result.get('data')) > 1:
-        return 0, '关键词不够精确哦，不如试试/query 关键词吧！'
+    # elif len(search_result.get('data')) > 1:
+    #     return 0, '关键词不够精确哦，不如试试/query 关键词吧！'
     elif search_result.get('data')[0].get('channel') == 'movie':
         # TODO: AccessKey  4002 资源关闭 4003暂时没有资源
         download_link = show_resource(search_result.get('data')[0].get('id'))
