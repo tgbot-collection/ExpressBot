@@ -60,30 +60,22 @@ def get_season_count(tv_name):
     """
     search_result = search_resource(tv_name)
     # return the first result!
-    if len(search_result.get('data')) > 1:
+    if search_result.get('data') is None or search_result.get('data') == u'':
+        return 0, '没有这个资源'
+    elif len(search_result.get('data')) > 1:
         search_result.update(data=[search_result.get('data')[0]])
 
-    if search_result.get('data') is None:
-        return 0, '没有这个资源'
-    # elif len(search_result.get('data')) > 1:
-    #     return 0, '关键词不够精确哦，不如试试/query 关键词吧！'
-    elif search_result.get('data')[0].get('channel') == 'movie':
+    if search_result.get('data')[0].get('channel') == 'movie':
         # TODO: AccessKey  4002 资源关闭 4003暂时没有资源
         download_link = show_resource(search_result.get('data')[0].get('id'))
-        if download_link.get('status') != 1:
-            return 0, '由于accesskey的原因，电影搜索基本是废的，正在尝试修复中……'
-        else:
-            return 255, get_movie_link(download_link)
+        return (0, '由于accesskey的原因，电影搜索基本是废的，正在尝试修复中……') if download_link.get(
+            'status') != 1 else (255, get_movie_link(download_link))
     else:
         download_link = show_resource(search_result.get('data')[0].get('id'))
         if download_link.get('status') != 1:
             return 0, '资源不可用'
-
         season = download_link.get('data').get('list')[0].get('season')
-        if season == '101':
-            return 1, download_link
-        else:
-            return int(season), download_link
+        return (1, download_link) if season == '101' else (int(season), download_link)
 
 
 def get_movie_link(data):
