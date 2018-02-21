@@ -133,7 +133,7 @@ def test_callback(call):
 @bot.message_handler(commands=['yyets'])
 def bot_yyets(message):
     markup = types.InlineKeyboardMarkup()
-    if message.text.count(' ') > 1:
+    if message.text.count(' ') != 1:
         bot.send_chat_action(message.chat.id, 'typing')
         bot.send_message(message.chat.id, '输入格式有误，例：`/yyets 神盾局特工`', parse_mode='Markdown')
         return
