@@ -7,14 +7,12 @@ __credits__ = 'ヨイツの賢狼ホロ <horo@yoitsu.moe>'
 __version__ = '1.2.3'
 
 import os
-import time
 
 import requests
 import telebot
 from telebot import types
 
 import config
-import db
 import kuaidi100
 import turing
 import utils
@@ -193,13 +191,7 @@ def track_express(message):
         bot.send_chat_action(message.chat.id, 'typing')
         r = kuaidi100.recv(message.text, message.message_id, message.chat.id)
         if u'单号不存在或者已经过期' in r:
-            bot.send_message(message.chat.id, '汝的单号可能刚刚生成，暂无信息，已经加入到任务队列中')
-            sql_cmd = "INSERT INTO job VALUES (NULL ,?,?,?,? ,'刚刚录入耶' ,'Started',?,0)"
-
-            db.upsert(sql_cmd,
-                      (message.message_id, message.chat.id,
-                       kuaidi100.auto_detect(message.text)[0], message.text,
-                       time.strftime("%Y-%m-%d %H:%M:%S")))
+            bot.send_message(message.chat.id, '汝的单号可能刚刚生成，暂无信息，不如稍后试试？')
         else:
             bot.send_message(message.chat.id, r, parse_mode='Markdown')
     # use turing bot
