@@ -41,6 +41,8 @@ ExpressBot [![Build Status](https://travis-ci.org/BennyThink/ExpressBot.svg?bran
 > query - 查询美剧、电影
 >
 > yyets - 查询下载链接
+>
+> weather - 查询指定城市近期天气预报
 
 
 ## 截图 ##
@@ -51,6 +53,10 @@ ExpressBot [![Build Status](https://travis-ci.org/BennyThink/ExpressBot.svg?bran
 ![](assets/season.jpg)
 
 ![](assets/episode.jpg)
+
+![](assets/weather.jpg)
+
+![](assets/chat.jpg)
 
 
 ## 使用方法1：查快递 ##
@@ -272,7 +278,7 @@ python /home/Expressbot/expressbot/broadcast.py 大家好
 ### query和yyets的区别 ###
 `yyets`用于通过点击InlineKeyboardButton获取到正确的下载链接，但是前提要求是只能有一个检索结果（多个结果只返回第一个）；`query`则是用于检索全部信息。
 比如说我想下载诺兰的黑暗骑士崛起，我就可以通过`query`找到唯一的名字，然后使用`/yyets 《蝙蝠侠：黑暗骑士崛起》(The Dark Knight Rises)`获取到唯一的结果。
-### timer.py, broadcast.py###
+### timer.py, broadcast.py ###
 在某些系统下，运行python timer.py会报错，大致内容如下：
 ```
 Exception in thread WorkerThread2 (most likely raised during interpreter shutdown):Exception in thread WorkerThread1 (most likely raised during interpreter shutdown):

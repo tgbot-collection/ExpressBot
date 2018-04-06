@@ -16,6 +16,7 @@ import config
 import kuaidi100
 import turing
 import utils
+from weather import forecast_5d
 import speech
 import yyets
 from msg import msg_logger
@@ -157,6 +158,18 @@ def bot_query(message):
     if msg == '':
         bot.send_message(message.chat.id, '好像出了点错误，使用方法`/query 逃避可耻却有用`', parse_mode='Markdown')
     else:
+        bot.send_message(message.chat.id, msg)
+
+
+@bot.message_handler(commands=['weather'])
+def bot_weather(message):
+    if len(message.text) == 8:
+        bot.send_chat_action(message.chat.id, 'typing')
+        bot.send_message(message.chat.id, '使用方法：/weather 北京')
+    else:
+        bot.send_chat_action(message.chat.id, 'upload_document')
+        msg = forecast_5d(message.text.split()[1], 30)
+        bot.send_chat_action(message.chat.id, 'typing')
         bot.send_message(message.chat.id, msg)
 
 
