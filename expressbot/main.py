@@ -7,19 +7,22 @@ __credits__ = 'ヨイツの賢狼ホロ <horo@yoitsu.moe>'
 __version__ = '1.2.3'
 
 import os
+import sys
 
 import requests
 import telebot
+from apscheduler.schedulers.background import BackgroundScheduler
 from telebot import types
 
 import config
 import kuaidi100
 import turing
 import utils
-from weather import forecast_5d
 import speech
 import yyets
 from msg import msg_logger
+from timer import checker
+from weather import forecast_5d
 
 TOKEN = os.environ.get('TOKEN') or config.TOKEN
 TURING_KEY = os.environ.get('TURING_KEY') or config.TURING_KEY
@@ -220,14 +223,6 @@ def track_express(message):
     return r
 
 
-# TODO: Exception in thread WorkerThread2... 'NoneType' object has no attribute 'Empty'
-# In Python 2, we need a bot action to stop this from happening.
-# Deprecated.
-def send_message(chat_id, msg):
-    bot.send_chat_action(chat_id, 'typing')
-    bot.send_message(chat_id, msg)
-
-
 if __name__ == '__main__':
     if DEBUG == '1':
         import logging
@@ -235,4 +230,11 @@ if __name__ == '__main__':
         logger = telebot.logger
         telebot.logger.setLevel(logging.DEBUG)
 
+    interval = 120
+    if len(sys.argv) == 2:
+        interval = int(sys.argv[1])
+
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(checker, 'interval', minutes=interval)
+    scheduler.start()
     bot.polling(none_stop=True)
