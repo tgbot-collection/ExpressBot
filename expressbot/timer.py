@@ -7,7 +7,6 @@ __author__ = 'Benny <benny@bennythink.com>'
 import os
 import random
 import sqlite3
-import time
 
 import telebot
 
@@ -51,11 +50,15 @@ def select(cmd):
     return data
 
 
-if __name__ == '__main__':
+def checker():
+    print 222222222
     sql_cmd = 'SELECT track_id,message_id,chat_id,content FROM job WHERE done=0'
     s = select(sql_cmd)
-    delay = random.uniform(1, 4)
+    # delay = random.uniform(1, 4)
 
     for i in s:
         cron(i[0], i[1], i[2], i[3])
-        time.sleep(delay)
+
+
+if __name__ == '__main__':
+    checker()
