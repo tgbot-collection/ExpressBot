@@ -98,7 +98,7 @@ johnpoint：反正我这边没有成功过
 ```bash
 wget -N --no-check-certificate https://raw.githubusercontent.com/BennyThink/ExpressBot/master/install.sh && bash install.sh
 ```
-然后按照提示操作。同时还会安装计划任务，支持systemd的系统会同时安装为systemd服务，其他系统可以使用对应的init手动配置或使用`supervisor`
+然后按照提示操作。支持systemd的系统会同时安装为systemd服务，其他系统可以使用对应的init手动配置或使用`supervisor`
 快捷操作
 ```bash
 # 启动服务 
@@ -200,17 +200,15 @@ python main.py
 ```
 
 ### (6). 计划任务 ###
-如果需要追踪更新并推送，那么需要添加到计划任务中, 以Linux为例
-仿造`bot_check.sh`创建你的文件，替换其中`TOKEN`、`DB_PATH`为你的信息并保存：
+如果需要追踪更新并推送，那么咱需要定期轮询。
 
-然后`crontab`，添加如下
-```*/30 * * * * bash /your/path/bot_check.sh```
-即为30分钟运行一次。如果查询量很大，建议增长间隔运行时间，如三小时一次：
-```1 */3 * * * bash /your/path/bot_check.sh```
+目前使用的定时器是apscheduler，原先的cron已经被弃用了（但是脚本依旧保留没有删除）。main.py的参数表示间隔时间，`python main.py 60`表示60分钟轮询一次，不加则默认为120分钟。
 
-**一键脚本会自动安装计划任务，位置在`/home/bot_check.sh`**
+如果有特殊需要，可以自行修改这个参数。systemd用户需要编辑`/lib/systemd/system/expressbot.service`更改如下行参数：
 
-_我承认这样把TOKEN加入到配置文件中有些不太好，但是鉴于bash坑太多了，还没有爬出来，于是只好这样了。_
+```
+ExecStart=/usr/bin/python /home/ExpressBot/expressbot/main.py 60
+```
 
 ###  (7). 检查运行状态 ###
 * systemd
