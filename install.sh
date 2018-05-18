@@ -172,21 +172,8 @@ systemctl daemon-reload
 # Start_service
 Start_service(){
 check_systemd
-systemctl status expressbot.service>/dev/null
-if [ $? -eq 0 ];then
-  echo -e "${Info}服务已经启动"
-  exit 0
-else
-  echo -e "${Info}服务正在启动"
-  systemctl start expressbot.service
-fi
-systemctl status expressbot.service>/dev/null
-if [ $? -eq 0 ];then
-  echo -e "${Info}服务启动成功"
-  exit 0
-else
-  echo -e "${Error}服务启动失败"
-fi
+systemctl start expressbot.service>/dev/null
+echo -e "${Info}服务已经启动"
 }
 
 
