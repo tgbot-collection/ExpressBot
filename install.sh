@@ -119,12 +119,12 @@ else
     echo "DB_PATH = r'/home/ExpressBot/expressbot/bot.db'">>/home/ExpressBot/expressbot/config.py
 fi
 
-echo "export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin">>/home/bot_check.sh
-echo "export TOKEN='$TOKEN'">>/home/bot_check.sh
-echo "export DB_PATH='/home/ExpressBot/expressbot/bot.db'">>/home/bot_check.sh
-echo "python /home/ExpressBot/expressbot/timer.py">>/home/bot_check.sh
-
-echo "*/30 * * * * bash /home/bot_check.sh" >> /var/spool/cron/root
+#echo "export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin">>/home/bot_check.sh
+#echo "export TOKEN='$TOKEN'">>/home/bot_check.sh
+#echo "export DB_PATH='/home/ExpressBot/expressbot/bot.db'">>/home/bot_check.sh
+#echo "python /home/ExpressBot/expressbot/timer.py">>/home/bot_check.sh
+#
+#echo "*/30 * * * * bash /home/bot_check.sh" >> /var/spool/cron/root
 }
 
 
