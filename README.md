@@ -1,5 +1,6 @@
 ExpressBot [![Build Status](https://travis-ci.org/BennyThink/ExpressBot.svg?branch=master)](https://travis-ci.org/BennyThink/ExpressBot)
 ==
+**准备重构一个新版本的！**
 
 帮你查快递、自动追踪快递最新状态的Telegram机器人！成品可戳：
 
