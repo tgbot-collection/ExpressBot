@@ -4,8 +4,6 @@
 # timer for cron
 __author__ = 'Benny <benny@bennythink.com>'
 
-import os
-import random
 import sqlite3
 
 import telebot
@@ -13,8 +11,8 @@ import telebot
 import config
 import kuaidi100
 
-TOKEN = os.environ.get('TOKEN') or config.TOKEN
-DB_PATH = os.environ.get('DB_PATH') or config.DB_PATH
+TOKEN = config.TOKEN
+DB_PATH = config.DB_PATH
 
 bot = telebot.TeleBot(TOKEN)
 
@@ -31,13 +29,13 @@ def cron(code, mid, cid, db_content):
     :return: None
     """
 
-    r = kuaidi100.recv(code, mid, cid)
+    r = kuaidi100.receiver(code, mid, cid)
     # suppress maximum 2000 queries
     if db_content not in r and r != u'非法访问:IP禁止访问':
         try:
             bot.send_message(chat_id=cid, reply_to_message_id=mid, text=r)
         except telebot.apihelper.ApiException as e:
-            print(e.message)
+            print(e)
 
 
 def select(cmd):
@@ -51,7 +49,6 @@ def select(cmd):
 
 
 def checker():
-    print 222222222
     sql_cmd = 'SELECT track_id,message_id,chat_id,content FROM job WHERE done=0'
     s = select(sql_cmd)
     # delay = random.uniform(1, 4)
@@ -61,4 +58,4 @@ def checker():
 
 
 if __name__ == '__main__':
-    checker()
+    print(checker())

@@ -1,14 +1,12 @@
 ExpressBot [![Build Status](https://travis-ci.org/BennyThink/ExpressBot.svg?branch=master)](https://travis-ci.org/BennyThink/ExpressBot)
 ==
-**准备重构一个新版本的！**
+
 
 帮你查快递、自动追踪快递最新状态的Telegram机器人！成品可戳：
 
 [@bennyblog_bot](https://t.me/bennyblog_bot)（此机器人由俺长期维护，但是**不提供任何保证**）
 
 这个机器人不只是能聊天、查快递哦！信不信发语音给它也可以！还能搜美剧日剧！详细信息可以看功能和TODO
-
-**由于数据库中记录的未完成订单数量比较大，为了避免再次被快递100封IP，目前可能随时停止轮询推送功能。对您造成的不便敬请谅解！**
 
 
 # 关于 #
@@ -76,23 +74,15 @@ ExpressBot [![Build Status](https://travis-ci.org/BennyThink/ExpressBot.svg?bran
 
 
 ## 部署环境 ##
-需要部署在可以访问Telegram API的服务器上（或者设置代理），同时支持Python 2和Python 3
-**Python 3的支持可能存在一些问题！！**
-已经在以下平台测试通过（目前主要测试于Windows/Ubuntu的Python 2.7：
+需要部署在可以访问Telegram API的服务器上（或者设置代理），同时支持Python 2和Python 3，推荐用Python 3
+已经在以下平台测试通过：
 
 Windows 10： Python 2.7.13 32bit  Python 3.6.3 32bit
 
 Ubuntu 16.04/14.04、CentOS 7、Debian 9： Python 2.7
 
-```
-关于Centos：
-BennyThink:反正我是测试通过了
-johnpoint：反正我这边没有成功过
-     ——————各位自便
-```
 
-
-## 部署方法1.自动脚本（配置文件/环境变量模式) ##
+## 部署方法1.自动脚本 ##
 
 一键脚本在systemd的情况下运行会更好，一键脚本仅测试于Ubuntu 16.04：
 先切换到root用户：
@@ -142,42 +132,17 @@ pip3 install -r requirements.txt
 ### (3). 准备ffmpeg ##
 ffmpeg是为了支持音频识别（使用ffmpe进行音频文件的转码）。
 
-如果你是Windows，从[这里](https://ffmpeg.org/)下载ffmpeg的二进制exe文件，放到PATH中；
+如果你是Windows，从[这里](https://ffmpeg.org/)下载ffmpeg的二进制exe文件（一共三个都需要），放到PATH中；
 如果你是Linux发行版，直接用包管理器安装就可以（编译或者下载二进制也行），Debian系可以使用`sudo apt install ffmpeg`，RHEL可以使用`yum install ffmpeg`
 
 ### (4). 配置 ###
-**为了方便更新，推荐在环境变量中设置的TOKEN，这样可以随时更新而不用考虑merge，不过配置文件模式也简单好用呢。**
-#### 配置文件版本 ####
-修改`config.py`进行配置，TOKEN为Bot的API，TURING_KEY若不配置则不启用机器人功能，DEBUG为设置是否在控制台输出debug信息，0为不输出；`DB_PATH`为数据库文件的绝对路径
+修改`config.py`进行配置，TOKEN为Bot的API，TURING_KEY若不配置则不启用机器人功能
 
 ```python
 TOKEN = 'Your TOKEN'
 TURING_KEY = 'Your Key'
-DB_PATH = '/home/ExpressBot/expressbot/bot.db'
-DEBUG = 0
 ```
-#### systemd 版本 ####
-systemd无法直接使用`.bashrc`等文件的环境变量，第一种方法是编辑对应的service配置文件（**强烈推荐**也把DB_PATH和TOKEN写入到.bashrc中，这样后续的一些小工具可以直接应用）：
-创建单元文件：`vim /lib/systemd/system/expressbot.service`
-自行替换输入如下信息
-```
-[Unit]
-Description=A Telegram Bot for querying expresses
-After=network.target network-online.target nss-lookup.target
 
-[Service]
-Environment="TOKEN=12345"
-Environment="DB_PATH=/home/ExpressBot/expressbot/bot.db"
-Environment="TURING_KEY=111111"
-Environment="DEBUG=0"
-Restart=on-failure
-Type=simple
-ExecStart=/usr/bin/python /home/ExpressBot/expressbot/main.py
-
-[Install]
-WantedBy=multi-user.target
-
-```
 重新载入daemon、自启、启动
 ```bash
 systemctl daemon-reload
@@ -185,9 +150,6 @@ systemctl enable expressbot.service
 systemctl start expressbot.service
 ```
 我使用了`restart=on-failure`参数，失败退出会重启。如果设置成always就意味着无论因为什么原因，只要进程不在了，systemd就会立刻帮我们重启。详情可以参见`systemd.service`手册。
-
-第二种是运行`systemctl --user import-environment`导入，运行`systemctl --user show-environment`查看。
-更多资料参考[Arch Linux Systemd wiki](https://wiki.archlinux.org/index.php/Systemd/User#Environment_variables)
 
 ### (5). 运行 ###
 测试目的的话，以nohub或screen运行`main.py`，Python 3请用`python3`替换为`python`
@@ -203,13 +165,7 @@ python main.py
 ### (6). 计划任务 ###
 如果需要追踪更新并推送，那么咱需要定期轮询。
 
-目前使用的定时器是apscheduler，原先的cron已经被弃用了（但是脚本依旧保留没有删除）。main.py的参数表示间隔时间，`python main.py 60`表示60分钟轮询一次，不加则默认为120分钟。
-
-如果有特殊需要，可以自行修改这个参数。systemd用户需要编辑`/lib/systemd/system/expressbot.service`更改如下行参数：
-
-```
-ExecStart=/usr/bin/python /home/ExpressBot/expressbot/main.py 60
-```
+目前使用的定时器是apscheduler，`config.py`中的interval可以来设置间隔时间
 
 ###  (7). 检查运行状态 ###
 * systemd
@@ -238,8 +194,7 @@ sudo systemctl restart expressbot.service
 * type 快递公司名称
 * track_id 运单编号
 * content 最新的物流信息
-* status 快递状态
-* date 最新物流更新时间
+* timesstamp 最新物流更新时间
 
 **如果你发送了语音，那么语音文件会被放到`/tmp`目录下**
 我不保证我能够有节操不去查看数据库，但是我保证我会妥善保护数据库、不外泄。
@@ -248,26 +203,14 @@ sudo systemctl restart expressbot.service
 
 
 ## 另类用法1：消息记录机器人 ##
-有一个文件叫`msg.py`，如果为了debug等需求（比如说journalctl发现抛异常了，此时如果能够找到造成此次异常的聊天消息那就是最好的了），或者想记录、备份群组消息，可以将开头的`ENABLE = os.environ.get('logger')`改成`ENABLE = True`（或加入环境变量）。
-
-这样和机器人之间的消息会被记录到`logger.db`中（懒得设置，所以可能直接存在`/`）。
+有一个文件叫`msg.py`，如果为了debug等需求，可以在`config.py`中把`LOGGER`设置成True
 当然了，群组中你就不能设置图灵API了（甚至应该将查询快递的功能也废掉免得机器人乱说话）。
 另外，群组中需要开启机器人的隐私模式。
-
-
-## 另类用法2：广播所有用户 ##
-如果用户曾经使用机器人查询过快递，那么我们可以这样来给所有用户发送广播信息：
-```bash
-python /home/Expressbot/expressbot/broadcast.py 大家好
-```
-将“最新公告”替换为数字0为查看目前总计未完成任务列表。
 
 
 ## FAQ ##
 ### 服务器错误 ###
 唔，可能是快递100的接口炸了吧；稍后重试。
-### SSL InsecurePlatform error ###
-哦，你可能用的是 Python 3.5 吧，我也不太了解具体原因。试试 Python 2.7 或者Python 3.6吧。
 ### 查询不到结果 ###
 可能是刚刚生成单号，快递100还没有数据
 ### 顺丰 ###
@@ -277,25 +220,6 @@ python /home/Expressbot/expressbot/broadcast.py 大家好
 ### query和yyets的区别 ###
 `yyets`用于通过点击InlineKeyboardButton获取到正确的下载链接，但是前提要求是只能有一个检索结果（多个结果只返回第一个）；`query`则是用于检索全部信息。
 比如说我想下载诺兰的黑暗骑士崛起，我就可以通过`query`找到唯一的名字，然后使用`/yyets 《蝙蝠侠：黑暗骑士崛起》(The Dark Knight Rises)`获取到唯一的结果。
-### timer.py, broadcast.py ###
-在某些系统下，运行python timer.py会报错，大致内容如下：
-```
-Exception in thread WorkerThread2 (most likely raised during interpreter shutdown):Exception in thread WorkerThread1 (most likely raised during interpreter shutdown):
-Traceback (most recent call last):
-  File "/usr/lib/python2.7/threading.py", line 801, in __bootstrap_inner
-  File "/usr/local/lib/python2.7/dist-packages/telebot/util.py", line 61, in run
-<type 'exceptions.AttributeError'>: 'NoneType' object has no attribute 'Empty'
-
-Traceback (most recent call last):
-  File "/usr/lib/python2.7/threading.py", line 801, in __bootstrap_inner
-  File "/usr/local/lib/python2.7/dist-packages/telebot/util.py", line 61, in run
-<type 'exceptions.AttributeError'>: 'NoneType' object has no attribute 'Empty'
-
-```
-目前的测试有：
-Windows 下 Python 2/3 无此问题；
-Linux下（Ubuntu 16.04）Python 2，TeleBot实例必须要执行一个操作（比如说`bot.get_me()`,`bot.send_message()`)，否则会导致抛出如上异常；Python 3 无此问题。
-所以目前，`timer.py`与`broadcast.py`采取独立引入 TeleBot 的设计，只要数据库中存在对应的条目、会执行一个操作，那么就不会抛异常了。
 
 
 ## 致谢 ##

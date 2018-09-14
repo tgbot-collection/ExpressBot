@@ -5,7 +5,15 @@
 
 __author__ = 'ヨイツの賢狼ホロ <horo@yoitsu.moe>'
 
+import os
 import random
+import time
+
+import speech_recognition as sr
+from pydub import AudioSegment
+
+from config import LOGGER
+from db import Database
 
 refuse_messages = [
     u'世上没有什么事情比必然与偶然更难懂了，就像要懂得木头人的爱恋之情一样困难。',
@@ -36,3 +44,63 @@ def reply_refuse():
 
 def reply_not_found():
     return random.choice(not_found_messages)
+
+
+# https://github.com/Uberi/speech_recognition
+def ogg_to_wav(ogg_path):
+    song = AudioSegment.from_ogg(ogg_path)
+
+    wav_file = os.path.join(os.path.dirname(ogg_path), ogg_path.rsplit('\\')[-1].split('.')[0] + '.wav')
+    song.export(wav_file, 'wav', 'pcm', '16k')
+    return wav_file
+
+
+def recognition(wav_file):
+    r = sr.Recognizer()
+    with sr.AudioFile(wav_file) as source:
+        audio = r.record(source)
+    # recognize speech using Google Speech Recognition
+    try:
+        return r.recognize_google(audio, language='cmn-Hans-CN')
+
+    except sr.UnknownValueError:
+        return "Google Speech Recognition could not understand audio.4C7"
+    except sr.RequestError as e:
+        return "Could not request results from Google Speech Recognition service.4C7; {0}".format(e)
+
+
+def voice_to_text(ogg_path):
+    v = ogg_to_wav(ogg_path)
+    return recognition(v)
+
+
+def msg_logger(fun):
+    def wrapper(*args):
+        res = fun(*args)
+
+        if LOGGER:
+            db = Database()
+            sql = u'INSERT INTO msg VALUES (NULL ,?,?,?,?,?,?)'
+
+            # user last name
+            if args[0].chat.last_name is None:
+                args[0].chat.last_name = ''
+
+            log_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(args[0].date))
+            p1 = (args[0].chat.id, args[0].message_id, args[0].chat.username,
+                  args[0].chat.first_name + args[0].chat.last_name,
+                  args[0].text, log_time)
+            log_time2 = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+            p2 = (args[0].chat.id, args[0].message_id + 1, u'机器人', '', res, log_time2)
+
+            db.con.cursor().executemany(sql, (p1, p2))
+            db.con.commit()
+            db.con.close()
+        return res
+
+    return wrapper
+
+
+if __name__ == '__main__':
+    re = r'C:\Users\Benny\AppData\Local\Temp\AwADBQADnAADJLjZVMv7E_goF5ubAg.ogg'
+    print(voice_to_text(re))

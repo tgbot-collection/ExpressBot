@@ -13,6 +13,6 @@ import sys
 sys.path.append(os.getcwd())
 from expressbot import kuaidi100
 
-result = kuaidi100.recv('100000', 0, 0)
+result = kuaidi100.receiver('100000', 0, 0)
 assert result is not None
 

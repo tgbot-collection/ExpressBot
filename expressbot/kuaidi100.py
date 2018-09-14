@@ -7,149 +7,120 @@ __credits__ = 'ヨイツの賢狼ホロ <horo@yoitsu.moe>'
 
 import json
 import requests
+import time
 
-import db
 import utils
-from com_dic import STATE, PROVIDER
+from constants import PROVIDER
+from config import INTERVAL
+from db import Database
 
 
-def auto_detect(tracker):
+def __auto_detect(track_id):
     """
     auto detect express company
-    :param tracker: ID
-    :return: company name in pinyin
+    :param track_id: ID
+    :return: pinyin
     """
-    url = 'https://www.kuaidi100.com/autonumber/autoComNum?text=' + tracker
+    url = 'https://www.kuaidi100.com/autonumber/autoComNum?text=' + track_id
     result = requests.get(url).text
 
     try:
         r = json.loads(result).get('auto')[0].get('comCode')
-        if r == u'shunfeng':
-            pass
-        return r, PROVIDER.get(r, 'Default')
+        return r
     except (IndexError, ValueError):
-        return False, 'Default'
+        return None
 
 
-def query_express_status(com, track_id):
+def __query_status(track_id):
     """
     query express status
-    :param com: company name in pinyin,
     :param track_id: id
-    :return: the newest status
+    :return: json
     """
-    url = 'https://www.kuaidi100.com/query' + '?type=' + com + '&postid=' + track_id
-    return json.loads(requests.get(url).text)
+    company_name = __auto_detect(track_id)
+
+    url = 'https://www.kuaidi100.com/query' + '?type=' + company_name + '&postid=' + track_id
+    result = json.loads(requests.get(url).text)
+    return result
 
 
-def recv(code, *args):
+def receiver(track_id, *args):
     """
     check if this track is done
     No result in database would return none, so do a query and insert
-    :param code: express id
+    :param track_id: express id
     :param args: usually Telegram message_id and chat_id(user_id)
     :return: message to be sent to the client
     """
-    # check the undone job length and send warning if necessary.
-    sql_cmd = 'SELECT track_id,message_id,chat_id,content FROM job WHERE done=?'
-    # recommend 4-6 hours on cron
-    message = ''
-    if len(db.select(sql_cmd, (0,))) > 300:
-        message += u'由于快递100的免费版接口存在每IP每日最高2000查询的限制，查询次数即将接近上限。*您的查询可能会失败*'
+    # 1. query from database
+    # 2. older or none, query kuaidi100, update database
+    # 3. return status result
 
+    db = Database()
+    data = db.retrieve({'track_id': track_id})
     try:
-        db_res = db.select("SELECT * FROM job WHERE track_id=?", (code,))[0]
+        db_time = float(data[0][6])
     except IndexError:
-        db_res = db.select("SELECT * FROM job WHERE track_id=?", (code,))
+        db_time = 0
 
-    if len(db_res) == 0:
-        com_code, real_com_name = auto_detect(code)
-        if com_code == u'shunfeng':
-            return u'不好意思，快递100说顺丰的接口有一点点小问题。俺会尽快调整API的。'
+    r = utils.reply_refuse()
+    try:
+        r = __doing_query(db_time, track_id, args, data)
+    except Exception as e:
+        print(e)
+    finally:
 
-        if not com_code:
-            # TODO: Is it the pythonic way?
-            return utils.reply_not_found()
-        res = query_express_status(com_code, code)
-        done = 1 if (res.get('state') == '3' or res.get('state') == '4') else 0
+        return r
 
-        try:
-            sql_cmd = "INSERT INTO job VALUES (NULL ,?,?,?,?,?,?,?,?)"
 
-            db.upsert(sql_cmd, (args[0], args[1], com_code, code, res.get('data')[0].get('context'),
-                                STATE.get(res.get('state')), res.get('data')[0].get('time'), done))
-            message += code + ' ' + real_com_name + '\n' + res.get('data')[0].get('time') + ' ' + res.get('data')[
-                0].get(
-                'context')
-        except IndexError:
-            message += res.get('message')
-    elif db_res[8] == 0:
-        com_code, real_com_name = auto_detect(code)
-        if com_code == u'shunfeng':
-            return u'不好意思，快递100说顺丰的接口有一点点小问题。俺会尽快调整API的。'
+def __doing_query(db_time, track_id, args, data):
+    if time.time() - db_time <= INTERVAL * 60:
+        # print('just store')
+        return data[0][5]
+    elif len(data) == 0:
+        # print('insert now')
+        res = __query_status(track_id)
 
-        if not com_code:
-            return utils.reply_not_found()
-        res = query_express_status(com_code, code)
-        done = 1 if (res.get('state') == '3' or res.get('state') == '4') else 0
+        if res['status'] != '200':
+            return res['message']
+        else:
+            p = (args[0], args[1], PROVIDER.get(res['com']), track_id, res['data'][0]['context'],
+                 int(time.time()), __process_status(res['state']))
+            Database().create(p)
 
-        try:
-            sql_cmd = "UPDATE job SET content=?,status=?,date=?,done=? WHERE track_id=?"
-
-            db.upsert(sql_cmd, (res.get('data')[0].get('context'),
-                                STATE.get(res.get('state')),
-                                res.get('data')[0].get('time'),
-                                done,
-                                code))
-            message += code + ' ' + real_com_name + '\n' + res.get('data')[0].get('time') + ' ' + res.get('data')[
-                0].get(
-                'context')
-        except IndexError:
-            message += res.get('message')
+        return res['data'][0]['context']
     else:
-        message += db_res[4] + ' ' + PROVIDER.get(db_res[3], 'Default') + '\n' + db_res[7] + ' ' + db_res[5]
+        # print('update and save')
+        res = __query_status(track_id)
 
-    # TODO: 快递100的顺丰接口被废了，使用移动版
-    if message == u'非法访问:IP禁止访问':
-        message = '''由于快递100的免费版接口存在每IP每日最高2000查询的限制，目前已经超过此限制。                
-                因此您此次的查询被取消。\n
-                建议稍后尝试，或者按照 https://github.com/BennyThink/ExpressBot 部署自己的机器人'''
+        if res['status'] != '200':
+            return res['message']
+        else:
+            p = (res['data'][0]['context'], int(time.time()), __process_status(res['state']), track_id)
+            Database().update(p)
 
-    return message
-
-
-def list_query(un):
-    """
-    list known user's info from database
-    :param un: chat_id(user_id)
-    :return: a list contains results.
-    """
-    cmd = "SELECT track_id,type,date,content FROM job WHERE chat_id=?"
-    r = db.select(cmd, (un,))
-    if len(r) == 0:
-        return None
-    else:
-        r_tmp = []
-        for i in r:
-            tmp = list(i)
-            tmp[1] = PROVIDER.get(tmp[1], 'Default')
-            r_tmp.append(tmp)
-
-        return r_tmp
+        return res['data'][0]['context']
 
 
-def delete(tid):
-    """
-    delete a track record
-    :param tid: express id
-    :return: delete result, success or fail
-    """
-    cmd = "DELETE FROM job WHERE track_id=?"
-    if db.upsert(cmd, (tid,)) == 1:
-        return '删除成功 😋'
-    else:
-        return '那个在哪？'
+def __process_status(code):
+    c = 1 if code == '3' or code == '1' else 0
+    return c
+
+
+def __store_result(a):
+    db = Database()
+    db.create(a)
+
+
+def list_query(_id):
+    return Database().retrieve({'chat_id': _id})
+
+
+def delete_record(track_id):
+    count = Database().delete(track_id)
+    return '删除成功' if count else '那个在哪？'
 
 
 if __name__ == '__main__':
-    pass
+    print(receiver('263432466781', '260130', '941226'))
+    print(list_query(941226))

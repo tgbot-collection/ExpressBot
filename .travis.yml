@@ -7,4 +7,4 @@ install:
 script:
   - python tests/build_test.py
   - python tests/turing_test.py
-  - python tests/yyets_test.py
+  # - python tests/yyets_test.py
