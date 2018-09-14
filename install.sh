@@ -177,8 +177,6 @@ fi
 uninstall_all(){
 pip uninstall -y -r /home/ExpressBot/requirements.txt
 rm -rf /home/ExpressBot
-# TODO: remove the last two lines in .bashrc
-
 remove_service
 }
 
@@ -218,23 +216,23 @@ case "$num" in
 	1)
 	Install_all
 	;;
-	3)
+	2)
 	uninstall_all
 	;;
-	4)
+	3)
 	Start_service
 	;;
-	5)
+	4)
 	Stop_service
 	;;
-	6)
+	5)
 	Restart_service
 	;;
-	7)
+	6)
 	Service_status
 	;;
 	*)
-	echo -e "${Error} 请输入正确的数字 [1-7]"
+	echo -e "${Error} 请输入正确的数字 [1-6]"
 	;;
 esac
 }
