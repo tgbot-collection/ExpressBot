@@ -7,13 +7,11 @@
 
 __author__ = 'Benny <benny@bennythink.com>'
 
-import os
-import json
 import requests
 
+from constants import CITY
+
 URL = u'http://wthrcdn.etouch.cn/weather_mini?citykey='
-json_file = os.environ.get('DB_PATH').split('bot.db')[0] + 'city.json'
-city_json = json.loads(open(json_file).read())  # type: dict
 
 
 def forecast_5d(city, length):
@@ -23,7 +21,7 @@ def forecast_5d(city, length):
     :param city: city name in unicode
     :return: forecast in string.
     """
-    city_code = city_json.get(city)
+    city_code = CITY.get(city)
     if city_code is None:
         return '啊哦，没有查询到你要的信息'
     r = requests.get(URL + city_code).json()

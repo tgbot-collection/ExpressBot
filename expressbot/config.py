@@ -2,17 +2,15 @@
 # coding:utf-8
 
 # configuration
+import os
 
 # Mandatory
-TOKEN = '353rUbWd-_xEb0'
-
-# Mandatory, db path,e.g.:
-# Linux:`/home/ExpressBot/expressbot/bot.db`
-# Windows:`C:\Users\Benny\Documents\ExpressBot\expressbot\bot.db`
-DB_PATH = r''
-
+TOKEN = '370WLNFXI'
 # Optional, if you leave TURING_KEY with blank, the robot won't chat with you.
-TURING_KEY = ''
+TURING_KEY = 'c9e6af827a'
 
-# Optional, set it to 1 to output debug info in console
-DEBUG = '0'
+DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'bot.db')
+# minutes
+INTERVAL = 120
+
+LOGGER = True

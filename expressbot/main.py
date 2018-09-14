@@ -4,12 +4,11 @@
 # Telegram message handle function.
 __author__ = 'Benny <benny@bennythink.com>'
 __credits__ = 'ヨイツの賢狼ホロ <horo@yoitsu.moe>'
-__version__ = '1.2.3'
 
 import os
-import sys
-
+import time
 import requests
+
 import telebot
 from apscheduler.schedulers.background import BackgroundScheduler
 from telebot import types
@@ -17,16 +16,15 @@ from telebot import types
 import config
 import kuaidi100
 import turing
-import utils
-import speech
 import yyets
-from msg import msg_logger
+import utils
+from __init__ import __author__, __version__, __credits__, __website__, BANNER
+from utils import msg_logger
 from timer import checker
 from weather import forecast_5d
 
-TOKEN = os.environ.get('TOKEN') or config.TOKEN
-TURING_KEY = os.environ.get('TURING_KEY') or config.TURING_KEY
-DEBUG = os.environ.get('DEBUG') or config.DEBUG
+TOKEN = config.TOKEN
+TURING_KEY = config.TURING_KEY
 
 bot = telebot.TeleBot(TOKEN)
 
@@ -40,12 +38,12 @@ def bot_start(message):
         msg = message.text.split()[1].split(',')
         for item_tid in msg:
             bot.send_chat_action(message.chat.id, 'typing')
-            r = kuaidi100.recv(item_tid, message.message_id, message.chat.id)
-            bot.send_message(message.chat.id, r, parse_mode='Markdown')
+            r = kuaidi100.receiver(item_tid, message.message_id, message.chat.id)
+            bot.reply_to(message, r, parse_mode='Markdown')
     else:
         bot.send_chat_action(message.chat.id, 'typing')
-        r = kuaidi100.recv(message.text.split()[1], message.message_id, message.chat.id)
-        bot.send_message(message.chat.id, r, parse_mode='Markdown')
+        r = kuaidi100.receiver(message.text.split()[1], message.message_id, message.chat.id)
+        bot.reply_to(message, r, parse_mode='Markdown')
 
 
 @bot.message_handler(commands=['help'])
@@ -73,7 +71,8 @@ def bot_list(message):
         for i in all_info:
             bot.send_chat_action(message.chat.id, 'typing')
             bot.send_message(
-                message.chat.id, i[0] + '  ' + i[1] + '\n' + i[2] + i[3])
+                message.chat.id,
+                '%s %s %s\n %s' % (i[4], i[3], time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(i[6]))), i[5]))
     else:
         bot.send_chat_action(message.chat.id, 'typing')
         bot.send_message(message.chat.id, '--o(*￣▽￣*)o--\n诶汝有问过咱嘛？')
@@ -86,9 +85,9 @@ def bot_delete(message):
         bot.send_message(
             message.chat.id, '`/delete 123456789`\n像这样把汝的运单编号加到 `/delete` 之后就好啦~/', parse_mode='Markdown')
     else:
-        msg = kuaidi100.delete(message.text[8:])
+        r = kuaidi100.delete_record(message.text[8:])
         bot.send_chat_action(message.chat.id, 'typing')
-        bot.send_message(message.chat.id, msg)
+        bot.send_message(message.chat.id, r)
 
 
 @bot.message_handler(commands=['quickdel'])
@@ -98,9 +97,9 @@ def bot_quick_delete(message):
         bot.send_message(message.chat.id, utils.reply_refuse())
     else:
         s = message.reply_to_message.text
-        msg = kuaidi100.delete(s.split()[0])
+        kuaidi100.delete_record(s.split()[0])
         bot.send_chat_action(message.chat.id, 'typing')
-        bot.send_message(message.chat.id, msg)
+        bot.send_message(message.chat.id, '删除成功')
 
 
 @bot.callback_query_handler(func=lambda call: True)
@@ -194,10 +193,10 @@ def track_express(message):
         # download the file
         file_info = bot.get_file(message.voice.file_id)
         voice_file = requests.get('https://api.telegram.org/file/bot{0}/{1}'.format(TOKEN, file_info.file_path))
-        file_path = temp + os.sep
-        with open(file_path + message.voice.file_id + '.ogg', 'wb') as f:
+        file_path = os.path.join(temp, message.voice.file_id + '.ogg')
+        with open(file_path, 'wb') as f:
             f.write(voice_file.content)
-        message.text = speech.voice_to_text(file_path, message.voice.file_id + '.ogg')
+        message.text = utils.voice_to_text(file_path)
 
     if u'4C7' in message.text:
         bot.send_chat_action(message.chat.id, 'typing')
@@ -205,11 +204,11 @@ def track_express(message):
         bot.send_message(message.chat.id, r)
     elif message.text.isdigit():
         bot.send_chat_action(message.chat.id, 'typing')
-        r = kuaidi100.recv(message.text, message.message_id, message.chat.id)
+        r = kuaidi100.receiver(message.text, message.message_id, message.chat.id)
         if u'单号不存在或者已经过期' in r:
-            bot.send_message(message.chat.id, '汝的单号可能刚刚生成，暂无信息，不如稍后试试？')
+            bot.reply_to(message, '汝的单号可能刚刚生成，暂无信息，不如稍后试试？')
         else:
-            bot.send_message(message.chat.id, r, parse_mode='Markdown')
+            bot.reply_to(message, r, parse_mode='Markdown')
     # use turing bot
     elif TURING_KEY == '':
         bot.send_chat_action(message.chat.id, 'typing')
@@ -224,17 +223,9 @@ def track_express(message):
 
 
 if __name__ == '__main__':
-    if DEBUG == '1':
-        import logging
-
-        logger = telebot.logger
-        telebot.logger.setLevel(logging.DEBUG)
-
-    interval = 120
-    if len(sys.argv) == 2:
-        interval = int(sys.argv[1])
-
     scheduler = BackgroundScheduler()
-    scheduler.add_job(checker, 'interval', minutes=interval)
+    scheduler.add_job(checker, 'interval', minutes=config.INTERVAL)
     scheduler.start()
+    print('''Welcome to ExpressBot, Version %s\n%sAuthor: %s\nCredits:%s\nWebsite:%s\n%s'''
+          % (__version__, BANNER, __author__, __credits__, __website__, '--' * 10 + 'Bot is running' + '--' * 10))
     bot.polling(none_stop=True)
