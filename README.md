@@ -143,6 +143,21 @@ TOKEN = 'Your TOKEN'
 TURING_KEY = 'Your Key'
 ```
 
+创建单元文件：`vim /lib/systemd/system/expressbot.service`	
+自行替换输入如下信息	
+```
+[Unit]	
+Description=A Telegram Bot for querying expresses	
+After=network.target network-online.target nss-lookup.target	
+
+[Service]	
+Restart=on-failure	
+Type=simple	
+ExecStart=/usr/bin/python /home/ExpressBot/expressbot/main.py	
+
+[Install]	
+WantedBy=multi-user.target
+```
 重新载入daemon、自启、启动
 ```bash
 systemctl daemon-reload
