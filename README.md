@@ -209,15 +209,17 @@ sudo systemctl restart expressbot.service
 ## 部署方法3.使用 Docker ##
 目前支持 docker 运行，但是尚未经过详细测试。
 
-将 Dockerfile 下载回来，或者克隆并进入仓库
-
-### 构建镜像 ###
+### 拉取镜像 ###
 ```bash
-docker build -t expressbot:v1 .
+docker pull bennythink/expressbot:latest
 ```
 ### 后台运行 ###
 ```bash
 docker run -d --restart=always -e TOKEN="TOKEN" -e TURING="KEY"  expressbot:v1
+```
+如果想自己 build 的话，那么就下载回 Dockerfile，然后
+```bash
+docker build -t expressbot:v1 .
 ```
 
 # 隐私 #
