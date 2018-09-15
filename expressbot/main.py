@@ -23,8 +23,8 @@ from utils import msg_logger
 from timer import checker
 from weather import forecast_5d
 
-TOKEN = config.TOKEN
-TURING_KEY = config.TURING_KEY
+TOKEN = os.environ.get('TOKEN') or config.TOKEN
+TURING_KEY = os.environ.get('TURING') or config.TURING_KEY
 
 bot = telebot.TeleBot(TOKEN)
 
@@ -223,7 +223,7 @@ def track_express(message):
 
 
 if __name__ == '__main__':
-    scheduler = BackgroundScheduler()
+    scheduler = BackgroundScheduler(timezone="Asia/Shanghai")
     scheduler.add_job(checker, 'interval', minutes=config.INTERVAL)
     scheduler.start()
     print('''Welcome to ExpressBot, Version %s\n%sAuthor: %s\nCredits:%s\nWebsite:%s\n%s'''

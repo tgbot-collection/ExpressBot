@@ -4,6 +4,7 @@
 # timer for cron
 __author__ = 'Benny <benny@bennythink.com>'
 
+import os
 import sqlite3
 
 import telebot
@@ -11,7 +12,7 @@ import telebot
 import config
 import kuaidi100
 
-TOKEN = config.TOKEN
+TOKEN = os.environ.get('TOKEN') or config.TOKEN
 DB_PATH = config.DB_PATH
 
 bot = telebot.TeleBot(TOKEN)
