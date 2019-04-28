@@ -29,7 +29,7 @@ def forecast_5d(city, length):
     if r['status'] != 1000:
         return '啊哦，没有查询到你要的信息'
 
-    msg = u'%s 天气预报\n%s\n空气质量指数：%s\n%s\n%s%s\n%s'
+    msg = u'%s 天气预报\n%s\n%s\n%s%s\n%s'
     five_day = ''
     yesterday = r["data"]["yesterday"]['date'] + '    ' + r["data"]["yesterday"]['type'] + '    ' + \
                 r["data"]["yesterday"]['high'] + ' ' + r["data"]["yesterday"]['low'] + '    ' + \
@@ -39,7 +39,7 @@ def forecast_5d(city, length):
         five_day = five_day + i['date'] + '    ' + i['type'] + '    ' + i['high'] + ' ' + i['low'] + '    ' + \
                    i['fengxiang'] + i['fengli'].split('[')[2].split(']')[0] + '\n'
 
-    return msg % (r['data']['city'], yesterday, r['data']['aqi'], '-' * length, five_day, '-' * length,
+    return msg % (r['data']['city'], yesterday,  '-' * length, five_day, '-' * length,
                   r['data']['ganmao'])
 
 
