@@ -17,7 +17,7 @@ def send_turing(key, info, userid):
     :param userid: chat_id, for context parse
     :return: response from Turing Bot, in text.
     """
-    return requests.get(' http://115.159.180.177:6789/chat?text={}'.format(info))
+    return requests.get(' http://115.159.180.177:6789/chat?text={}'.format(info)).json()['text']
 
     data = {
         "key": key,
