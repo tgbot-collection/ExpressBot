@@ -1,9 +1,9 @@
-FROM alpine
+FROM python:alpine
 
 RUN apk update \
-    && apk add python3 git ffmpeg flac --no-cache \
-    && git clone https://github.com/BennyThink/ExpressBot \
-    && pip3 install -r /ExpressBot/requirements.txt
+    && apk add git ffmpeg flac --no-cache \
+    && git clone https://github.com/tgbot-collection/ExpressBot \
+    && pip3 install --no-cache-dir -r /ExpressBot/requirements.txt 
 
 WORKDIR /ExpressBot
 
