@@ -3,3 +3,4 @@ pydub
 SpeechRecognition
 pyTelegramBotAPI
 requests
+tgbot-ping

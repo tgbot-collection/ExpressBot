@@ -12,6 +12,7 @@ import requests
 import telebot
 from apscheduler.schedulers.background import BackgroundScheduler
 from telebot import types
+from tgbot_ping import get_runtime
 
 import config
 import kuaidi100
@@ -27,6 +28,13 @@ TOKEN = os.environ.get('TOKEN') or config.TOKEN
 TURING_KEY = os.environ.get('TURING') or config.TURING_KEY
 
 bot = telebot.TeleBot(TOKEN)
+
+
+@bot.message_handler(commands=['ping'])
+def send_help(message):
+    bot.send_chat_action(message.chat.id, 'typing')
+    info = get_runtime("botsrunner_expressbot_1")
+    bot.send_message(message.chat.id, info, parse_mode='markdown')
 
 
 @bot.message_handler(commands=['start'])
