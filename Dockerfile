@@ -8,7 +8,7 @@ RUN apk update \
 WORKDIR /ExpressBot
 
 
-CMD python3 expressbot/main.py
+CMD ["python3", "expressbot/main.py"]
 
 # usage
 # docker build -t expressbot:v1 .
